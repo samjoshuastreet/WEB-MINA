@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'gordita-light';
+    src: url('/public/assets/fonts/GorditaLight.otf');
+}
+@font-face {
+    font-family: 'gordita-regular';
+    src: url('/public/assets/fonts/GorditaRegular.otf');
+}
+@font-face {
+    font-family: 'gordita-ultra';
+    src: url('/public/assets/fonts/GorditaUltra.otf');
+}
+@font-face {
+    font-family: 'poppins-light';
+    src: url('/public/assets/fonts/PoppinsLight.ttf');
+}
+@font-face {
+    font-family: 'poppins-regular';
+    src: url('/public/assets/fonts/PoppinsRegular.ttf');
+}
+@font-face {
+    font-family: 'poppins-ultra';
+    src: url('/public/assets/fonts/PoppinsUltra.ttf');
+}
