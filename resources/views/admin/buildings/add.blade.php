@@ -5,10 +5,20 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/toastr/toastr.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/cropperjs/cropper.min.css') }}" />
 <style>
     #longitude-table:focus {
         outline: none;
         border: none;
+    }
+
+    .marker {
+        background-image: url('{{ asset("assets/logos/logo-only.png") }}');
+        background-size: cover;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        cursor: pointer;
     }
 </style>
 @endsection
@@ -38,7 +48,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="building-add-form">
+            <form id="building-add-form" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-body">
                     <table class="table table-bordered">
                         <tbody>
@@ -65,6 +76,8 @@
                                 <td class="font-weight-bold" style="width: 25%">Marker Image</td>
                                 <td>
                                     <input type="file" name="marker_image" id="marker_image-table">
+                                    <img class="img-thumbnail rounded-circle mt-2" id="cropper-result" height="100" width="100" alt="200x200" src="" data-holder-rendered="true">
+                                    <button type="button" id="remove-marker-image-btn" class="btn btn-danger btn-sm ml-2">Remove</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -80,12 +93,140 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+
+<div class="modal fade" id="cropper-modal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Crop Image</h4>
+                <button type="button" id="cropper-cancel-top-btn" class="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="d-flex justify-content-center align-items-center">
+                    <img id="photo-cropper" alt="Upload an Image" />
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button id="cropper-cancel-bot-btn" type="button" class="btn btn-default">Cancel</button>
+                <button id="cropper-crop-btn" type="button" class="btn btn-primary">Crop</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <!-- /.modal -->
 @endsection
 @section('more_scripts')
-<script src="{{ asset('assets/admin/plugins/sweetalert2/sweetalert2.min.js') }}">
-</script>
+<script src="{{ asset('assets/admin/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+<script src="{{ asset('assets/admin/plugins/cropperjs/cropper.min.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/toastr/toastr.min.js') }}"></script>
+// CropperJs Scripts
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const imageInput = document.getElementById('marker_image-table');
+        const cropperCont = document.getElementById('photo-cropper');
+        const cropBtn = document.getElementById('cropper-crop-btn');
+        const cancelCropTopBtn = document.getElementById('cropper-cancel-top-btn');
+        const cancelCropBotBtn = document.getElementById('cropper-cancel-bot-btn');
+        const removeImageUploadBtn = document.getElementById('remove-marker-image-btn');
+        $('#cropper-result').hide();
+        $('#remove-marker-image-btn').hide();
+        let cropper;
+
+        function dataURLtoBlob(dataURL) {
+            const parts = dataURL.split(';base64,');
+            const contentType = parts[0].split(':')[1];
+            const raw = window.atob(parts[1]);
+            const rawLength = raw.length;
+            const uint8Array = new Uint8Array(rawLength);
+
+            for (let i = 0; i < rawLength; ++i) {
+                uint8Array[i] = raw.charCodeAt(i);
+            }
+
+            return new Blob([uint8Array], {
+                type: contentType
+            });
+        }
+
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    cropperCont.src = e.target.result;
+
+                    // Destroy the previous Cropper instance if it exists
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+
+                    // Initialize a new Cropper instance on the updated image
+                    cropper = new Cropper(cropperCont, {
+                        aspectRatio: 1,
+                        viewMode: 1
+                    });
+                };
+
+                reader.readAsDataURL(file);
+
+                // Use Bootstrap methods to toggle modal visibility
+                $('#cropper-modal').modal('toggle');
+                $('#add-modal').modal('toggle');
+            }
+        });
+        removeImageUploadBtn.addEventListener('click', () => {
+            document.getElementById('cropper-result').src = "";
+            imageInput.value = '';
+            $('#cropper-result').hide();
+            $('#remove-marker-image-btn').hide();
+        })
+        cancelCropTopBtn.addEventListener('click', () => {
+            $('#add-modal').modal('toggle');
+            $('#cropper-modal').modal('toggle');
+            $('#marker_image-table').val('');
+        })
+        cancelCropBotBtn.addEventListener('click', () => {
+            $('#add-modal').modal('toggle');
+            $('#cropper-modal').modal('toggle');
+            $('#marker_image-table').val('');
+        })
+        cropBtn.addEventListener('click', () => {
+            const croppedDataUrl = cropper.getCroppedCanvas().toDataURL();
+
+            // Create a new Blob from the data URL
+            const blob = dataURLtoBlob(croppedDataUrl);
+
+            // Create a new File object from the Blob
+            const croppedFile = new File([blob], 'cropped_image.jpg', {
+                type: 'image/jpeg'
+            });
+
+            // Create a new DataTransfer object
+            const dataTransfer = new DataTransfer();
+
+            // Add the new File object to the DataTransfer object
+            dataTransfer.items.add(croppedFile);
+
+            document.getElementById('marker_image-table').files = dataTransfer.files;
+
+            // Display the cropped image in the preview
+            $('#remove-marker-image-btn').show();
+            $('#cropper-result').show();
+            document.getElementById('cropper-result').src = croppedDataUrl;
+
+            // Close the modals
+            $('#cropper-modal').modal('toggle');
+            $('#add-modal').modal('toggle');
+        })
+    });
+</script>
+// End of CropperJS Scripts
 <script>
     // Initializing Sweet Alert Toastr
     var Toast = Swal.mixin({
@@ -119,7 +260,13 @@
             success: function(data) {
                 data.buildings.forEach(function(building) {
                     var coordinates = [building.longitude, building.latitude];
-                    var marker = new mapboxgl.Marker()
+                    const el = document.createElement('div');
+                    el.className = 'marker';
+                    if (building.marker_photo !== null) {
+                        var marker_photo = decodeURIComponent('{{ asset("storage/") }}' + "/" + building.marker_photo); // Decode URL
+                        el.style.backgroundImage = `url('${marker_photo}')`;
+                    }
+                    var marker = new mapboxgl.Marker(el)
                         .setLngLat(coordinates)
                         .setPopup(new mapboxgl.Popup().setHTML('<h3>' + building.building_name + '</h3>'))
                         .addTo(map);
@@ -177,12 +324,28 @@
         coordinatesCont.style.visibility = 'visible';
     });
 
+    function loadModal() {
+        $('#cropper-modal').modal('toggle');
+    }
+
     $('#building-add-form').submit(function(e) {
         e.preventDefault();
-        let formData = $(this).serialize();
+        let formData = new FormData();
+
+        // Append form data using serializeArray
+        $.each($(this).serializeArray(), function(i, field) {
+            formData.append(field.name, field.value);
+        });
+
+        // Append file inputs
+        formData.append('marker_image', $('#marker_image-table')[0].files[0]);
+
         $.ajax({
             url: '{{ route("buildings.add.submit") }}',
             data: formData,
+            type: 'POST',
+            contentType: false, // Set contentType to false when using FormData
+            processData: false,
             success: function(data) {
                 if (data.success == true) {
                     $('#building-add-form')[0].reset();

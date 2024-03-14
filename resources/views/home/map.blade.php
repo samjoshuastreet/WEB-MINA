@@ -1,9 +1,20 @@
 @extends('home.layouts.layout')
 @section('title', 'MSU-IIT Map - Home')
+@section('more_links')
+<style>
+    .marker {
+        background-image: url('{{ asset("assets/logos/logo-only.png") }}');
+        background-size: cover;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        cursor: pointer;
+    }
+</style>
+@endsection
 @section('content')
 <div id="map" class="relative w-full h-[calc(100vh-50px)] mt-[50px]">
     @include('home.layouts.popups')
-    @include('home.layouts.auth')
 </div>
 
 <div id="directions-cont" class="fixed py-8 top-0 left-[-30%] w-[30%] h-full bg-upsdell-900 z-30">

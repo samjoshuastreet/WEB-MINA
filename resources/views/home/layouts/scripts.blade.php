@@ -162,7 +162,13 @@
             success: function(data) {
                 data.buildings.forEach(function(building) {
                     var coordinates = [building.longitude, building.latitude];
-                    var marker = new mapboxgl.Marker()
+                    const el = document.createElement('div');
+                    el.className = 'marker';
+                    if (building.marker_photo !== null) {
+                        var marker_photo = decodeURIComponent('{{ asset("storage/") }}' + "/" + building.marker_photo); // Decode URL
+                        el.style.backgroundImage = `url('${marker_photo}')`;
+                    }
+                    var marker = new mapboxgl.Marker(el)
                         .setLngLat(coordinates)
                         .setPopup(new mapboxgl.Popup().setHTML('<h3>' + building.building_name + '</h3>'))
                         .addTo(map);
