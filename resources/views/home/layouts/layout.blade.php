@@ -1,0 +1,6 @@
+@include('home.layouts.head')
+@include('home.layouts.navbar')
+@include('home.layouts.sidebar')
+@yield('content')
+@include('home.layouts.footer')
+@include('home.layouts.scripts')

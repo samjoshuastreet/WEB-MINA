@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +17,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AuthController::class, 'index'])->name('landing');
+Route::get('/login_user', [AuthController::class, 'login_user'])->name('login_user');
+Route::get('/register_user', [AuthController::class, 'register_user'])->name('register_user');
+Route::get('/logout_user', [AuthController::class, 'logout_user'])->name('logout_user');
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+Route::get('/admin/buildings', [BuildingController::class, 'index'])->name('buildings.index');
+Route::get('/admin/buildings/get', [BuildingController::class, 'get'])->name('buildings.get');
+Route::get('/admin/buildings/add', [BuildingController::class, 'add'])->name('buildings.add');
+Route::get('/admin/buildings/add-submit', [BuildingController::class, 'add_submit'])->name('buildings.add.submit');
