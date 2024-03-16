@@ -13,6 +13,9 @@
 <script src="{{ asset('assets/admin/dist/js/demo.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('assets/admin/dist/js/pages/dashboard3.js') }}"></script>
+<script src="{{ asset('assets/admin/plugins/toastr/toastr.min.js') }}"></script>
+<script src="{{ asset('assets/admin/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
 @yield('more_scripts')
 </body>
 

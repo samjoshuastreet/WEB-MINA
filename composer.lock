@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c491b8531eec05ba41a11d9276a5749",
+    "content-hash": "2cc13a67c0f3d1d3b706d92c195d9616",
     "packages": [
         {
             "name": "brick/math",
@@ -5414,6 +5414,46 @@
                 }
             ],
             "time": "2024-02-15T11:23:52+00:00"
+        },
+        {
+            "name": "taniko/dijkstra",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/taniko/dijkstra.git",
+                "reference": "be5fe93702d2eb25ad09fefb30e3df74b4e1fff8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/taniko/dijkstra/zipball/be5fe93702d2eb25ad09fefb30e3df74b4e1fff8",
+                "reference": "be5fe93702d2eb25ad09fefb30e3df74b4e1fff8",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Taniko\\Dijkstra\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Yuya Aratani",
+                    "email": "hrgruri@gmail.com"
+                }
+            ],
+            "description": "dijkstra algorithm",
+            "support": {
+                "issues": "https://github.com/taniko/dijkstra/issues",
+                "source": "https://github.com/taniko/dijkstra/tree/master"
+            },
+            "time": "2017-12-06T05:58:01+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

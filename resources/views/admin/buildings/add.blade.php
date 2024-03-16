@@ -1,8 +1,6 @@
 @extends('admin.layouts.layout')
 @section('title', 'Add Building')
 @section('more_links')
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/toastr/toastr.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/cropperjs/cropper.min.css') }}" />
@@ -120,9 +118,7 @@
 <!-- /.modal -->
 @endsection
 @section('more_scripts')
-<script src="{{ asset('assets/admin/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/cropperjs/cropper.min.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/toastr/toastr.min.js') }}"></script>
 // CropperJs Scripts
 <script>
     document.addEventListener('DOMContentLoaded', () => {

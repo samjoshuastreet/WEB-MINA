@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PathController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BuildingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,10 @@ Route::get('/admin/buildings/{id}/edit', [BuildingController::class, 'edit'])->n
 Route::get('/admin/buildings/{id}/view', [BuildingController::class, 'view'])->name('buildings.view');
 Route::get('/admin/buildings/delete', [BuildingController::class, 'delete'])->name('buildings.delete');
 Route::post('/admin/buildings/add-submit', [BuildingController::class, 'add_submit'])->name('buildings.add.submit');
+
+Route::get('/admin/paths', [PathController::class, 'index'])->name('paths.index');
+Route::get('/admin/paths/get', [PathController::class, 'get'])->name('paths.get');
+Route::get('/admin/paths/find', [PathController::class, 'find'])->name('paths.find');
+Route::get('/admin/paths/add', [PathController::class, 'add'])->name('paths.add');
+Route::get('/admin/paths/add-submit', [PathController::class, 'add_submit'])->name('paths.add.submit');
+Route::get('/admin/paths/add-validator', [PathController::class, 'validator'])->name('paths.add.validator');
