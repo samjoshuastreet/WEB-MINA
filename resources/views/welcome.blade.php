@@ -1,6 +1,16 @@
 @section('title', 'MSU-IIT Navigation Aid')
 @include('landing.head')
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1">
+    <title>Page Title</title>
+    <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+
 <body id="top" class="overflow-y-auto overflow-x-hidden">
     @include('landing.navbar')
 
@@ -70,12 +80,48 @@
             </div>
         </div>
 
-        <div id="about" class="bg-upsdell-900 w-screen h-screen">
-            <h1></h1>
+        <div id="about" class="flex w-screen h-screen">
+            <div class="w-1/2 h-full flex items-center justify-center bg-upsdell-900">
+                <div class="Image">
+                    <div class="image-container">
+                        <a href="assets/images/landing/campus-lawn.png">
+                            <img src="{{ asset('assets/images/landing/campus-lawn.png') }}" alt="MSU-IIT Campus">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-full bg-upsdell-900 p-8 text-white text-lg">
+                <div class="text-container"> 
+                    <h1>MSU-IIT: Empowering Minds, Transforming Communities</h1>
+                    <p class="block mt-1 text-lg leading-tight font-medium text-white">
+                        Discover excellence at Mindanao State University – Iligan Institute of Technology (MSU-IIT). Founded in 1968 under Republic Act 5363, MSU-IIT is a leading state university renowned for its commitment to academic excellence, holistic development, and community engagement. Led by Prof. Alizedney M. Ditucalan, JD, LLM, MSU-IIT fosters a diverse and inclusive environment where global competitiveness thrives. Explore our achievements, leadership, and impact on technological advancements in Iligan City. Join us in shaping the future.
+                    </p>
+                    <div class="button-container">
+                        <button onclick="location.href='https://msuiit.edu.ph/about/'" class="button" style="vertical-align:middle"><span>More Information </span></button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="contact" class="w-screen h-screen">
-            <h1></h1>
+            <div class="contactall">
+                <div class="contact-body">
+                    <div class="contact-in">
+                        <div class="contact-map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.631487700821!2d124.24219007449189!3d8.239760300844592!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x325576785fc4d679%3A0x73c07711931c8cce!2sMindanao%20State%20University%20-%20Iligan%20Institute%20of%20Technology!5e0!3m2!1sen!2sph!4v1711065016417!5m2!1sen!2sph" width="100%" height="auto" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                        <div class="contact-form">
+                            <h1>Contact Us</h1>
+                            <form>
+                                <input type="text" placeholder="Name" class="contact-form-txt" />
+                                <input type="text" placeholder="Email" class="contact-form-txt" />
+                                <textarea placeholder="Message" class="contact-form-txtarea"></textarea>
+                                <input type="submit" name="Submit" class="contact-form-btn" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="fixed bottom-5 right-5" id="scroll-top-cont">

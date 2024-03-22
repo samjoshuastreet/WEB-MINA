@@ -41,3 +41,7 @@ Route::get('/admin/paths/find', [PathController::class, 'find'])->name('paths.fi
 Route::get('/admin/paths/add', [PathController::class, 'add'])->name('paths.add');
 Route::get('/admin/paths/add-submit', [PathController::class, 'add_submit'])->name('paths.add.submit');
 Route::get('/admin/paths/add-validator', [PathController::class, 'validator'])->name('paths.add.validator');
+
+Route::get('/msuiit_map', function () {
+    return view('msuiit_map');
+});
