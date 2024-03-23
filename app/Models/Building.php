@@ -13,8 +13,26 @@ class Building extends Model
 
     protected $fillable = [
         'building_name',
-        'latitude',
-        'longitude',
-        'marker_photo'
+        'status'
     ];
+
+    public function buildingDetails()
+    {
+        return $this->hasOne(BuildingDetails::class, 'building_id');
+    }
+
+    public function buildingMarker()
+    {
+        return $this->hasOne(BuildingMarker::class, 'building_id');
+    }
+
+    public function buildingBoundary()
+    {
+        return $this->hasOne(BuildingBoundary::class, 'building_id');
+    }
+
+    public function buildingEntrypoint()
+    {
+        return $this->hasOne(BuildingEntrypoint::class, 'building_id');
+    }
 }

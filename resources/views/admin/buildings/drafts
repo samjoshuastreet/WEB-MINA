@@ -1,0 +1,31 @@
+    map.on('zoom', function() {
+        const zoom = map.getZoom();
+        const markers = document.querySelectorAll('.marker');
+        const markerLabels = document.querySelectorAll('.marker-label');
+
+        markers.forEach(marker => {
+            if (zoom >= 20) {
+                marker.style.width = '15px';
+                marker.style.height = '15px';
+            } else if (zoom >= 19 && zoom < 20) {
+                marker.style.width = '10px';
+                marker.style.height = '10px';
+            } else {
+                marker.style.width = '5px';
+                marker.style.height = '5px';
+            }
+        });
+
+        markerLabels.forEach(label => {
+            if (zoom >= 20) {
+                label.style.fontSize = '0.85rem';
+                label.style.top = '-25px';
+            } else if (zoom >= 19 && zoom < 20) {
+                label.style.fontSize = '0.70rem';
+                label.style.top = '-22.5px';
+            } else {
+                label.style.fontSize = '0.5rem';
+                label.style.top = '-17px';
+            }
+        });
+    });

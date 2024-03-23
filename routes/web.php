@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PathController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\DirectionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,7 @@ Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboa
 
 Route::get('/admin/buildings', [BuildingController::class, 'index'])->name('buildings.index');
 Route::get('/admin/buildings/get', [BuildingController::class, 'get'])->name('buildings.get');
+Route::get('/admin/buildings/find', [BuildingController::class, 'find'])->name('buildings.find');
 Route::get('/admin/buildings/add', [BuildingController::class, 'add'])->name('buildings.add');
 Route::get('/admin/buildings/{id}/edit', [BuildingController::class, 'edit'])->name('buildings.edit');
 Route::get('/admin/buildings/{id}/view', [BuildingController::class, 'view'])->name('buildings.view');
@@ -41,3 +43,7 @@ Route::get('/admin/paths/find', [PathController::class, 'find'])->name('paths.fi
 Route::get('/admin/paths/add', [PathController::class, 'add'])->name('paths.add');
 Route::get('/admin/paths/add-submit', [PathController::class, 'add_submit'])->name('paths.add.submit');
 Route::get('/admin/paths/add-validator', [PathController::class, 'validator'])->name('paths.add.validator');
+Route::get('/admin/paths/edit', [PathController::class, 'edit'])->name('paths.edit');
+Route::get('/admin/paths/delete', [PathController::class, 'delete'])->name('paths.delete');
+
+Route::get('/directions/get', [DirectionsController::class, 'get'])->name('directions.get');

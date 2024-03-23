@@ -2,11 +2,11 @@
 @section('title', 'MSU-IIT Map - Home')
 @section('more_links')
 <style>
-    .marker {
+    .display-marker {
         background-image: url('{{ asset("assets/logos/logo-only.png") }}');
         background-size: cover;
-        width: 30px;
-        height: 30px;
+        width: 20px;
+        height: 20px;
         border-radius: 100%;
         cursor: pointer;
     }
@@ -23,4 +23,143 @@
     </svg>
     <h1 class="text-white font-poppins-regular p-2 text-center">Directions Here</h1>
 </div>
+@endsection
+@section('more_scripts')
+<script>
+    // Map Initialization
+    mapboxgl.accessToken = 'pk.eyJ1Ijoic2Ftc3RyZWV0IiwiYSI6ImNsczRxb29mdTE1ZmkybHBjcHBhcG9xN2kifQ.SpJ2sxffT8PRfQjFtYgg6Q';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/samstreet/clu2rl1ub024601oigzn6960q',
+        zoom: 17,
+        minZoom: 16,
+        center: [124.2438547179179, 8.2414298468554],
+        bearing: -95,
+        maxBounds: [
+            [124.23616973647256, 8.233619024568284], // Southwest bound
+            [124.25301604017682, 8.248537110726303] // Northeast bound
+        ]
+    });
+    // End of Map Initialization
+
+    // Element Rendering
+    function renderElements(building = null, marker = null, entrypoint = null, boundary = null) {
+        var data = {};
+        if (building) {
+            data['building'] = true;
+        }
+        if (marker) {
+            data['marker'] = true;
+        }
+        if (entrypoint) {
+            data['entrypoint'] = true;
+        }
+        if (boundary) {
+            data['boundary'] = true;
+        }
+        $.ajax({
+            url: '{{ route("buildings.get") }}',
+            data: data,
+            success: function(response) {
+                if (building) {
+                    console.log(response.buildings);
+                }
+                if (marker) {
+                    response.markers.forEach(marker => {
+                        var temp = JSON.parse(marker.markers);
+                        var coordinates = [temp.lng, temp.lat];
+                        const el = document.createElement('div');
+                        el.className = 'display-marker';
+                        el.setAttribute('display-marker', marker.id);
+                        if (marker.marker_image) {
+                            var marker_image = decodeURIComponent('{{ asset("storage/") }}' + "/" + marker.marker_image); // Decode URL
+                            el.style.backgroundImage = `url('${marker_image}')`;
+                        }
+                        var thisMarker = new mapboxgl.Marker(el)
+                            .setLngLat(coordinates)
+                            .addTo(map);
+                    });
+                }
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        })
+    }
+    renderElements(false, true, false, false);
+    // End of Element Rendering
+
+    // Map Elements Optimizations
+    map.on('zoom', function() {
+        const zoom = map.getZoom();
+        const markers = document.querySelectorAll('.display-marker');
+
+        markers.forEach(marker => {
+            if (zoom >= 20) {
+                marker.style.width = '100px';
+                marker.style.height = '100px';
+            } else if (zoom >= 19 && zoom < 20) {
+                marker.style.width = '50px';
+                marker.style.height = '50px';
+            } else if (zoom >= 18 && zoom < 20) {
+                marker.style.width = '35px';
+                marker.style.height = '35px';
+            } else if (zoom >= 17 && zoom < 18) {
+                marker.style.width = '20px';
+                marker.style.height = '20px';
+            } else {
+                marker.style.width = '10px';
+                marker.style.height = '10px';
+            }
+        });
+    });
+    // End of Map Elements Optimizations
+
+    // Building Information Functions
+    $(document).on('click', '.display-marker', function() {
+        var target = $(this).attr('display-marker');
+        $('#popup-image').attr('src', '');
+        $('#popup-building-description').text('');
+        $('#popup-building-name').text('');
+        $.ajax({
+            url: '{{ route("buildings.find") }}',
+            data: {
+                'target': target
+            },
+            success: function(response) {
+                $('.popup-sample-btn').click();
+                $('#popup-building-name').text(response.building.building_name);
+                var imageSourceA = 'storage/';
+                var imageSourceB = response.marker.marker_image;
+                $('#popup-image').attr('src', imageSourceA + imageSourceB);
+                $('#popup-building-description').text(response.details.building_description);
+            },
+            error: function(error) {
+
+            }
+        })
+
+    });
+    // End of Building Information Functions
+
+    // Dijkstra's Algorithm
+    var directionsBtn = document.getElementById('popup-directions-btn');
+    directionsBtn.addEventListener('click', function(e) {
+        var data = {
+            'origin': 'A',
+            'destination': 'EA'
+        }
+        $.ajax({
+            url: '{{ route("directions.get") }}',
+            data: data,
+            success: (response) => {
+                console.log(response.route);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        })
+    });
+    // End of Dijkstra's Algorithm
+</script>
 @endsection

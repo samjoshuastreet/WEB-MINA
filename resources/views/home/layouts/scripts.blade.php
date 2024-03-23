@@ -1,5 +1,5 @@
-@yield('more_scripts')
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+@yield('more_scripts')
 <script>
     var sidebarStatus = 0;
     var loginFormStatus = 0;
@@ -139,47 +139,6 @@
             marginLeft: '0%'
         }, 500)
     });
-</script>
-<script>
-    mapboxgl.accessToken = 'pk.eyJ1Ijoic2Ftc3RyZWV0IiwiYSI6ImNsczRxb29mdTE1ZmkybHBjcHBhcG9xN2kifQ.SpJ2sxffT8PRfQjFtYgg6Q';
-    const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/samstreet/clto5jp0h01cg01ptc2idfbdk',
-        zoom: 17,
-        minZoom: 16,
-        center: [124.2438547179179, 8.2414298468554],
-        bearing: -95,
-        maxBounds: [
-            [124.23616973647256, 8.233619024568284], // Southwest bound
-            [124.25301604017682, 8.248537110726303] // Northeast bound
-        ]
-    });
-    // Loading Markers
-    function loadMarkers() {
-        $.ajax({
-            url: '{{ route("buildings.get") }}',
-            data: '',
-            success: function(data) {
-                data.buildings.forEach(function(building) {
-                    var coordinates = [building.longitude, building.latitude];
-                    const el = document.createElement('div');
-                    el.className = 'marker';
-                    if (building.marker_photo !== null) {
-                        var marker_photo = decodeURIComponent('{{ asset("storage/") }}' + "/" + building.marker_photo); // Decode URL
-                        el.style.backgroundImage = `url('${marker_photo}')`;
-                    }
-                    var marker = new mapboxgl.Marker(el)
-                        .setLngLat(coordinates)
-                        .setPopup(new mapboxgl.Popup().setHTML('<h3>' + building.building_name + '</h3>'))
-                        .addTo(map);
-                });
-            },
-            error: function(data) {
-                console.log(data);
-            }
-        });
-    }
-    loadMarkers();
 </script>
 </div>
 </body>

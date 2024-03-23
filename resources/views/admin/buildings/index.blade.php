@@ -32,9 +32,10 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 15%;">Image</th>
-                                        <th style="width: 30%;">Name</th>
-                                        <th style="width: 20%;">Longitude</th>
-                                        <th style="width: 20%;">Latitude</th>
+                                        <th style="width: 20%;">Name</th>
+                                        <th style="width: 30%;">Description</th>
+                                        <th style="width: 10%;">Status</th>
+                                        <th style="width: 10%;">Active Entrance</th>
                                         <th style="width: 15%;">Action</th>
                                     </tr>
                                 </thead>

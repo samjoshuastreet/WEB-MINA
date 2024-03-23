@@ -47,7 +47,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item {{ Route::currentRouteName() == 'paths.index' || Route::currentRouteName() == 'paths.add' ? 'menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteName() == 'paths.index' || Route::currentRouteName() == 'paths.add' || Route::currentRouteName() == 'paths.edit' ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link d-flex justify-center-start align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building nav-item mr-2" viewBox="0 0 16 16">
                             <path d="M5 8.5A2.5 2.5 0 0 1 7.5 6H9V4.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L9.41 8.658A.25.25 0 0 1 9 8.466V7H7.5A1.5 1.5 0 0 0 6 8.5V11H5z" />
@@ -63,6 +63,12 @@
                             <a href="{{ route('paths.add') }}" class="nav-link {{ Route::currentRouteName() == 'paths.add' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Add Paths</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('paths.edit') }}" class="nav-link {{ Route::currentRouteName() == 'paths.edit' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Path Editor</p>
                             </a>
                         </li>
                         <li class="nav-item">

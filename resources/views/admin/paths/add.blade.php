@@ -4,13 +4,56 @@
 <style>
     .marker {
         background-color: black;
-        width: 15px;
-        height: 15px;
+        width: 10px;
+        height: 10px;
         border-radius: 100%;
         cursor: pointer;
     }
 
+    .display-marker {
+        background-image: url('{{ asset("assets/logos/logo-only.png") }}');
+        background-size: cover;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        cursor: pointer;
+    }
+
+    .entry {
+        background-color: green;
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        cursor: pointer;
+    }
+
+    .marker:hover {
+        background-color: red;
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        cursor: pointer;
+        transition: 500ms;
+    }
+
+    .entry:hover {
+        background-color: red;
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        cursor: pointer;
+        transition: 500ms;
+    }
+
     .marker-label {
+        text-transform: capitalize;
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .entry-label {
         text-transform: capitalize;
         position: absolute;
         top: -20px;
@@ -87,10 +130,107 @@
     });
     renderPaths();
 
+    function renderBoundaries() {
+        $.ajax({
+            url: '{{ route("buildings.get") }}',
+            data: {
+                'entrypoint': true,
+                'boundary': true,
+            },
+            success: function(response) {
+                response.boundaries.forEach(boundary => {
+                    var temp = JSON.parse(boundary.corners);
+                    var boundaryCoordinates = [];
+                    for (let key in temp) {
+                        if (temp.hasOwnProperty(key)) {
+                            boundaryCoordinates.push([temp[key].lng, temp[key].lat]);
+                        }
+                    }
+                    map.addLayer({
+                        id: `polygon-display-${boundary.id}`,
+                        type: 'fill',
+                        source: {
+                            type: 'geojson',
+                            data: {
+                                type: 'Feature',
+                                geometry: {
+                                    type: 'Polygon',
+                                    coordinates: [boundaryCoordinates]
+                                }
+                            }
+                        },
+                        layout: {},
+                        paint: {
+                            'fill-color': '#87ceeb',
+                            'fill-opacity': 1
+                        }
+                    }, 'waterway-label');
+                    map.on('click', `polygon-display-${boundary.id}`, function(e) {
+                        if (step === 1) {
+                            Toast.fire({
+                                icon: 'error',
+                                title: `You cannot overlap a building inside an existing building!`
+                            });
+
+
+                            // Get all elements with class "corner"
+                            var cornerElements = document.getElementsByClassName('corner');
+
+                            var highestCount = -1;
+                            var elementWithHighestCount = null;
+
+                            for (var i = 0; i < cornerElements.length; i++) {
+                                var element = cornerElements[i];
+                                var cornerId = element.getAttribute('corner-id');
+
+                                // Extract the count from the corner-id attribute
+                                var count = parseInt(cornerId.split('-')[1]);
+
+                                // Check if the current count is higher than the highest count found so far
+                                if (!isNaN(count) && count > highestCount) {
+                                    highestCount = count;
+                                    elementWithHighestCount = element;
+                                }
+                            }
+
+                            delete corners[`corner${highestCount}`];
+                            elementWithHighestCount.remove();
+                        }
+                    })
+                })
+                response.entrypoints.forEach(entry => {
+                    var temp = JSON.parse(entry.entrypoints);
+                    var temp = JSON.parse(temp);
+                    for (let key in temp) {
+                        var coordinates = [temp[key].lng, temp[key].lat];
+                        const el = document.createElement('div');
+                        const codeValue = temp[key].code;
+                        el.className = 'entry';
+                        el.setAttribute('entry', entry.id);
+                        el.innerHTML = `<span class="entry-label">${codeValue}</span>`;
+                        el.setAttribute('code', `entry-code-${codeValue}`);
+                        el.setAttribute('lng', temp[key].lng);
+                        el.setAttribute('lat', temp[key].lat);
+                        var thisMarker = new mapboxgl.Marker(el)
+                            .setLngLat(coordinates)
+                            .addTo(map);
+                    }
+                });
+            },
+            error: function(error) {
+
+            }
+        });
+    }
+    renderBoundaries();
+
     var marker;
     var wp_a;
     var wp_b;
     var wp_distance;
+    var buildingConnection = false;
+    var buildingConnectionA = null;
+    var buildingConnectionB = null;
     var coordinatesCont = document.getElementById('coordinates-cont');
     var saveBtn = document.getElementById('save-coordinates-btn');
     var cancelBtn = document.getElementById('cancel-coordinates-btn');
@@ -126,8 +266,49 @@
 
     function resetMarkerColors() {
         $(document).find('.marker').css('background-color', 'black');
-        document.getElementById('wp-a-code').readOnly = false;
+        $(document).find('.entry').css('background-color', 'green');
+        if (!wp_a) {
+            $('#wp-a-code').val('');
+            document.getElementById('wp-a-code').readOnly = false;
+        } else {
+            $('#wp-b-code').val('');
+            document.getElementById('wp-b-code').readOnly = false;
+        }
     }
+
+    $(document).on('click', '.entry', function() {
+        if (marker) {
+            marker.remove();
+        }
+        var target = $(this).attr('code');
+        var lng = $(this).attr('lng');
+        var lat = $(this).attr('lat');
+        resetMarkerColors();
+        $(this).css('background-color', 'red');
+        target = target.replace('entry-code-', '');
+        if (!buildingConnectionA) {
+            buildingConnectionA = this.getAttribute('entry');
+        } else {
+            buildingConnectionB = this.getAttribute('entry');
+        }
+
+        buildingConnection = true;
+        if (!wp_a) {
+            marker = new mapboxgl.Marker()
+                .setLngLat([lng, lat]);
+            latCoordinate.innerText = lat;
+            longCoordinate.innerText = lng;
+            document.getElementById('wp-a-code').value = target;
+            document.getElementById('wp-a-code').readOnly = true;
+        } else {
+            marker = new mapboxgl.Marker()
+                .setLngLat([lng, lat]);
+            latCoordinate.innerText = lat;
+            longCoordinate.innerText = lng;
+            document.getElementById('wp-b-code').value = target;
+            document.getElementById('wp-b-code').readOnly = true;
+        }
+    })
 
     $(document).on('click', '.marker', function() {
         if (marker) {
@@ -145,8 +326,8 @@
             success: function(response) {
                 if (!wp_a) {
                     $('#wp-a-code').show();
+                    console.log(response.waypoint);
                     if (response.waypoint == true) {
-                        console.log('top');
                         marker = new mapboxgl.Marker()
                             .setLngLat([response.path.wp_a_lng, response.path.wp_a_lat]);
                         latCoordinate.innerText = `${response.path.wp_a_lat}`;
@@ -216,7 +397,7 @@
                         },
                         'paint': {
                             'line-color': 'blue',
-                            'line-width': 8
+                            'line-width': 4
                         }
                     }, 'waterway-label');
                     const ael = document.createElement('div');
@@ -274,6 +455,9 @@
         $('#wp-a-code').val('').hide();
         $('#wp-b-code').val('').hide();
         resetMarkerColors();
+        buildingConnection = false;
+        buildingConnectionA = null;
+        buildingConnectionB = null;
     })
 
     $(document).on('click', '#wp-a-save-btn', function() {
@@ -293,7 +477,8 @@
                 url: '{{ route("paths.add.validator") }}',
                 data: {
                     'code': $('#wp-a-code').val(),
-                    'redMarkers': redMarkers
+                    'redMarkers': redMarkers,
+                    'buildingConnection': buildingConnection
                 },
                 success: function(response) {
                     if (response.success == true) {
@@ -346,7 +531,8 @@
                 url: '{{ route("paths.add.validator") }}',
                 data: {
                     'code': $('#wp-b-code').val(),
-                    'redMarkers': redMarkers
+                    'redMarkers': redMarkers,
+                    'buildingConnection': buildingConnection
                 },
                 success: function(response) {
                     if (response.success == true) {
@@ -434,7 +620,10 @@
                 'wp_b_lng': wp_b.getLngLat().lng,
                 'wp_b_lat': wp_b.getLngLat().lat,
                 'wp_b_code': $('#wp-b-code').val(),
-                'weight': wp_distance
+                'weight': wp_distance,
+                'building_connection': buildingConnection,
+                'buildingConnectionA': buildingConnectionA,
+                'buildingConnectionB': buildingConnectionB
             },
             success: function(data) {
                 Toast.fire({
@@ -445,6 +634,9 @@
                 $('#wp-a-code').hide();
                 $('#wp-b-code').hide();
                 renderPaths();
+            },
+            error: function(error) {
+                console.log(error);
             }
         });
     });
