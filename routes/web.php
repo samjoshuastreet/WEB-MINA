@@ -47,3 +47,7 @@ Route::get('/admin/paths/edit', [PathController::class, 'edit'])->name('paths.ed
 Route::get('/admin/paths/delete', [PathController::class, 'delete'])->name('paths.delete');
 
 Route::get('/directions/get', [DirectionsController::class, 'get'])->name('directions.get');
+
+Route::get('/msuiit_map', function () {
+    return view('msuiit_map');
+});
