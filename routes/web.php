@@ -45,3 +45,4 @@ Route::get('/admin/paths/add-validator', [PathController::class, 'validator'])->
 Route::get('/msuiit_map', function () {
     return view('msuiit_map');
 });
+

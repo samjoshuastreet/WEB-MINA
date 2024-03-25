@@ -123,6 +123,60 @@
         }
     });
 
+    $('#procedures-btn').on('click', function() {
+        var procedures = $('#procedures-cont');
+        var navbar = $('#navbar');
+        var map = $('#map');
+        var sidebar = $('#sidebar');
+
+        procedures.animate({
+            left: '0%'
+        }, 500)
+        navbar.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500);
+        map.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500)
+
+        if (sidebarStatus == 1) {
+            sidebar.animate({
+                left: "-20%"
+            }, 500)
+
+            sidebarStatus = 0;
+        }
+    });
+
+    $('#events-btn').on('click', function() {
+        var events = $('#events-cont');
+        var navbar = $('#navbar');
+        var map = $('#map');
+        var sidebar = $('#sidebar');
+
+        events.animate({
+            left: '0%'
+        }, 500)
+        navbar.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500);
+        map.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500)
+
+        if (sidebarStatus == 1) {
+            sidebar.animate({
+                left: "-20%"
+            }, 500)
+
+            sidebarStatus = 0;
+        }
+    });
+
     $('#directions-close-btn').on('click', function() {
         var directions = $('#directions-cont');
         var navbar = $('#navbar');
@@ -138,6 +192,54 @@
             width: '100%',
             marginLeft: '0%'
         }, 500)
+    });
+
+    $('#procedures-close-btn').on('click', function() {
+        var procedures = $('#procedures-cont');
+        var navbar = $('#navbar');
+        var map = $('#map');
+        var sidebar = $('#sidebar');  // Add this line
+
+        procedures.animate({
+            left: '-20%'
+        }, 500)
+        navbar.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500);
+        map.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500)
+
+        sidebar.animate({  // Add this block
+            left: '0%'
+        }, 500);
+        sidebarStatus = 1;
+    });
+
+    $('#events-close-btn').on('click', function() {
+        var events = $('#events-cont');
+        var navbar = $('#navbar');
+        var map = $('#map');
+        var sidebar = $('#sidebar');  // Add this line
+
+        events.animate({
+            left: '-20%'
+        }, 500)
+        navbar.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500);
+        map.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500)
+
+        sidebar.animate({  // Add this block
+            left: '0%'
+        }, 500);
+        sidebarStatus = 1;
     });
 </script>
 <script>
