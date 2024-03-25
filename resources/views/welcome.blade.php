@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1">
-    <title>Page Title</title>
+    <title>MSU-IIT Navigation Aid</title>
     <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,8 +84,8 @@
             <div class="w-1/2 h-full flex items-center justify-center bg-upsdell-900">
                 <div class="Image">
                     <div class="image-container">
-                        <a href="assets/images/landing/campus-lawn.png">
-                            <img src="{{ asset('assets/images/landing/campus-lawn.png') }}" alt="MSU-IIT Campus">
+                        <a href="{{ asset('assets/images/landing/campus-lawn.png') }}">
+                            <img src="{{ asset('assets/images/landing/campus-lawn.png') }}" alt="Image of MSU-IIT Campus">
                         </a>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                         Discover excellence at Mindanao State University – Iligan Institute of Technology (MSU-IIT). Founded in 1968 under Republic Act 5363, MSU-IIT is a leading state university renowned for its commitment to academic excellence, holistic development, and community engagement. Led by Prof. Alizedney M. Ditucalan, JD, LLM, MSU-IIT fosters a diverse and inclusive environment where global competitiveness thrives. Explore our achievements, leadership, and impact on technological advancements in Iligan City. Join us in shaping the future.
                     </p>
                     <div class="button-container">
-                        <button onclick="location.href='https://msuiit.edu.ph/about/'" class="button" style="vertical-align:middle"><span>More Information </span></button>
+                        <button id="more-info-button" class="button"><span>More Information </span></button>
                     </div>
                 </div>
             </div>
@@ -108,14 +108,20 @@
                 <div class="contact-body">
                     <div class="contact-in">
                         <div class="contact-map">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.631487700821!2d124.24219007449189!3d8.239760300844592!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x325576785fc4d679%3A0x73c07711931c8cce!2sMindanao%20State%20University%20-%20Iligan%20Institute%20of%20Technology!5e0!3m2!1sen!2sph!4v1711065016417!5m2!1sen!2sph" width="100%" height="auto" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.631487700821!2d124.24219007449189!3d8.239760300844592!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x325576785fc4d679%3A0x73c07711931c8cce!2sMindanao%20State%20University%20-%20Iligan%20Institute%20of%20Technology!5e0!3m2!1sen!2sph!4v1711065016417!5m2!1sen!2sph" width="100%" height="auto" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                         <div class="contact-form">
                             <h1>Contact Us</h1>
                             <form>
-                                <input type="text" placeholder="Name" class="contact-form-txt" />
-                                <input type="text" placeholder="Email" class="contact-form-txt" />
-                                <textarea placeholder="Message" class="contact-form-txtarea"></textarea>
+                                <label for="name"></label>
+                                <input type="text" id="name" name="name" placeholder="Name" class="contact-form-txt" />
+                                
+                                <label for="email"></label>
+                                <input type="text" id="email" name="email" placeholder="Email" class="contact-form-txt" />
+                                
+                                <label for="message"></label>
+                                <textarea id="message" name="message" placeholder="Message" class="contact-form-txtarea"></textarea>
+                                
                                 <input type="submit" name="Submit" class="contact-form-btn" />
                             </form>
                         </div>
@@ -269,6 +275,12 @@
             }, 300);
         });
         // End of Internal Navigation Animations
+    </script>
+
+    <script>
+        document.getElementById('more-info-button').addEventListener('click', function() {
+            window.location.href = 'https://msuiit.edu.ph/about/';
+        });
     </script>
 </body>
 

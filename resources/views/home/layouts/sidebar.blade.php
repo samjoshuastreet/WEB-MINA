@@ -1,6 +1,57 @@
-<div id="sidebar" class="fixed top-0 left-[-20%] w-[20%] h-full bg-upsdell-900 flex flex-col items-center gap-2">
-    <h1 class="text-white font-poppins-regular p-2 text-center">Sidebar Here</h1>
-    <button class="popup-sample-btn bg-white rounded-md px-2 py-1 font-poppins-regular w-[60%]">Toggle Pop-up</button>
-    <button id="directions-btn" class=" bg-white rounded-md px-2 py-1 font-poppins-regular w-[60%]">Toggle Map Directions</button>
-    <a href="{{ route('landing') }}" class=" bg-white rounded-md px-2 py-1 font-poppins-regular w-[60%] text-center">Back to Home</a>
+<head>
+    <link href="{{ asset('assets/css/sidebar.css') }}" rel="stylesheet">
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+</head>
+
+<div id="sidebar" class="fixed top-0 left-[-20%] w-[20%] h-full bg-upsdell-900 flex flex-col gap-2">
+    <!-- Title -->
+    <h1 class="text-white font-poppins-regular p-2 text-center">Directions</h1>
+    
+    <div class="line"></div>
+
+    <!-- Locator -->
+    <div class="locator">
+        <!-- Starting point form -->
+        <form onsubmit="event.preventDefault();" role="search">
+            <label for="starting-point"></label>
+            <div class="input-wrapper">
+                <box-icon name='walk' class='walk-icon'></box-icon>
+                <input id="starting-point" type="search" placeholder="Choose starting point..." autofocus required />
+            </div>
+        </form>
+        
+        <!-- Divider -->
+        <div class="icon-divider">
+            <box-icon name='dots-vertical-rounded' class='divider-icon'></box-icon>
+        </div>
+        
+        <!-- Destination form -->
+        <form onsubmit="event.preventDefault();" role="search">
+            <label for="destination"></label>
+            <div class="input-wrapper">
+                <box-icon name='map' class='map-icon'></box-icon>
+                <input id="destination" type="search" placeholder="Choose destination..." required />
+            </div>
+        </form>
+
+        <!-- Current location button -->
+        <button id="current-location" class="button">
+            <box-icon name='current-location' class="current-icon"></box-icon>
+            <span class="location">Your Location</span>
+        </button>
+    </div>
+    
+    <div class="line2"></div>
+
+    <!-- Buttons -->
+    <div id="buttons-container" class="buttons-container">
+        <a href="#" id="procedures-btn" class="procedures btn2"><span class="spn2">Procedures</span></a>
+        <a href="#" id="events-btn" class="events btn2"><span class="spn2">Events</span></a>
+    </div>
+
+    <!-- Report button -->
+    <button id="report" class="report">
+        <box-icon name='bug' class="bug-icon"></box-icon>
+        <span class="report-bug">Report a bug</span>
+    </button>
 </div>
