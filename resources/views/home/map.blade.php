@@ -144,16 +144,68 @@
 
     // Dijkstra's Algorithm
     var directionsBtn = document.getElementById('popup-directions-btn');
+
+    function renderDirection(route) {
+        console.log(route);
+        for (let i = 0; i < route.length - 1; i++) {
+            var response = renderPath(route[i], route[i + 1]);
+            console.log(response);
+        }
+        $('.popup-sample-btn').click();
+    }
+
+    function renderPath(a, b) {
+        $.ajax({
+            url: '{{ route("paths.find") }}',
+            data: {
+                'a': a,
+                'b': b,
+                'single_search': true
+            },
+            success: function(response) {
+                const lineCoordinates = [
+                    [response.path.wp_a_lng, response.path.wp_a_lat],
+                    [response.path.wp_b_lng, response.path.wp_b_lat]
+                ]
+                map.addLayer({
+                    'id': response.path.id.toString(),
+                    'type': 'line',
+                    'source': {
+                        'type': 'geojson',
+                        'data': {
+                            'type': 'Feature',
+                            'properties': {},
+                            'geometry': {
+                                'type': 'LineString',
+                                'coordinates': lineCoordinates
+                            }
+                        }
+                    },
+                    'layout': {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    'paint': {
+                        'line-color': 'blue',
+                        'line-width': 4
+                    }
+                }, 'waterway-label');
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        })
+    }
     directionsBtn.addEventListener('click', function(e) {
         var data = {
             'origin': 'A',
-            'destination': 'EA'
+            'destination': 'ss'
         }
         $.ajax({
             url: '{{ route("directions.get") }}',
             data: data,
             success: (response) => {
-                console.log(response.route);
+                renderDirection(response.route);
             },
             error: (error) => {
                 console.log(error);

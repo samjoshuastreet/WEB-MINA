@@ -482,6 +482,22 @@
                 },
                 success: function(response) {
                     if (response.success == true) {
+                        var validationData = response.decodedEntries;
+                        var decodedValidationData = [];
+                        for (let key in validationData) {
+                            var temp = decodedValidationData.push(JSON.parse(validationData[key]));
+                        }
+                        for (let key in decodedValidationData) {
+                            console.log(decodedValidationData[key]);
+                        }
+                        // $.ajax({
+                        //     url: '{{ route("paths.add.validator") }}',
+                        //     data: {
+
+                        //     }
+                        // })
+
+
                         $('#wp-a-save-btn').hide();
                         $('#wp-b-save-btn').show();
                         $('#instructions').text('Step 2: Mark the path\'s endpoint.');
@@ -508,7 +524,7 @@
                     }
                 },
                 error: function(response) {
-                    console.log(resposne);
+                    console.log(response);
                 }
             })
         }

@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Path;
 use App\Models\Building;
-use App\Models\BuildingEntrypoint;
 use Taniko\Dijkstra\Graph;
 use Illuminate\Http\Request;
+use App\Models\BuildingEntrypoint;
+use Illuminate\Support\Facades\DB;
+
+use function Symfony\Component\String\b;
 use Illuminate\Support\Facades\Validator;
 
 class PathController extends Controller
@@ -56,6 +59,8 @@ class PathController extends Controller
     }
     public function find(Request $request)
     {
+        if ($request->input('single_search')) {
+        }
         $target = $request->input('target');
         if ($request->input('editor')) {
             $path = Path::find($target);
@@ -82,15 +87,30 @@ class PathController extends Controller
             return response()->json(['success' => true]);
         } else {
             $code = $request->input('code');
-            $existing = Path::where('wp_a_code', $code)
+            $pathExists = Path::where('wp_a_code', $code)
                 ->orWhere('wp_b_code', $code)
                 ->exists();
 
-
-            if ($existing) {
+            if ($pathExists) {
                 return response()->json(['success' => false, 'code' => $code]);
             } else {
-                return response()->json(['success' => true]);
+                $entries = BuildingEntrypoint::all();
+                $decodedEntries = [];
+
+                foreach ($entries as $entry) {
+                    // Decode the JSON string from the entrypoints column
+                    $decodedEntry = json_decode($entry->entrypoints, true);
+
+                    // Check if decoding was successful
+                    if ($decodedEntry !== null) {
+                        // Add decoded entrypoints to the array
+                        $decodedEntries[] = $decodedEntry;
+                    } else {
+                        // Handle the case where JSON decoding failed for a record
+                        return response()->json(['error' => 'Failed to decode JSON for record with ID ' . $entry->id]);
+                    }
+                }
+                return response()->json(['success' => true, 'decodedEntries' => $decodedEntries]);
             }
         }
     }

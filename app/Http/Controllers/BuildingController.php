@@ -65,10 +65,13 @@ class BuildingController extends Controller
                     // Add the value to the unique values array
                     $uniqueValues[] = $value;
 
-                    $existing = Path::where('wp_a_code', $value)
+                    $pathExists = Path::where('wp_a_code', $value)
                         ->orWhere('wp_b_code', $value)
                         ->exists();
-                    if ($existing) {
+
+                    $entryExists = BuildingEntrypoint::where('entrypoints', 'LIKE', '%"code":"' . $value . '"%')->exists();
+
+                    if ($pathExists || $entryExists) {
                         $entryInputs[$key . '_error'] = "$value is already taken.";
                         $hasEntryErrors = true;
                     } else {
