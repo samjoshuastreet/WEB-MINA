@@ -326,7 +326,6 @@
             success: function(response) {
                 if (!wp_a) {
                     $('#wp-a-code').show();
-                    console.log(response.waypoint);
                     if (response.waypoint == true) {
                         marker = new mapboxgl.Marker()
                             .setLngLat([response.path.wp_a_lng, response.path.wp_a_lat]);
@@ -482,40 +481,65 @@
                 },
                 success: function(response) {
                     if (response.success == true) {
+                        var connection = false;
+                        if (response.connection) {
+                            connection = true;
+                        }
                         var validationData = response.decodedEntries;
                         var decodedValidationData = [];
+                        var codes = [];
                         for (let key in validationData) {
                             var temp = decodedValidationData.push(JSON.parse(validationData[key]));
                         }
                         for (let key in decodedValidationData) {
-                            console.log(decodedValidationData[key]);
+                            if (decodedValidationData.hasOwnProperty(key)) {
+                                let entry = decodedValidationData[key];
+                                for (let prop in entry) {
+                                    if (entry.hasOwnProperty(prop)) {
+                                        codes.push(entry[prop].code);
+                                    }
+                                }
+                            }
                         }
-                        // $.ajax({
-                        //     url: '{{ route("paths.add.validator") }}',
-                        //     data: {
-
-                        //     }
-                        // })
-
-
-                        $('#wp-a-save-btn').hide();
-                        $('#wp-b-save-btn').show();
-                        $('#instructions').text('Step 2: Mark the path\'s endpoint.');
-                        $('#coordinates-lat').text('');
-                        $('#coordinates-long').text('');
-                        const lngLat = marker.getLngLat();
-                        const el = document.createElement('div');
-                        el.className = 'marker';
-                        const codeValue = document.getElementById('wp-a-code').value;
-                        el.innerHTML = `<span class="marker-label">${codeValue}</span>`;
-                        wp_a = new mapboxgl.Marker(el)
-                            .setLngLat(lngLat)
-                            .addTo(map);
-                        marker.remove();
-                        marker = null;
-                        $('#wp-a-code').hide();
-                        $('#wp-b-code').show();
-                        document.getElementById('wp-b-code').readOnly = false;
+                        $.ajax({
+                            url: '{{ route("paths.add.validator") }}',
+                            data: {
+                                'code': $('#wp-a-code').val(),
+                                'codes': codes,
+                                'entrypoint_validation': true,
+                                'connection': connection
+                            },
+                            success: function(response) {
+                                if (response.success == false) {
+                                    Toast.fire({
+                                        icon: 'error',
+                                        title: `The code name ${response.code} already exists!`
+                                    })
+                                } else {
+                                    $('#wp-a-save-btn').hide();
+                                    $('#wp-b-save-btn').show();
+                                    $('#instructions').text('Step 2: Mark the path\'s endpoint.');
+                                    $('#coordinates-lat').text('');
+                                    $('#coordinates-long').text('');
+                                    const lngLat = marker.getLngLat();
+                                    const el = document.createElement('div');
+                                    el.className = 'marker';
+                                    const codeValue = document.getElementById('wp-a-code').value;
+                                    el.innerHTML = `<span class="marker-label">${codeValue}</span>`;
+                                    wp_a = new mapboxgl.Marker(el)
+                                        .setLngLat(lngLat)
+                                        .addTo(map);
+                                    marker.remove();
+                                    marker = null;
+                                    $('#wp-a-code').hide();
+                                    $('#wp-b-code').show();
+                                    document.getElementById('wp-b-code').readOnly = false;
+                                }
+                            },
+                            error: function(error) {
+                                console.log(error);
+                            }
+                        })
                     } else if (response.success == false) {
                         Toast.fire({
                             icon: 'error',
@@ -552,60 +576,101 @@
                 },
                 success: function(response) {
                     if (response.success == true) {
+                        var connection = false;
+                        if (response.connection) {
+                            connection = true;
+                        }
                         if ($('#wp-b-code').val() !== $('#wp-a-code').val()) {
-                            const aLngLat = wp_a.getLngLat();
-                            const bLngLat = marker.getLngLat();
-                            const lineCoordinates = [
-                                [aLngLat.lng, aLngLat.lat],
-                                [bLngLat.lng, bLngLat.lat]
-                            ]
-                            const el = document.createElement('div');
-                            el.className = 'marker';
-                            const codeValue = document.getElementById('wp-b-code').value; // Get value from input field
-                            el.innerHTML = `<span class="marker-label">${codeValue}</span>`;
-                            wp_b = new mapboxgl.Marker(el)
-                                .setLngLat(bLngLat)
-                                .addTo(map);
-                            marker.remove();
-
-                            map.addLayer({
-                                'id': 'temporary-path',
-                                'type': 'line',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'properties': {},
-                                        'geometry': {
-                                            'type': 'LineString',
-                                            'coordinates': lineCoordinates
+                            var validationData = response.decodedEntries;
+                            var decodedValidationData = [];
+                            var codes = [];
+                            for (let key in validationData) {
+                                var temp = decodedValidationData.push(JSON.parse(validationData[key]));
+                            }
+                            for (let key in decodedValidationData) {
+                                if (decodedValidationData.hasOwnProperty(key)) {
+                                    let entry = decodedValidationData[key];
+                                    for (let prop in entry) {
+                                        if (entry.hasOwnProperty(prop)) {
+                                            codes.push(entry[prop].code);
                                         }
                                     }
-                                },
-                                'layout': {
-                                    'line-join': 'round',
-                                    'line-cap': 'round'
-                                },
-                                'paint': {
-                                    'line-color': 'blue',
-                                    'line-width': 8
                                 }
-                            }, 'waterway-label');
+                            }
+                            $.ajax({
+                                url: '{{ route("paths.add.validator") }}',
+                                data: {
+                                    'code': $('#wp-b-code').val(),
+                                    'codes': codes,
+                                    'entrypoint_validation': true,
+                                    'connection': connection
+                                },
+                                success: function(response) {
+                                    if (response.success == false) {
+                                        Toast.fire({
+                                            icon: 'error',
+                                            title: `The code name ${response.code} already exists!`
+                                        })
+                                    } else {
+                                        const aLngLat = wp_a.getLngLat();
+                                        const bLngLat = marker.getLngLat();
+                                        const lineCoordinates = [
+                                            [aLngLat.lng, aLngLat.lat],
+                                            [bLngLat.lng, bLngLat.lat]
+                                        ]
+                                        const el = document.createElement('div');
+                                        el.className = 'marker';
+                                        const codeValue = document.getElementById('wp-b-code').value; // Get value from input field
+                                        el.innerHTML = `<span class="marker-label">${codeValue}</span>`;
+                                        wp_b = new mapboxgl.Marker(el)
+                                            .setLngLat(bLngLat)
+                                            .addTo(map);
+                                        marker.remove();
 
-                            $('#instructions').text('Step 3: Recheck if you are satistied with the path.');
-                            $('#wp-b-save-btn').hide();
-                            $('#wp-b-code').hide();
-                            $('#add-path-btn').show();
+                                        map.addLayer({
+                                            'id': 'temporary-path',
+                                            'type': 'line',
+                                            'source': {
+                                                'type': 'geojson',
+                                                'data': {
+                                                    'type': 'Feature',
+                                                    'properties': {},
+                                                    'geometry': {
+                                                        'type': 'LineString',
+                                                        'coordinates': lineCoordinates
+                                                    }
+                                                }
+                                            },
+                                            'layout': {
+                                                'line-join': 'round',
+                                                'line-cap': 'round'
+                                            },
+                                            'paint': {
+                                                'line-color': 'blue',
+                                                'line-width': 8
+                                            }
+                                        }, 'waterway-label');
 
-                            const {
-                                lineDistance
-                            } = turf;
+                                        $('#instructions').text('Step 3: Recheck if you are satistied with the path.');
+                                        $('#wp-b-save-btn').hide();
+                                        $('#wp-b-code').hide();
+                                        $('#add-path-btn').show();
 
-                            const line = turf.lineString(lineCoordinates);
-                            const distance = lineDistance(line, {
-                                units: 'meters'
+                                        const {
+                                            lineDistance
+                                        } = turf;
+
+                                        const line = turf.lineString(lineCoordinates);
+                                        const distance = lineDistance(line, {
+                                            units: 'meters'
+                                        });
+                                        wp_distance = distance;
+                                    }
+                                },
+                                error: function(error) {
+                                    console.log(error);
+                                }
                             });
-                            wp_distance = distance;
                         } else {
                             Toast.fire({
                                 icon: 'error',

@@ -10,6 +10,43 @@
         border-radius: 100%;
         cursor: pointer;
     }
+
+    .ui-autocomplete::-webkit-scrollbar {
+        width: 0;
+    }
+
+    .ui-autocomplete {
+        max-height: 200px;
+        max-width: 15%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 1000;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .ui-state-focus {
+        background-color: #f0f0f0;
+    }
+
+    .ui-menu-item {
+        padding: 12px 8px;
+        cursor: pointer;
+        list-style-type: none;
+        width: 100%;
+        font-family: poppins-regular;
+        font-size: 0.80rem;
+    }
+
+    .ui-menu-item:hover {
+        background-color: #EDEDED;
+    }
+
+    .ui-autocomplete-loading {
+        background: white url('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js') right center no-repeat;
+    }
 </style>
 @endsection
 @section('content')
@@ -39,6 +76,7 @@
 </div>
 @endsection
 @section('more_scripts')
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
 <script>
     // Map Initialization
     mapboxgl.accessToken = 'pk.eyJ1Ijoic2Ftc3RyZWV0IiwiYSI6ImNsczRxb29mdTE1ZmkybHBjcHBhcG9xN2kifQ.SpJ2sxffT8PRfQjFtYgg6Q';
@@ -131,7 +169,20 @@
 
     // Building Information Functions
     $(document).on('click', '.display-marker', function() {
+        var samplePopup = $('#popup-sample');
+        if (samplePopupStatus == 0) {
+            samplePopup.animate({
+                right: '7.5%'
+            }, 500)
+            samplePopupStatus = 1;
+        } else {
+            samplePopup.animate({
+                right: '-100%'
+            }, 500)
+            samplePopupStatus = 0;
+        }
         var target = $(this).attr('display-marker');
+        $('.popup-sample-btn').click();
         $('#popup-image').attr('src', '');
         $('#popup-building-description').text('');
         $('#popup-building-name').text('');
@@ -149,7 +200,7 @@
                 $('#popup-building-description').text(response.details.building_description);
             },
             error: function(error) {
-
+                console.log(error);
             }
         })
 
@@ -158,14 +209,28 @@
 
     // Dijkstra's Algorithm
     var directionsBtn = document.getElementById('popup-directions-btn');
+    var origin = null;
+    var destination = null;
 
     function renderDirection(route) {
-        console.log(route);
+        var allDisplayBoundaries = map.getStyle().layers.filter(function(layer) {
+            return layer.id.startsWith('route-path-');
+        });
+        allDisplayBoundaries.forEach(function(layer) {
+            map.removeLayer(layer.id);
+        });
+        allDisplayBoundaries.forEach(function(layer) {
+            if (map.getSource(layer.source)) {
+                map.removeSource(layer.source);
+            }
+        });
         for (let i = 0; i < route.length - 1; i++) {
             var response = renderPath(route[i], route[i + 1]);
-            console.log(response);
         }
-        $('.popup-sample-btn').click();
+        var samplePopup = $('#popup-sample');
+        samplePopup.animate({
+            right: '-100%'
+        }, 500)
     }
 
     function renderPath(a, b) {
@@ -182,7 +247,7 @@
                     [response.path.wp_b_lng, response.path.wp_b_lat]
                 ]
                 map.addLayer({
-                    'id': response.path.id.toString(),
+                    'id': `route-path-${response.path.id.toString()}`,
                     'type': 'line',
                     'source': {
                         'type': 'geojson',
@@ -213,7 +278,7 @@
     directionsBtn.addEventListener('click', function(e) {
         var data = {
             'origin': 'A',
-            'destination': 'ss'
+            'destination': 'ED'
         }
         $.ajax({
             url: '{{ route("directions.get") }}',
@@ -226,6 +291,97 @@
             }
         })
     });
+
+    function multipleCalculations(origin_points, destination_points) {
+        var shortestRoute = null;
+        var totalRequests = origin_points.length * destination_points.length;
+        var completedRequests = 0;
+
+        origin_points.forEach(function(origin) {
+            destination_points.forEach(function(destination) {
+                $.ajax({
+                    url: '{{ route("directions.get") }}',
+                    data: {
+                        'origin': origin,
+                        'destination': destination,
+                        'single_search': true,
+                        'weight': true
+                    },
+                    success: function(response) {
+                        if (!shortestRoute || response.weight < shortestRoute[1]) {
+                            shortestRoute = [response.route, response.weight];
+                        }
+                        completedRequests++;
+
+                        // Check if all requests are completed
+                        if (completedRequests === totalRequests) {
+                            renderDirection(shortestRoute[0]);
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error);
+                        completedRequests++;
+
+                        // Check if all requests are completed
+                        if (completedRequests === totalRequests) {
+                            renderDirection(shortestRoute ? shortestRoute[0] : []);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
     // End of Dijkstra's Algorithm
+
+    // Searchbar Functions
+    var building_names = [];
+
+    $.ajax({
+        url: '{{ route("buildings.get") }}',
+        data: {
+            'names': true
+        },
+        success: (response) => {
+            building_names = response.names;
+            $('#starting-point').autocomplete({
+                source: building_names
+            });
+            $('#destination').autocomplete({
+                source: building_names
+            });
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+
+    $('#sidebar-searchbar').submit(function(e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+        data += '&sidebar=true';
+        console.log(data);
+        $.ajax({
+            url: '{{ route("directions.get.polarpoints") }}',
+            data: data,
+            success: (response) => {
+                var origin_decoded = JSON.parse(JSON.parse(response.target_origin.entrypoints));
+                var destination_decoded = JSON.parse(JSON.parse(response.target_destination.entrypoints));
+                var origin_points = [];
+                var destination_points = [];
+                for (let key in origin_decoded) {
+                    origin_points.push(origin_decoded[key].code);
+                }
+                for (let key in destination_decoded) {
+                    destination_points.push(destination_decoded[key].code);
+                }
+                multipleCalculations(origin_points, destination_points);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        })
+    });
+    // End of Searchbar Functions
 </script>
 @endsection

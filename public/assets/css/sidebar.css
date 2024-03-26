@@ -53,6 +53,25 @@
     margin-top: 3%;
 }
 
+#get-directions-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 9px 12px;
+    gap: 8px;
+    height: 40px;
+    width: 201px;
+    border: none;
+    background: rgb(34, 197, 94);
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 3%;
+}
+
+#get-directions-btn:hover {
+    background: rgb(11, 150, 62);
+}
+
 #current-location .location {
     line-height: 22px;
     font-size: 17px;

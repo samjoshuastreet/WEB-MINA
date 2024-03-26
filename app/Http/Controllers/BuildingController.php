@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Path;
 use App\Models\Building;
-use App\Models\BuildingBoundary;
-use App\Models\BuildingDetails;
-use App\Models\BuildingEntrypoint;
-use App\Models\BuildingMarker;
 use Illuminate\Http\Request;
+use App\Models\BuildingMarker;
+use App\Models\BuildingDetails;
+use App\Models\BuildingBoundary;
+use App\Models\BuildingEntrypoint;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BuildingController extends Controller
@@ -29,11 +30,30 @@ class BuildingController extends Controller
     }
     public function delete(Request $request)
     {
-        $id = $request->input('id');
-        $target = Building::find($id);
+        $target = Building::find($request->input('id'));
+        $target_name = $target->building_name;
+        // Delete Building Details
+        if (isset($target->buildingDetails)) {
+            $target_details = $target->buildingDetails;
+            $target_details->delete();
+        }
+        // Delete Building Entrypoints
+        $target_entrypoints = $target->buildingEntrypoint;
+        $target_entrypoints->delete();
+        // Delete Building Boundary
+        $target_boundaries = $target->buildingBoundary;
+        $target_boundaries->delete();
+        // Delete Building Marker
+        $target_marker = $target->buildingMarker;
+        $target_marker_image = $target_marker->marker_image;
+        Storage::delete('public/' . $target_marker_image);
+        $target_marker->delete();
+        // Delete Building
         $target->delete();
-        $buildings = Building::all();
-        return view('admin.buildings.ajax.building_list', compact('buildings'))->render();
+        return response()->json([
+            'success' => true,
+            'bldg_name' => $target_name,
+        ]);
     }
     public function view($id)
     {
@@ -120,6 +140,14 @@ class BuildingController extends Controller
     }
     public function get(Request $request)
     {
+        if ($request->input('names')) {
+            $buildings = Building::all();
+            $building_names = [];
+            foreach ($buildings as $key => $building) {
+                $building_names[] = $building->building_name;
+            }
+            return response()->json(['names' => $building_names]);
+        }
         $results = [];
         if ($request->input('building')) {
             $buildings = Building::all();
@@ -165,5 +193,19 @@ class BuildingController extends Controller
         $building = $marker->building;
         $details = $building->buildingDetails;
         return response()->json(['building' => $building, 'marker' => $marker, 'details' => $details]);
+    }
+    public function delete_validator(Request $request)
+    {
+        $target = Building::find($request->input('id'));
+        if ($target->status == 'active') {
+            return response()->json(['success' => false, 'bldg_name' => $target->building_name, 'count' => $target->connection_count]);
+        } else {
+            return response()->json(['success' => true, 'bldg_name' => $target->building_name]);
+        }
+    }
+    public function reload()
+    {
+        $buildings = Building::all();
+        return view('admin.buildings.ajax.building_list', compact('buildings'))->render();
     }
 }

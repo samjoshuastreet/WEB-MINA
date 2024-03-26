@@ -198,7 +198,7 @@
         var procedures = $('#procedures-cont');
         var navbar = $('#navbar');
         var map = $('#map');
-        var sidebar = $('#sidebar');  // Add this line
+        var sidebar = $('#sidebar'); // Add this line
 
         procedures.animate({
             left: '-20%'
@@ -212,7 +212,7 @@
             marginLeft: '20%'
         }, 500)
 
-        sidebar.animate({  // Add this block
+        sidebar.animate({ // Add this block
             left: '0%'
         }, 500);
         sidebarStatus = 1;
@@ -222,7 +222,7 @@
         var events = $('#events-cont');
         var navbar = $('#navbar');
         var map = $('#map');
-        var sidebar = $('#sidebar');  // Add this line
+        var sidebar = $('#sidebar'); // Add this line
 
         events.animate({
             left: '-20%'
@@ -236,7 +236,7 @@
             marginLeft: '20%'
         }, 500)
 
-        sidebar.animate({  // Add this block
+        sidebar.animate({ // Add this block
             left: '0%'
         }, 500);
         sidebarStatus = 1;

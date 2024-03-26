@@ -5,7 +5,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" id="sidebar-btn" class="bi bi-list hover:cursor-pointer" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                 </svg>
-                <a href="https://flowbite.com/" class="bg-white rounded-xl p-2 flex items-center lg:ml-6 lg:h-[75%]">
+                <a href="{{ route('home') }}" class="bg-white rounded-xl p-2 flex items-center lg:ml-6 lg:h-[75%]">
                     <img src="{{ asset('assets/logos/logo-full.png') }}" class="lg:h-8 lg:mr-1" alt="MSU-IIT Map Logo">
                 </a>
             </div>

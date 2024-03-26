@@ -60,6 +60,17 @@ class PathController extends Controller
     public function find(Request $request)
     {
         if ($request->input('single_search')) {
+            $code_a = $request->input('a');
+            $code_b = $request->input('b');
+            $paths = Path::all();
+            foreach ($paths as $path) {
+                if ($path->wp_a_code == $code_a || $path->wp_b_code == $code_a) {
+                    if ($path->wp_a_code == $code_b || $path->wp_b_code == $code_b) {
+                        $target = $path;
+                    }
+                }
+            }
+            return response()->json(['path' => $target]);
         }
         $target = $request->input('target');
         if ($request->input('editor')) {
@@ -82,8 +93,35 @@ class PathController extends Controller
     public function validator(Request $request)
     {
         if ($request->input('redMarkers') == "true") {
-            return response()->json(['success' => true]);
+            $entries = BuildingEntrypoint::all();
+            $decodedEntries = [];
+
+            foreach ($entries as $entry) {
+                // Decode the JSON string from the entrypoints column
+                $decodedEntry = json_decode($entry->entrypoints, true);
+
+                // Check if decoding was successful
+                if ($decodedEntry !== null) {
+                    // Add decoded entrypoints to the array
+                    $decodedEntries[] = $decodedEntry;
+                } else {
+                    // Handle the case where JSON decoding failed for a record
+                    return response()->json(['error' => 'Failed to decode JSON for record with ID ' . $entry->id]);
+                }
+            }
+            return response()->json(['success' => true, 'decodedEntries' => $decodedEntries]);
         } else if ($request->input('buildingConnection') == "true") {
+            return response()->json(['success' => true, 'connection' => true]);
+        } else if ($request->input('entrypoint_validation')) {
+            if ($request->input('connection') !== "true") {
+                $target = $request->input('code');
+                $codes = $request->input('codes');
+                foreach ($codes as $code) {
+                    if ($code == $target) {
+                        return response()->json(['success' => false, 'code' => $code]);
+                    }
+                }
+            }
             return response()->json(['success' => true]);
         } else {
             $code = $request->input('code');

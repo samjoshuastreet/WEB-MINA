@@ -6,41 +6,45 @@
 <div id="sidebar" class="fixed top-0 left-[-20%] w-[20%] h-full bg-upsdell-900 flex flex-col gap-2">
     <!-- Title -->
     <h1 class="text-white font-poppins-regular p-2 text-center">Directions</h1>
-    
-    <div class="line"></div>
 
+    <div class="line"></div>
     <!-- Locator -->
     <div class="locator">
         <!-- Starting point form -->
-        <form onsubmit="event.preventDefault();" role="search">
+        <form id="sidebar-searchbar" class="flex flex-col items-center">
             <label for="starting-point"></label>
             <div class="input-wrapper">
                 <box-icon name='walk' class='walk-icon'></box-icon>
-                <input id="starting-point" type="search" placeholder="Choose starting point..." autofocus required />
+                <input id="starting-point" name="origin" type="search" placeholder="Choose starting point..." autocomplete="off" autofocus required />
             </div>
-        </form>
-        
-        <!-- Divider -->
-        <div class="icon-divider">
-            <box-icon name='dots-vertical-rounded' class='divider-icon'></box-icon>
-        </div>
-        
-        <!-- Destination form -->
-        <form onsubmit="event.preventDefault();" role="search">
+
+
+            <!-- Divider -->
+            <div class="icon-divider">
+                <box-icon name='dots-vertical-rounded' class='divider-icon'></box-icon>
+            </div>
+
+            <!-- Destination form -->
             <label for="destination"></label>
             <div class="input-wrapper">
                 <box-icon name='map' class='map-icon'></box-icon>
-                <input id="destination" type="search" placeholder="Choose destination..." required />
+                <input id="destination" name="destination" type="search" placeholder="Choose destination..." autocomplete="off" required />
             </div>
-        </form>
 
-        <!-- Current location button -->
-        <button id="current-location" class="button">
-            <box-icon name='current-location' class="current-icon"></box-icon>
-            <span class="location">Your Location</span>
-        </button>
+            <!-- Current location button -->
+            <button id="current-location" class="button">
+                <box-icon name='current-location' class="current-icon"></box-icon>
+                <span class="location">Your Location</span>
+            </button>
+
+            <!-- Current location button -->
+            <button type="submit" id="get-directions-btn" class="button">
+                <box-icon type='solid' name='direction-right'></box-icon>
+                <span>Directions</span>
+            </button>
+        </form>
     </div>
-    
+
     <div class="line2"></div>
 
     <!-- Buttons -->
