@@ -77,6 +77,7 @@
 @endsection
 @section('more_scripts')
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
 <script>
     // Map Initialization
     mapboxgl.accessToken = 'pk.eyJ1Ijoic2Ftc3RyZWV0IiwiYSI6ImNsczRxb29mdTE1ZmkybHBjcHBhcG9xN2kifQ.SpJ2sxffT8PRfQjFtYgg6Q';
@@ -91,6 +92,23 @@
             [124.23616973647256, 8.233619024568284], // Southwest bound
             [124.25301604017682, 8.248537110726303] // Northeast bound
         ]
+    });
+    map.addControl(new mapboxgl.NavigationControl());
+
+    // Initialize the GeolocateControl.
+    const geolocate = new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    });
+    // Add the control to the map.
+    map.addControl(geolocate);
+    // Set an event listener that fires
+    // when a geolocate event occurs.
+    geolocate.on('geolocate', (response) => {
+        console.log(response.coords.longitude);
+        console.log(response.coords.latitude);
     });
     // End of Map Initialization
 
@@ -211,8 +229,10 @@
     var directionsBtn = document.getElementById('popup-directions-btn');
     var origin = null;
     var destination = null;
+    var gps_json = {};
+    var npl_json = {};
 
-    function renderDirection(route) {
+    function renderDirection(route, gps_origin) {
         var allDisplayBoundaries = map.getStyle().layers.filter(function(layer) {
             return layer.id.startsWith('route-path-');
         });
@@ -225,55 +245,137 @@
             }
         });
         for (let i = 0; i < route.length - 1; i++) {
-            var response = renderPath(route[i], route[i + 1]);
+            if (i == 0 && route[i] == "GPS") {
+                renderPath([gps_json.coordinates], [npl_json.coordinates], 'full');
+            } else if (i == 1 && route[i] == "NPL") {
+                renderPath([npl_json.coordinates], route[i + 1], 'half');
+            } else {
+                renderPath(route[i], route[i + 1]);
+            }
         }
+        gpsSuccess({
+            coords: {
+                longitude: 124.24450695486951,
+                latitude: 8.239895989653476
+            }
+        })
         var samplePopup = $('#popup-sample');
         samplePopup.animate({
             right: '-100%'
         }, 500)
     }
 
-    function renderPath(a, b) {
-        $.ajax({
-            url: '{{ route("paths.find") }}',
-            data: {
-                'a': a,
-                'b': b,
-                'single_search': true
-            },
-            success: function(response) {
-                const lineCoordinates = [
-                    [response.path.wp_a_lng, response.path.wp_a_lat],
-                    [response.path.wp_b_lng, response.path.wp_b_lat]
-                ]
-                map.addLayer({
-                    'id': `route-path-${response.path.id.toString()}`,
-                    'type': 'line',
-                    'source': {
-                        'type': 'geojson',
-                        'data': {
-                            'type': 'Feature',
-                            'properties': {},
-                            'geometry': {
-                                'type': 'LineString',
-                                'coordinates': lineCoordinates
+    function renderPath(a, b, raw = false) {
+        if (raw === false) {
+            $.ajax({
+                url: '{{ route("paths.find") }}',
+                data: {
+                    'a': a,
+                    'b': b,
+                    'single_search': true
+                },
+                success: function(response) {
+                    if (!response.skip) {
+                        const lineCoordinates = [
+                            [response.path.wp_a_lng, response.path.wp_a_lat],
+                            [response.path.wp_b_lng, response.path.wp_b_lat]
+                        ];
+                        map.addLayer({
+                            'id': `route-path-${response.path.id.toString()}`,
+                            'type': 'line',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'properties': {},
+                                    'geometry': {
+                                        'type': 'LineString',
+                                        'coordinates': lineCoordinates
+                                    }
+                                }
+                            },
+                            'layout': {
+                                'line-join': 'round',
+                                'line-cap': 'round'
+                            },
+                            'paint': {
+                                'line-color': 'blue',
+                                'line-width': 4
                             }
-                        }
-                    },
-                    'layout': {
-                        'line-join': 'round',
-                        'line-cap': 'round'
-                    },
-                    'paint': {
-                        'line-color': 'blue',
-                        'line-width': 4
+                        }, 'waterway-label');
+
                     }
-                }, 'waterway-label');
-            },
-            error: function(error) {
-                console.log(error);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            })
+        } else if (raw === true) {
+            var tempLine = [
+                a,
+                b
+            ];
+            if (map.getSource('temporary-line')) {
+                map.removeLayer('temporary-line');
+                map.removeSource('temporary-line');
             }
-        })
+            map.addLayer({
+                'id': `temporary-line`,
+                'type': 'line',
+                'source': {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'Feature',
+                        'properties': {},
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': tempLine
+                        }
+                    }
+                },
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': 'blue',
+                    'line-width': 4
+                }
+            }, 'waterway-label');
+        } else if (raw == 'full') {
+            const lineCoordinates = [
+                a[0],
+                b[0]
+            ];
+            map.addLayer({
+                'id': `route-path-gps`,
+                'type': 'line',
+                'source': {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'Feature',
+                        'properties': {},
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': lineCoordinates
+                        }
+                    }
+                },
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': 'blue',
+                    'line-width': 4
+                }
+            }, 'waterway-label');
+            var thisMarker = new mapboxgl.Marker()
+                .setLngLat(a[0], a[1])
+                .addTo(map);
+        } else if (raw == 'half') {
+            console.log('half');
+        }
     }
     directionsBtn.addEventListener('click', function(e) {
         var data = {
@@ -292,21 +394,36 @@
         })
     });
 
-    function multipleCalculations(origin_points, destination_points) {
+    function multipleCalculations(origin_points, destination_points, additionalData = null) {
         var shortestRoute = null;
         var totalRequests = origin_points.length * destination_points.length;
         var completedRequests = 0;
 
         origin_points.forEach(function(origin) {
             destination_points.forEach(function(destination) {
-                $.ajax({
-                    url: '{{ route("directions.get") }}',
-                    data: {
+                if (_gps === false) {
+                    var data = {
                         'origin': origin,
                         'destination': destination,
                         'single_search': true,
                         'weight': true
-                    },
+                    }
+                } else {
+                    var data = {
+                        'origin': origin,
+                        'destination': destination,
+                        'single_search': true,
+                        'weight': true,
+                        'gps': true,
+                        'nearest_path_id': additionalData.nearestPathId,
+                        'GPSNPL': additionalData.GPSNPL,
+                        'NPLA': additionalData.NPLA,
+                        'NPLB': additionalData.NPLB
+                    }
+                }
+                $.ajax({
+                    url: '{{ route("directions.get") }}',
+                    data: data,
                     success: function(response) {
                         if (!shortestRoute || response.weight < shortestRoute[1]) {
                             shortestRoute = [response.route, response.weight];
@@ -331,7 +448,6 @@
             });
         });
     }
-
     // End of Dijkstra's Algorithm
 
     // Searchbar Functions
@@ -361,27 +477,289 @@
         var data = $(this).serialize();
         data += '&sidebar=true';
         console.log(data);
+        if (_gps === false) {
+            $.ajax({
+                url: '{{ route("directions.get.polarpoints") }}',
+                data: data,
+                success: (response) => {
+                    var origin_decoded = JSON.parse(JSON.parse(response.target_origin.entrypoints));
+                    var destination_decoded = JSON.parse(JSON.parse(response.target_destination.entrypoints));
+                    var origin_points = [];
+                    var destination_points = [];
+                    for (let key in origin_decoded) {
+                        origin_points.push(origin_decoded[key].code);
+                    }
+                    for (let key in destination_decoded) {
+                        destination_points.push(destination_decoded[key].code);
+                    }
+                    multipleCalculations(origin_points, destination_points);
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            })
+        } else {
+            var currentLocationSample = [124.24333777347061, 8.240546148594902];
+            nearestLine(currentLocationSample);
+        }
+    });
+    // End of Searchbar Functions
+
+    // Realtime Origin Point
+    function gpsSuccess(position) {
+        var coords = position.coords;
+        map.easeTo({
+            center: [coords.longitude, coords.latitude],
+            zoom: 22,
+            duration: 2000,
+            pitch: 75,
+            bearing: 0
+        });
+    }
+    var originPointInput = document.getElementById('starting-point');
+    var currentLocBtn = document.getElementById('current-location');
+    var _gps = false;
+    Object.defineProperty(window, 'gps', {
+        get: function() {
+            return _gps;
+        },
+        set: function(value) {
+            if (value === true) {
+                disableOriginInput();
+                _gps = true;
+            } else if (value === false) {
+                enableOriginInput();
+                _gps = false;
+            }
+        }
+    });
+
+    currentLocBtn.addEventListener('click', function() {
+        if (_gps === true) {
+            gps = false
+        } else if (_gps === false) {
+            gps = true
+        }
+    });
+
+    function disableOriginInput() {
+        originPointInput.setAttribute('readonly', '');
+        originPointInput.value = 'Your Location';
+        originPointInput.style.backgroundColor = '#ffea82';
+    }
+
+    function enableOriginInput() {
+        originPointInput.removeAttribute('readonly');
+        originPointInput.value = '';
+        originPointInput.style.backgroundColor = 'white';
+        if (map.getSource('temporary-line')) {
+            map.removeLayer('temporary-line');
+            map.removeSource('temporary-line');
+        }
+        var allDisplayBoundaries = map.getStyle().layers.filter(function(layer) {
+            return layer.id.startsWith('route-path-');
+        });
+        allDisplayBoundaries.forEach(function(layer) {
+            map.removeLayer(layer.id);
+        });
+        allDisplayBoundaries.forEach(function(layer) {
+            if (map.getSource(layer.source)) {
+                map.removeSource(layer.source);
+            }
+        });
+    }
+
+    function locateUser() {
+        var thisLine = [
+            [124.24372302907886, 8.242335593748535],
+            [124.24354731894357, 8.242714235990405]
+        ]
+        map.addLayer({
+            'id': `route-path`,
+            'type': 'line',
+            'source': {
+                'type': 'geojson',
+                'data': {
+                    'type': 'Feature',
+                    'properties': {},
+                    'geometry': {
+                        'type': 'LineString',
+                        'coordinates': thisLine
+                    }
+                }
+            },
+            'layout': {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': 'blue',
+                'line-width': 4
+            }
+        }, 'waterway-label');
+    }
+    map.on('click', (e) => {
+        console.log(e.lngLat);
+    });
+
+    function nearestLine(currentLoc) {
+        var point = turf.point(currentLoc);
         $.ajax({
-            url: '{{ route("directions.get.polarpoints") }}',
-            data: data,
+            url: '{{ route("paths.get") }}',
+            data: '',
             success: (response) => {
-                var origin_decoded = JSON.parse(JSON.parse(response.target_origin.entrypoints));
-                var destination_decoded = JSON.parse(JSON.parse(response.target_destination.entrypoints));
-                var origin_points = [];
-                var destination_points = [];
-                for (let key in origin_decoded) {
-                    origin_points.push(origin_decoded[key].code);
-                }
-                for (let key in destination_decoded) {
-                    destination_points.push(destination_decoded[key].code);
-                }
-                multipleCalculations(origin_points, destination_points);
+                const lineStrings = [];
+                var results = response.paths;
+                results.forEach(function(path, index) {
+                    // Construct GeoJSON features for each LineString
+                    const lineStringFeature = turf.lineString([
+                        [path.wp_a_lng, path.wp_a_lat],
+                        [path.wp_b_lng, path.wp_b_lat]
+                    ], {
+                        id: path.id
+                    });
+                    lineStrings.push(lineStringFeature);
+                });
+
+                let nearestLineString;
+                let minDistance = Infinity;
+                // Iterate through each LineString to find the nearest one
+                lineStrings.forEach(lineString => {
+                    const distance = turf.pointToLineDistance(point, lineString, {
+                        units: 'meters'
+                    });
+
+                    // Update the nearest LineString if a closer one is found
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nearestLineString = lineString;
+                    }
+                });
+                nearestPointOnLine(currentLoc, nearestLineString.properties.id);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+    }
+
+    function nearestPointOnLine(currentLoc, nearestLine) {
+        const {
+            nearestPointOnLine
+        } = turf;
+        $.ajax({
+            url: '{{ route("paths.find") }}',
+            data: {
+                'id_search': true,
+                'id': nearestLine
+            },
+            success: (response) => {
+                var path = response.path;
+                var point = turf.point(currentLoc);
+                var line = turf.lineString([
+                    [path.wp_a_lng, path.wp_a_lat],
+                    [path.wp_b_lng, path.wp_b_lat]
+                ]);
+                var snapped = turf.nearestPointOnLine(line, point, {
+                    units: 'miles'
+                });
+
+                var nearestPoint = [snapped.geometry.coordinates[0], snapped.geometry.coordinates[1]];
+                temporaryPoints(currentLoc, nearestPoint, path);
             },
             error: (error) => {
                 console.log(error);
             }
         })
+    }
+
+    function temporaryPoints(GPS, NPL, path) {
+        gps_json = {};
+        gps_json = {
+            'coordinates': GPS
+        }
+        npl_json = {};
+        npl_json = {
+            'coordinates': NPL
+        };
+        var GPSNPL = turf.distance(turf.point(GPS), turf.point(NPL), {
+            units: 'meters'
+        })
+        var NPLA = turf.distance(turf.point(NPL), turf.point([path.wp_a_lng, path.wp_a_lat]), {
+            units: 'meters'
+        });
+        var NPLB = turf.distance(turf.point(NPL), turf.point([path.wp_b_lng, path.wp_b_lat]), {
+            units: 'meters'
+        });
+        var destination = document.getElementById('destination').value;
+        $.ajax({
+            url: '{{ route("directions.get.polarpoints") }}',
+            data: {
+                'destination': destination
+            },
+            success: (response) => {
+                var destination_points = [];
+                var destination_decoded = JSON.parse(JSON.parse(response.target_destination.entrypoints));
+                for (let key in destination_decoded) {
+                    destination_points.push(destination_decoded[key].code);
+                }
+                multipleCalculations(
+                    GPS,
+                    destination_points, {
+                        'nearestPathId': path.id,
+                        'GPSNPL': GPSNPL,
+                        'NPLA': NPLA,
+                        'NPLB': NPLB
+                    }
+                );
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+    }
+    // End of Realtime Origin Point
+    var polygonData = {
+        'type': 'FeatureCollection',
+        'features': [{
+            'type': 'Feature',
+            'properties': {
+                'description': 'School of Engineering Technology'
+            },
+            'geometry': {
+                'type': 'Polygon',
+                'coordinates': [
+                    [
+                        [124.24394963376335, 8.240492844326639],
+                        [124.24443740131852, 8.24040243975439],
+                        [124.24453083874386, 8.24122316165223],
+                        [124.24406612293791, 8.24128212387022]
+                    ]
+                ]
+            }
+        }]
+    };
+    map.on('load', function() {
+        map.addSource('polygon', {
+            'type': 'geojson',
+            'data': polygonData
+        });
+
+        map.addLayer({
+            'id': 'polygon-labels',
+            'type': 'symbol',
+            'source': 'polygon',
+            'layout': {
+                'text-field': ['get', 'description'],
+                'text-size': 12,
+                'text-anchor': 'top',
+                'symbol-placement': 'point', // Set symbol placement to 'point'
+                'text-offset': [0, -2] // Adjust text offset to position it above the building
+            },
+            'paint': {
+                'text-color': '#000000' // Adjust text color as needed
+            }
+        });
     });
-    // End of Searchbar Functions
 </script>
 @endsection

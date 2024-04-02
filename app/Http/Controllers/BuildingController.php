@@ -176,6 +176,12 @@ class BuildingController extends Controller
                 $boundary->corners = json_decode($boundary->corners, true);
                 return $boundary;
             });
+            if ($request->input('boundary_with_name')) {
+                $building_names = $boundaries->map(function ($boundary) {
+                    $results['building'] = $boundary->building;
+                    $results['marker'] = $boundary->building->buildingMarker;
+                });
+            }
         }
 
         return response()->json($results);

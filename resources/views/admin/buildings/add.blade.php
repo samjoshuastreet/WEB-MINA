@@ -533,6 +533,31 @@
                     .setLngLat(e.lngLat)
                     .addTo(map);
             }
+            var features = map.queryRenderedFeatures(e.point);
+
+            // Check if any features are present
+            if (features.length > 0) {
+                // Loop through the features
+                features.forEach(function(feature) {
+                    // Check if the feature belongs to the boundary layer
+                    if (feature.layer.id === 'boundary-latest-19j3o8') {
+                        // Log "out of bounds" to the console
+
+                        if (Object.keys(corners).length > 0) {
+                            // Get the key of the latest added corner
+                            var latestCornerKey = `corner${Object.keys(corners).length - 1}`;
+                            // Delete the latest added corner from the corners object
+                            delete corners[latestCornerKey];
+                            // Remove the latest added marker from the map
+                            temporaryMarker.remove();
+                            Toast.fire({
+                                icon: 'error',
+                                title: `Area out of bounds!`
+                            });
+                        }
+                    }
+                });
+            }
         }
     });
 

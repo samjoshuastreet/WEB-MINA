@@ -80,7 +80,7 @@
                     </ul>
                 </li>
                 <li class="nav-header mt-4">NAVIGATION</li>
-                <li class="nav-item">
+                <li class="nav-item {{ Route::currentRouteName() == 'procedures.index' || Route::currentRouteName() == 'procedures.add' ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link d-flex justify-center-start align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building nav-item mr-2" viewBox="0 0 16 16">
                             <path d="M7 7V1.414a1 1 0 0 1 2 0V2h5a1 1 0 0 1 .8.4l.975 1.3a.5.5 0 0 1 0 .6L14.8 5.6a1 1 0 0 1-.8.4H9v10H7v-5H2a1 1 0 0 1-.8-.4L.225 9.3a.5.5 0 0 1 0-.6L1.2 7.4A1 1 0 0 1 2 7zm1 3V8H2l-.75 1L2 10zm0-5h6l.75-1L14 3H8z" />
@@ -92,13 +92,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('buildings.add') }}" class="nav-link">
+                            <a href="{{ route('procedures.add') }}" class="nav-link {{ Route::currentRouteName() == 'procedures.add' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Add Procedures</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('buildings.index') }}" class="nav-link">
+                            <a href="{{ route('procedures.index') }}" class="nav-link {{ Route::currentRouteName() == 'procedures.index' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Manage Procedures</p>
                             </a>

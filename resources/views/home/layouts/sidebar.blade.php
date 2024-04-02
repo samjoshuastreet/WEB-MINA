@@ -32,7 +32,7 @@
             </div>
 
             <!-- Current location button -->
-            <button id="current-location" class="button">
+            <button type="button" id="current-location" class="button">
                 <box-icon name='current-location' class="current-icon"></box-icon>
                 <span class="location">Your Location</span>
             </button>

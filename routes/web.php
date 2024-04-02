@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PathController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\ProcedureController;
 use App\Http\Controllers\DirectionsController;
 
 /*
@@ -50,6 +51,11 @@ Route::get('/admin/paths/delete', [PathController::class, 'delete'])->name('path
 
 Route::get('/directions/get', [DirectionsController::class, 'get'])->name('directions.get');
 Route::get('/directions/get/polarpoints', [DirectionsController::class, 'polarpoints'])->name('directions.get.polarpoints');
+
+Route::get('/procedures/index', [ProcedureController::class, 'index'])->name('procedures.index');
+Route::get('/procedures/add', [ProcedureController::class, 'add'])->name('procedures.add');
+Route::get('/procedures/add/validate', [ProcedureController::class, 'add_validate'])->name('procedures.add.validate');
+Route::get('/procedures/add/submit', [ProcedureController::class, 'add_submit'])->name('procedures.add.submit');
 
 Route::get('/msuiit_map', function () {
     return view('msuiit_map');

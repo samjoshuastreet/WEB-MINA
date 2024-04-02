@@ -8,6 +8,7 @@
         height: 10px;
         border-radius: 100%;
         cursor: pointer;
+        z-index: 20;
     }
 
     .display-marker {
@@ -17,6 +18,7 @@
         height: 30px;
         border-radius: 100%;
         cursor: pointer;
+        z-index: 40;
     }
 
     .entry {
@@ -25,6 +27,7 @@
         height: 10px;
         border-radius: 100%;
         cursor: pointer;
+        z-index: 30;
     }
 
     .marker:hover {
@@ -128,7 +131,6 @@
             [124.25301604017682, 8.248537110726303] // Northeast bound
         ]
     });
-    renderPaths();
 
     function renderBoundaries() {
         $.ajax({
@@ -223,6 +225,7 @@
         });
     }
     renderBoundaries();
+    renderPaths();
 
     var marker;
     var wp_a;
@@ -261,6 +264,24 @@
             const [lng, lat] = e.lngLat.toArray();
             latCoordinate.innerText = `${lat}`;
             longCoordinate.innerText = `${lng}`;
+        }
+        var features = map.queryRenderedFeatures(e.point);
+        if (features.length > 0) {
+            // Loop through the features
+            features.forEach(function(feature) {
+                // Check if the feature belongs to the boundary layer
+                if (feature.layer.id === 'boundary-latest-19j3o8') {
+                    // Log "out of bounds" to the console
+
+                    if (marker) {
+                        marker.remove();
+                        Toast.fire({
+                            icon: 'error',
+                            title: `Area out of bounds!`
+                        });
+                    }
+                }
+            });
         }
     });
 

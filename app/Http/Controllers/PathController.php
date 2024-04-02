@@ -59,6 +59,10 @@ class PathController extends Controller
     }
     public function find(Request $request)
     {
+        if ($request->input('id_search')) {
+            $target = Path::find($request->input('id'));
+            return response()->json(['path' => $target]);
+        }
         if ($request->input('single_search')) {
             $code_a = $request->input('a');
             $code_b = $request->input('b');
@@ -70,7 +74,52 @@ class PathController extends Controller
                     }
                 }
             }
-            return response()->json(['path' => $target]);
+            if (isset($target)) {
+                return response()->json(['path' => $target]);
+            } else {
+                return response()->json(['skip' => true]);
+            }
+            //     if ($request->input('gps')) {
+            //         $gps_coords = $request->input('gps');
+            //     }
+            //     if ($request->input('npl')) {
+            //         $npl_coords = $request->input('npl');
+            //     }
+            //     $path_a = Path::where('wp_a_code', $code_a)
+            //         ->orWhere('wp_b_code', $code_a)
+            //         ->first();
+            //     $path_b = Path::where('wp_a_code', $code_b)
+            //         ->orWhere('wp_b_code', $code_b)
+            //         ->first();
+            //     $exists = $path_a !== null || $path_b !== null;
+            //     if ($exists) {
+            //         if ($path_a) {
+            //             if ($code_a == $path_a->wp_a_code) {
+            //                 $wp_a_coords = [$path_a->wp_a_lng, $path_a->wp_a_lat];
+            //             } else {
+            //                 $wp_a_coords = [$path_a->wp_b_lng, $path_a->wp_b_lat];
+            //             }
+            //             if (isset($gps_coords)) {
+            //                 return response()->json(['wp_a_coords' => $wp_a_coords, 'gps_coords' => $gps_coords]);
+            //             } else {
+            //                 return response()->json(['wp_a_coords' => $wp_a_coords, 'npl_coords' => $npl_coords]);
+            //             }
+            //         } else {
+            //             if ($code_a == $path_b->wp_a_code) {
+            //                 $wp_b_coords = [$path_b->wp_a_lng, $path_b->wp_a_lat];
+            //             } else {
+            //                 $wp_b_coords = [$path_b->wp_b_lng, $path_b->wp_b_lat];
+            //             }
+            //             if (isset($gps_coords)) {
+            //                 return response()->json(['wp_b_coords' => $wp_b_coords, 'gps_coords' => $gps_coords]);
+            //             } else {
+            //                 return response()->json(['wp_b_coords' => $wp_b_coords, 'npl_coords' => $npl_coords]);
+            //             }
+            //         }
+            //     } else {
+            //         return response()->json(['gps_coords' => $gps_coords, 'npl_coords' => $npl_coords, 'raw_search' => true]);
+            //     }
+            // }
         }
         $target = $request->input('target');
         if ($request->input('editor')) {

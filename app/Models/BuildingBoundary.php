@@ -15,4 +15,9 @@ class BuildingBoundary extends Model
         'corners',
         'building_id'
     ];
+
+    public function building()
+    {
+        return $this->belongsTo(Building::class, 'building_id');
+    }
 }
