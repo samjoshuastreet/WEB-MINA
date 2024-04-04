@@ -17,4 +17,13 @@ class ProcedureWaypoint extends Model
         'procedure_id',
         'building_id'
     ];
+
+    public function procedure()
+    {
+        return $this->belongsTo(Procedure::class, 'procedure_id');
+    }
+    public function building()
+    {
+        return $this->belongsTo(Building::class, 'building_id');
+    }
 }

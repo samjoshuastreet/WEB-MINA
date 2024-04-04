@@ -35,4 +35,14 @@ class Building extends Model
     {
         return $this->hasOne(BuildingEntrypoint::class, 'building_id');
     }
+
+    public function procedures()
+    {
+        return $this->belongsToMany(ProcedureWaypoint::class, 'building_id');
+    }
+
+    public function procedureWaypoint()
+    {
+        return $this->hasOne(ProcedureWaypoint::class, 'building_id');
+    }
 }

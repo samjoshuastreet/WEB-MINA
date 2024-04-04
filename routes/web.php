@@ -56,6 +56,7 @@ Route::get('/procedures/index', [ProcedureController::class, 'index'])->name('pr
 Route::get('/procedures/add', [ProcedureController::class, 'add'])->name('procedures.add');
 Route::get('/procedures/add/validate', [ProcedureController::class, 'add_validate'])->name('procedures.add.validate');
 Route::get('/procedures/add/submit', [ProcedureController::class, 'add_submit'])->name('procedures.add.submit');
+Route::get('/procedures/get', [ProcedureController::class, 'get'])->name('procedures.get');
 
 Route::get('/msuiit_map', function () {
     return view('msuiit_map');

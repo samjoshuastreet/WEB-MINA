@@ -17,4 +17,9 @@ class Procedure extends Model
         'intial_instructions',
         'access_level'
     ];
+
+    public function waypoints()
+    {
+        return $this->hasMany(ProcedureWaypoint::class, 'procedure_id');
+    }
 }

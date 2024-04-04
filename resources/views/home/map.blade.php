@@ -47,14 +47,48 @@
     .ui-autocomplete-loading {
         background: white url('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js') right center no-repeat;
     }
+
+    #popup-procedure {
+        overflow-y: scroll;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        max-height: 100%;
+    }
+
+    #popup-procedure::-webkit-scrollbar {
+        display: none;
+    }
+
+    .procedure-contents {
+        overflow-y: scroll;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        max-height: 100%;
+    }
+
+    .procedure-contents::-webkit-scrollbar {
+        display: none;
+    }
 </style>
 @endsection
 @section('content')
 <div id="map" class="relative w-full h-[calc(100vh-50px)] mt-[50px]">
     @include('home.layouts.popups')
+    <div id="map-navbar" class="absolute top-1 left-[50%] translate-x-[-50%] z-50 bg-transparent rounded-md text-white-900 text-white font-poppins-light w-[80%] h-[35px] p-1 flex justify-between" style="display: none;">
+        <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
+            <span class="font-poppins-ultra">Procedure:</span>
+            <spam id="map-navbar-name"></span>
+        </div>
+        <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
+            Step No. <span id="map-navbar-step"></span>
+        </div>
+        <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
+            <span class="font-poppins-ultra">Destination:</span> <span id="map-navbar-destination"></span>
+        </div>
+    </div>
 </div>
 
-<div id="directions-cont" class="fixed py-8 top-0 left-[-30%] w-[30%] h-full bg-upsdell-900 z-30">
+<div id="directions-cont" class="fixed py-8 top-0 left-[-30%] w-[30%] h-full z-30">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" id="directions-close-btn" fill="white" class="bi bi-x-circle-fill absolute top-[2.5%] right-[5%] hover:cursor-pointer" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
     </svg>
@@ -65,7 +99,26 @@
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" id="procedures-close-btn" fill="white" class="bi bi-x-circle-fill absolute top-[2.5%] right-[5%] hover:cursor-pointer" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
     </svg>
-    <h1 class="text-white font-poppins-regular p-2 text-center">Procedures</h1>
+    <h1 class="text-white font-gordita-regular p-2 text-center">Procedures</h1>
+    <div class="flex justify-center mt-2">
+        <ul class="w-[90%] text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            @if(count($procedures) > 1)
+            @foreach($procedures as $procedure)
+            @if ($loop->first)
+            <li procedure_id='{{ $procedure->id }}' class="procedure-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{ $procedure->procedure_name }}</li>
+            @elseif ($loop->last)
+            <li procedure_id='{{ $procedure->id }}' class="procedure-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light px-4 py-2 border-b border-gray-200 dark:border-gray-600">{{ $procedure->procedure_name }}</li>
+            @else
+            <li procedure_id='{{ $procedure->id }}' class="procedure-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light px-4 py-2 rounded-b-lg">{{ $procedure->procedure_name }}</li>
+            @endif
+            @endforeach
+            @elseif(count($procedures) == 1)
+            <li procedure_id='{{ $procedures[0]->id }}' class="procedure-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light px-4 py-2 border-b rounded-lg border-gray-200 dark:border-gray-600">{{ $procedures[0]->procedure_name }}</li>
+            @else
+            <li class="w-full font-poppins-light px-4 py-2 border-b rounded-lg border-gray-200 dark:border-gray-600">No Records Found</li>
+            @endif
+        </ul>
+    </div>
 </div>
 
 <div id="events-cont" class="fixed py-8 top-0 left-[-20%] w-[20%] h-full bg-upsdell-900 z-30">
@@ -761,5 +814,180 @@
             }
         });
     });
+
+    // Procedures Functions
+    var procedurePopupStatus = 0;
+    $('.procedure-item').click(function() {
+        var procedurePopup = $('#popup-procedure');
+        if (procedurePopupStatus == 0) {
+            displayProcedureTimeline($(this).attr('procedure_id'));
+            procedurePopup.animate({
+                right: '7.5%'
+            }, 500)
+            procedurePopupStatus = 1;
+        } else {
+            procedurePopup.animate({
+                right: '-100%'
+            }, 500)
+            procedurePopupStatus = 0;
+        }
+    });
+    $('.popup-procedure-close-btn').on('click', function() {
+        var procedurePopup = $('#popup-procedure');
+        procedurePopup.animate({
+            right: '-100%'
+        }, 500)
+        procedurePopupStatus = 0;
+    });
+
+    function displayProcedureTimeline(id) {
+        $.ajax({
+            url: '{{ route("procedures.get") }}',
+            data: {
+                'id': id
+            },
+            success: (response) => {
+                $('#popup-procedure-name').text(response.target_procedure.procedure_name);
+                $('#popup-procedure-description').text(response.target_procedure.procedure_description);
+                $('#procedure_id').text(response.target_procedure.id);
+                var timeline = document.getElementById('timeline');
+                var waypoints = response.waypoints;
+                for (let key in waypoints) {
+                    timeline.innerHTML += `
+                    <div class="w-[100%] bg-transparent flex justify-center items-center mb-5">
+                        <div class="w-[80%] py-6 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg flex justify-center">
+                            <a href="#" class="flex flex-col w-[100%] items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src="${decodeURIComponent('{{ asset("storage/") }}' + "/" + waypoints[key].photo)}" alt="">
+                                <div class="flex flex-col justify-between p-4 leading-normal">
+                                    <h1>Step ${waypoints[key].step_no}</h1>
+                                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">${waypoints[key].building.building_name}</h5>
+                                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">${waypoints[key].instructions}</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    `;
+                }
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        })
+    }
+
+    var procedureDirectionBtns = document.querySelectorAll('.popup-procedure-btn');
+    procedureDirectionBtns.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var pro_id = document.getElementById('procedure_id').innerText;
+            $.ajax({
+                url: '{{ route("procedures.get") }}',
+                data: {
+                    'id': pro_id
+                },
+                success: (response) => {
+                    beginProcedureNagivation(response);
+                    console.log('through')
+                },
+                error: (error) => {
+                    console.log(error)
+                }
+            })
+        })
+    })
+
+    function displayRoute(destination_id, origin_id = null) {
+        if (!origin_id) {
+            // locateUser()
+            // nearestLine()
+            // nearestPointOnLine()
+            // temporaryPoints()
+            // multipleCalculations()
+            // (GPS, destination_points, { nearestPathId, GPSNPL, NPLA, NPLB })
+            // Display route
+            // Display walking distance
+        } else {
+            // get destination (building) entrypoints
+            // get origin (building) entrypoints
+            // directions.get
+            // display route
+            // display walking distance
+        }
+    }
+
+    function displayProcedureNavbar(name, step, destination) {
+        $('#map-navbar').show();
+        $('#map-navbar-name').text(name);
+        $('#map-navbar-step').text(step);
+        $('#map-navbar-destination').text(destination);
+    }
+
+    function hideProcedureNavbar() {
+        $('#map-navbar').hide();
+    }
+
+    function displaySidebar() {
+        openInstructionsSidebar();
+    }
+
+    function endProcedureNavigation() {
+        // TBA
+    }
+
+    function beginStep(index, totalWaypoints, json) {
+        displayRoute(json.waypoints[index].building_id);
+        displayProcedureNavbar(json.target_procedure.procedure_name, json.waypoints[index].step_no, json.waypoints[index].building.building_name); // procedure name, step name, destination name
+        displaySidebar(); // instructions, next button, prev button, end button
+        addEventListener('#procedure-next-btn', 'click', function() {
+            if (index !== (totalWaypoints - 1)) {
+                beginStep(index, totalWaypoints, json)
+            }
+        })
+        addEventListener('#procedure-prev-btn', 'click', function() {
+            if (index > 1) {
+                beginStep(index, totalWaypoints, json);
+            }
+        })
+        addEventListener('#procedure-end-btn', 'click', function() {
+            endProcedureNavigation();
+        })
+    }
+
+    function beginProcedureNagivation(json) {
+        console.log(json);
+        var waypoints = json.waypoints;
+        var procedureLoop = true;
+        var totalWaypoints = 0;
+        for (let key in waypoints) {
+            totalWaypoints += 1;
+        }
+        beginStep(0, (totalWaypoints - 1), json);
+    }
+    // End of Procedures Functions
+    function openInstructionsSidebar() {
+        var directions = $('#directions-cont');
+        var navbar = $('#navbar');
+        var map = $('#map');
+        var sidebar = $('#sidebar');
+
+        directions.animate({
+            left: '0%'
+        }, 500)
+        navbar.animate({
+            width: '70%',
+            marginLeft: '30%'
+        }, 500);
+        map.animate({
+            width: '70%',
+            marginLeft: '30%'
+        }, 500)
+
+        if (sidebarStatus == 1) {
+            sidebar.animate({
+                left: "-20%"
+            }, 500)
+
+            sidebarStatus = 0;
+        }
+    }
 </script>
 @endsection

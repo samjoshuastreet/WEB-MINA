@@ -398,7 +398,7 @@
                                     </svg>
                                 </span>
                                 <select id="review-input-access-level" name="review_access_level" class="form-control" aria-label="Default select example">
-                                    <option selected>Select an accessibility level for this procedure</option>
+                                    <option value="" selected>Select an accessibility level for this procedure</option>
                                     <option value=1>Guest Level</option>
                                     <option value=2>Student Level</option>
                                     <option value=3>Staff Level</option>
@@ -738,7 +738,7 @@
         $('#review-modal').modal('toggle');
         for (let key in waypoints) {
             $('#timeline-initial-procedure').text($('#input-procedure-name').val());
-            $('#timeline-initial-instructions').text($('#input-procedure-description').val());
+            $('#timeline-initial-instructions').text($('#input-initial-instructions').val());
             var timeline = document.getElementById('procedure-timeline');
             timeline.innerHTML += `
             <div class="vertical-timeline-item vertical-timeline-element">
@@ -749,7 +749,7 @@
                     <div class="vertical-timeline-element-content bounce-in">
                         <p>${waypoints[key].building_name}</p>
                         <p><span class="text-success"><a href="#${waypoints[key].step_no}-review">${waypoints[key].instructions}</a></span></p>
-                        <span class="vertical-timeline-element-date">Step #${waypoints[key].step_no}</span>
+                        <span class="vertical-timeline-element-date text-dark">Step #${waypoints[key].step_no}</span>
                     </div>
                 </div>
             </div>
@@ -775,6 +775,7 @@
                         </svg>
                     </span>
                     <input type="text" id="${waypoints[key].step_no}-review-input-step-no" placeholder="Add a name for this procedure" name="${waypoints[key].step_no}_review_step_no" value="${waypoints[key].step_no}" class="form-control" aria-label="Username" aria-describedby="addon-wrapping" style="cursor: context-menu;" readonly>
+                    <input type="number" name="${waypoints[key].step_no}_review_building_id" value=${waypoints[key].building_id} hidden>
                 </div>
             </div>
             <small id="review_step_no_error" class="form-text ml-5 mb-3 text-danger"></small>
@@ -799,15 +800,37 @@
         e.preventDefault();
 
         var data = $(this).serialize();
-
+        data += '&final=true';
         $.ajax({
             url: '{{ route("procedures.add.submit") }}',
             data: data,
             success: (response) => {
-                Toast.fire({
-                    icon: 'success',
-                    title: `${response.procedure_name} has been successfully added to the database!`
+                document.querySelectorAll('[id$="_error"]').forEach((element) => {
+                    element.innerText = '';
                 });
+                if (response.success == true) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: `${response.procedure_name} has been successfully added to the database!`
+                    });
+                    $('#review-modal').modal('toggle');
+                    step = 1;
+                } else if (response.success == false) {
+                    var errors = response.msg;
+                    for (let key in errors) {
+                        if (key == 'review_procedure_name') {
+                            if (errors[key] == "The review procedure name has already been taken.") {
+                                $(document).find(`#${key}_error`).text('This name has already been taken.');
+                            } else {
+                                $(document).find(`#${key}_error`).text('This field is required.');
+                            }
+                        } else if (key == 'review_access_level') {
+                            $(document).find(`#${key}_error`).text('Please select an accessibilty level.');
+                        } else {
+                            $(document).find(`#${key}_error`).text('This field is required.');
+                        }
+                    }
+                }
             },
             error: (error) => {
                 console.log(error);

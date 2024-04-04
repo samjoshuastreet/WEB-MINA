@@ -5,6 +5,7 @@
     var loginFormStatus = 0;
     var regFormStatus = 0;
     var samplePopupStatus = 0;
+    var procedurePopupStatus = 0;
 
     $('#login-btn').on('click', function() {
         var loginForm = $('#loginform');
@@ -37,6 +38,7 @@
     })
 
     $('#sidebar-btn').on('click', function() {
+        console.log('clicked')
         var sidebar = $('#sidebar');
         var navbar = $('#navbar');
         var map = $('#map');
@@ -94,6 +96,28 @@
             right: '-100%'
         }, 500)
         samplePopupStatus = 0;
+    });
+
+    $('.popup-procedure-btn').on('click', function() {
+        var procedurePopup = $('#popup-procedure');
+        if (procedurePopupStatus == 0) {
+            procedurePopup.animate({
+                right: '7.5%'
+            }, 500)
+            procedurePopupStatus = 1;
+        } else {
+            samplePopup.animate({
+                right: '-100%'
+            }, 500)
+            procedurePopupStatus = 0;
+        }
+    });
+    $('.popup-procedure-close-btn').on('click', function() {
+        var procedurePopup = $('#popup-procedure');
+        procedurePopup.animate({
+            right: '-100%'
+        }, 500)
+        procedurePopupStatus = 0;
     });
 
     $('#directions-btn').on('click', function() {
