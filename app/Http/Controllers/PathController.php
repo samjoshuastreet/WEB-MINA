@@ -63,6 +63,19 @@ class PathController extends Controller
             $target = Path::find($request->input('id'));
             return response()->json(['path' => $target]);
         }
+        if ($request->input('half')) {
+            $code = $request->input('code');
+            $target_path = Path::where('wp_a_code', $code)
+                ->orWhere('wp_b_code', $code)
+                ->first();
+
+            if ($target_path->wp_a_code == $code) {
+                $result_path = [$target_path->wp_a_lng, $target_path->wp_b_lat];
+            } else {
+                $result_path = [$target_path->wp_b_lng, $target_path->wp_b_lat];
+            }
+            return response()->json(['result_path' => $result_path]);
+        }
         if ($request->input('single_search')) {
             $code_a = $request->input('a');
             $code_b = $request->input('b');

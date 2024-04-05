@@ -106,7 +106,7 @@
             }, 500)
             procedurePopupStatus = 1;
         } else {
-            samplePopup.animate({
+            procedurePopup.animate({
                 right: '-100%'
             }, 500)
             procedurePopupStatus = 0;
