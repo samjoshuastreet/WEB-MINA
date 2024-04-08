@@ -278,7 +278,7 @@
             <div class="modal-content">
                 <form id="waypoint-form" action="">
                     <div class="modal-header">
-                        <h5 class="modal-title waypoint-modal-title">Modal title</h5>
+                        <h5 class="modal-title waypoint-modal-title">Add a Procedure</h5>
                     </div>
                     <div class="modal-body">
                         <img src="" id="waypoint-building-image" class="img-fluid mb-2 p-2" alt="Building Image">

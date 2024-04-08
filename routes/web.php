@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PathController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\ProcedureController;
 use App\Http\Controllers\DirectionsController;
@@ -57,6 +58,11 @@ Route::get('/procedures/add', [ProcedureController::class, 'add'])->name('proced
 Route::get('/procedures/add/validate', [ProcedureController::class, 'add_validate'])->name('procedures.add.validate');
 Route::get('/procedures/add/submit', [ProcedureController::class, 'add_submit'])->name('procedures.add.submit');
 Route::get('/procedures/get', [ProcedureController::class, 'get'])->name('procedures.get');
+
+Route::get('/events/index', [EventController::class, 'index'])->name('events.index');
+Route::get('/events/add', [EventController::class, 'add'])->name('events.add');
+Route::get('/events/add/validate', [EventController::class, 'add_validate'])->name('events.add.validate');
+Route::get('/events/get', [EventController::class, 'get'])->name('events.get');
 
 Route::get('/msuiit_map', function () {
     return view('msuiit_map');

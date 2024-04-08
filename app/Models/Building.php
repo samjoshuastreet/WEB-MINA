@@ -41,6 +41,11 @@ class Building extends Model
         return $this->belongsToMany(ProcedureWaypoint::class, 'building_id');
     }
 
+    public function events()
+    {
+        return $this->belongsToMany(Event::class, 'building_id');
+    }
+
     public function procedureWaypoint()
     {
         return $this->hasOne(ProcedureWaypoint::class, 'building_id');

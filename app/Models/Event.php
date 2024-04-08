@@ -20,4 +20,9 @@ class Event extends Model
         'end_date',
         'building_id'
     ];
+
+    public function building()
+    {
+        return $this->belongsTo(Building::class, 'building_id');
+    }
 }

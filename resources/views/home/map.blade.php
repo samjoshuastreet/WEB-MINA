@@ -134,6 +134,25 @@
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
     </svg>
     <h1 class="text-white font-poppins-regular p-2 text-center">Events</h1>
+    <div class="flex justify-center mt-2">
+        <ul class="w-[90%] text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            @if(count($events) > 1)
+            @foreach($events as $event)
+            @if ($loop->first)
+            <li event_id='{{ $event->id }}' class="event-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{ $event->event_name }}</li>
+            @elseif ($loop->last)
+            <li event_id='{{ $event->id }}' class="event-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light px-4 py-2 border-t border-gray-200 rounded-b-lg dark:border-gray-600">{{ $event->event_name }}</li>
+            @else
+            <li event_id='{{ $event->id }}' class="event-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light border px-4 py-2">{{ $event->event_name }}</li>
+            @endif
+            @endforeach
+            @elseif(count($events) == 1)
+            <li event_id='{{ $events[0]->id }}' class="event-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light px-4 py-2 rounded-lg border-gray-200 dark:border-gray-600">{{ $events[0]->event_name }}</li>
+            @else
+            <li class="w-full font-poppins-light px-4 py-2 border-b rounded-lg border-gray-200 dark:border-gray-600">No Records Found</li>
+            @endif
+        </ul>
+    </div>
 </div>
 @endsection
 @section('more_scripts')
@@ -1211,5 +1230,52 @@
 
         }
     });
+
+    // Events Functions
+    document.querySelectorAll('.event-item').forEach(function(element) {
+        element.addEventListener('click', function() {
+            var eventID = $(this).attr('event_id');
+            getEvent(eventID);
+        })
+    })
+
+    function getEvent(id) {
+        $.ajax({
+            url: '{{ route("events.get") }}',
+            data: {
+                'id': id
+            },
+            success: (response) => {
+                console.log(response);
+                return openEventModal(response.target_event);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        })
+    }
+
+    function openEventModal(json) {
+        console.log(json)
+        $('#popup-event-name').text(json.event_name);
+        $('#popup-event-description').text(json.event_description);
+        if (json.building.building_marker.marker_image) {
+            var marker_image = decodeURIComponent('{{ asset("storage/") }}' + "/" + json.building.building_marker.marker_image); // Decode URL
+            $('#popup-event-image').attr('src', marker_image);
+        }
+        var eventPopup = $('#popup-event');
+        if (eventPopupStatus == 0) {
+            eventPopup.animate({
+                right: '7.5%'
+            }, 500)
+            eventPopupStatus = 1;
+        } else {
+            eventPopup.animate({
+                right: '-100%'
+            }, 500)
+            eventPopupStatus = 0;
+        }
+    }
+    // End of Events Functions
 </script>
 @endsection

@@ -105,7 +105,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {{ Route::currentRouteName() == 'events.index' || Route::currentRouteName() == 'events.add' ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link d-flex justify-center-start align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building nav-item mr-2" viewBox="0 0 16 16">
                             <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
@@ -119,13 +119,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('buildings.add') }}" class="nav-link">
+                            <a href="{{ route('events.add') }}" class="nav-link {{ Route::currentRouteName() == 'events.add' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Add Event</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('buildings.index') }}" class="nav-link">
+                            <a href="{{ route('events.index') }}" class="nav-link {{ Route::currentRouteName() == 'events.index' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Manage Events</p>
                             </a>
