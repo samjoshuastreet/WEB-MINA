@@ -76,10 +76,10 @@
     @include('home.layouts.popups')
     <div id="map-navbar" class="absolute top-1 left-[50%] translate-x-[-50%] z-50 bg-transparent rounded-md text-white-900 text-white font-poppins-light w-[80%] h-[35px] p-1 flex justify-between" style="display: none;">
         <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
-            <span class="font-poppins-ultra">Procedure:</span>
+            <span class="font-poppins-ultra"><span id="navbar-mode">"Procedure</span>:</span>
             <spam id="map-navbar-name"></span>
         </div>
-        <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
+        <div id="map-navbar-step-cont" class="bg-upsdell-900 text-white rounded-full py-1 px-3">
             Step No. <span id="map-navbar-step"></span>
         </div>
         <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
@@ -98,6 +98,7 @@
         <div class="w-[80%] bg-transparent flex justify-between">
             <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-prev-btn">Prev</button>
             <button type="button" class="shine bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-end-btn">End</button>
+            <button type="button" class="shine bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="event-end-btn">End</button>
             <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-next-btn">Next</button>
         </div>
     </div>
@@ -331,22 +332,23 @@
                 } else if (i == 1 && route[i] == "NPL") {
                     renderPath([npl_json.coordinates], route[i + 1], 'half');
                 } else {
-                    renderPath(route[i], route[i + 1]);
+                    if (i == 0) {
+                        renderPath(route[i], route[i + 1], false, true);
+                    } else if (i == route.length - 2) {
+                        renderPath(route[i], route[i + 1]);
+                        console.log('last path')
+                    } else {
+                        renderPath(route[i], route[i + 1]);
+                    }
                 }
             }
-            gpsSuccess({
-                coords: {
-                    longitude: 124.24450695486951,
-                    latitude: 8.239895989653476
-                }
-            })
             var samplePopup = $('#popup-sample');
             samplePopup.animate({
                 right: '-100%'
             }, 500)
         }
 
-        function renderPath(a, b, raw = false) {
+        function renderPath(a, b, raw = false, first = false) {
             if (raw === false) {
                 $.ajax({
                     url: '{{ route("paths.find") }}',
@@ -361,6 +363,10 @@
                                 [response.path.wp_a_lng, response.path.wp_a_lat],
                                 [response.path.wp_b_lng, response.path.wp_b_lat]
                             ];
+                            if (first) {
+                                gpsSuccess([response.path.wp_a_lng, response.path.wp_a_lat],
+                                    [response.path.wp_b_lng, response.path.wp_b_lat]);
+                            }
                             map.addLayer({
                                 'id': `route-path-${response.path.id.toString()}`,
                                 'type': 'line',
@@ -456,6 +462,8 @@
                     })
                     .setLngLat(a[0], a[1])
                     .addTo(map);
+                console.log(a);
+                gpsSuccess(a[0], b[0]);
             } else if (raw == 'half') {
                 $.ajax({
                     url: '{{ route("paths.find") }}',
@@ -557,16 +565,9 @@
                         },
                         error: function(error) {
                             console.log(error);
-                            completedRequests++;
-
-                            // Check if all requests are completed
-                            if (completedRequests === totalRequests) {
-                                renderDirection(shortestRoute ? shortestRoute[0] : []);
-                            }
                         }
                     });
                 });
-
             });
         }
         // End of Dijkstra's Algorithm
@@ -597,7 +598,6 @@
             e.preventDefault();
             var data = $(this).serialize();
             data += '&sidebar=true';
-            console.log(data);
             if (_gps === false) {
                 $.ajax({
                     url: '{{ route("directions.get.polarpoints") }}',
@@ -627,16 +627,19 @@
         // End of Searchbar Functions
 
         // Realtime Origin Point
-        function gpsSuccess(position) {
-            var coords = position.coords;
+        function gpsSuccess(position, initial) {
+            var point1 = turf.point(position);
+            var point2 = turf.point(initial);
+            var bearing = turf.bearing(point1, point2);
             map.easeTo({
-                center: [coords.longitude, coords.latitude],
-                zoom: 22,
+                center: position,
+                zoom: 20,
                 duration: 2000,
-                pitch: 75,
-                bearing: 0
+                pitch: 60,
+                bearing: bearing
             });
         }
+
         var originPointInput = document.getElementById('starting-point');
         var currentLocBtn = document.getElementById('current-location');
         var _gps = false;
@@ -661,6 +664,16 @@
             gpsMarkers.forEach(function(gpsMarker) {
                 gpsMarker.remove();
             })
+        }
+
+        function resetMap() {
+            map.easeTo({
+                zoom: 17,
+                center: [124.2438547179179, 8.2414298468554],
+                duration: 2000,
+                pitch: 0,
+                bearing: -95
+            });
         }
 
         currentLocBtn.addEventListener('click', function() {
@@ -698,35 +711,35 @@
             });
         }
 
-        function locateUser() {
-            var thisLine = [
-                [124.24372302907886, 8.242335593748535],
-                [124.24354731894357, 8.242714235990405]
-            ]
-            map.addLayer({
-                'id': `route-path`,
-                'type': 'line',
-                'source': {
-                    'type': 'geojson',
-                    'data': {
-                        'type': 'Feature',
-                        'properties': {},
-                        'geometry': {
-                            'type': 'LineString',
-                            'coordinates': thisLine
-                        }
-                    }
-                },
-                'layout': {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                'paint': {
-                    'line-color': 'blue',
-                    'line-width': 4
-                }
-            }, 'waterway-label');
-        }
+        // function locateUser() {
+        //     var thisLine = [
+        //         [124.24372302907886, 8.242335593748535],
+        //         [124.24354731894357, 8.242714235990405]
+        //     ]
+        //     map.addLayer({
+        //         'id': `route-path`,
+        //         'type': 'line',
+        //         'source': {
+        //             'type': 'geojson',
+        //             'data': {
+        //                 'type': 'Feature',
+        //                 'properties': {},
+        //                 'geometry': {
+        //                     'type': 'LineString',
+        //                     'coordinates': thisLine
+        //                 }
+        //             }
+        //         },
+        //         'layout': {
+        //             'line-join': 'round',
+        //             'line-cap': 'round'
+        //         },
+        //         'paint': {
+        //             'line-color': 'blue',
+        //             'line-width': 4
+        //         }
+        //     }, 'waterway-label');
+        // }
         map.on('click', (e) => {
             console.log(e.lngLat);
         });
@@ -946,6 +959,27 @@
             });
         });
 
+        function removeGpsMarkers() {
+            var allGpsMarkers = document.querySelectorAll('.gps-marker');
+            allGpsMarkers.forEach(function(gpsMarker) {
+                gpsMarker.remove();
+            })
+        }
+
+        function removeRenderedPaths() {
+            var allDisplayBoundaries = map.getStyle().layers.filter(function(layer) {
+                return layer.id.startsWith('route-path-');
+            });
+            allDisplayBoundaries.forEach(function(layer) {
+                map.removeLayer(layer.id);
+            });
+            allDisplayBoundaries.forEach(function(layer) {
+                if (map.getSource(layer.source)) {
+                    map.removeSource(layer.source);
+                }
+            });
+        }
+
         // Procedures Functions
         var procedurePopupStatus = 0;
         $('.procedure-item').click(function() {
@@ -1079,14 +1113,17 @@
         document.querySelector('#procedure-end-btn').addEventListener('click', function() {
             endProcedureNavigation();
         });
+        document.querySelector('#event-end-btn').addEventListener('click', function() {
+            endEventNavigation();
+        });
 
         function beginStep(index, totalWaypoints, json) {
             if (index == 0) {
                 displayRoute(json.waypoints[index].building_id);
-                displaySidebar(json.waypoints[index].instructions, json.target_procedure.initial_instructions);
+                displaySidebar(json.waypoints[index].instructions, json.target_procedure.initial_instructions, true);
             } else {
                 displayRoute(json.waypoints[index].building.building_name, json.waypoints[index - 1].building.building_name);
-                displaySidebar(json.waypoints[index].instructions);
+                displaySidebar(json.waypoints[index].instructions, null, true);
             }
             displayProcedureNavbar(json.target_procedure.procedure_name, json.waypoints[index].step_no, json.waypoints[index].building.building_name); // procedure name, step name, destination name
         }
@@ -1142,9 +1179,16 @@
         }
 
         function displayProcedureNavbar(name, step, destination) {
+            $('#map-navbar-step-cont').show();
             $('#map-navbar').show();
             $('#map-navbar-name').text(name);
-            $('#map-navbar-step').text(step);
+            if (step) {
+                $('#navbar-mode').text('Procedure');
+                $('#map-navbar-step').text(step);
+            } else {
+                $('#navbar-mode').text('Event');
+                $('#map-navbar-step-cont').hide();
+            }
             $('#map-navbar-destination').text(destination);
         }
 
@@ -1152,18 +1196,30 @@
             $('#map-navbar').hide();
         }
 
-        function displaySidebar(instructions, initial = null) {
+        function displaySidebar(instructions, initial = null, procedure) {
             instructionsSidebar(true);
             $('#initial-instructions-cont').text('');
             if (initial) {
                 $('#initial-instructions-cont').text(initial);
+                $('#initial-instructions-cont').addClass('mb-8');
+            } else {
+                $('#initial-instructions-cont').removeClass('mb-8');
             }
             $('#instructions-cont').text(instructions);
+            if (procedure) {
+                $('#procedure-end-btn').show();
+                $('#event-end-btn').hide();
+                $('#procedure-next-btn').css('visibility', 'visible');
+                $('#procedure-prev-btn').css('visibility', 'visible');
+            } else {
+                $('#procedure-end-btn').hide();
+                $('#event-end-btn').show();
+                $('#procedure-next-btn').css('visibility', 'hidden');
+                $('#procedure-prev-btn').css('visibility', 'hidden');
+            }
         }
 
         function endProcedureNavigation() {
-            // delete all map styles
-            // delete all map sources
             $('#sidebar-btn').show();
             var procedures = $('#procedures-cont');
             procedures.animate({
@@ -1174,17 +1230,9 @@
             instructionsSidebar(false);
             response_json = {};
             totalWaypoints = 0;
-            var allDisplayBoundaries = map.getStyle().layers.filter(function(layer) {
-                return layer.id.startsWith('route-path-');
-            });
-            allDisplayBoundaries.forEach(function(layer) {
-                map.removeLayer(layer.id);
-            });
-            allDisplayBoundaries.forEach(function(layer) {
-                if (map.getSource(layer.source)) {
-                    map.removeSource(layer.source);
-                }
-            });
+            removeRenderedPaths();
+            removeGpsMarker();
+            resetMap();
         }
 
         // End of Procedures Functions
@@ -1229,53 +1277,109 @@
             }
 
         }
-    });
 
-    // Events Functions
-    document.querySelectorAll('.event-item').forEach(function(element) {
-        element.addEventListener('click', function() {
-            var eventID = $(this).attr('event_id');
-            getEvent(eventID);
+        // Events Functions
+        document.querySelectorAll('.event-item').forEach(function(element) {
+            element.addEventListener('click', function() {
+                var eventID = $(this).attr('event_id');
+                getEvent(eventID);
+            })
         })
-    })
 
-    function getEvent(id) {
-        $.ajax({
-            url: '{{ route("events.get") }}',
-            data: {
-                'id': id
-            },
-            success: (response) => {
-                console.log(response);
-                return openEventModal(response.target_event);
-            },
-            error: (error) => {
-                console.log(error);
+        function getEvent(id) {
+            $.ajax({
+                url: '{{ route("events.get") }}',
+                data: {
+                    'id': id
+                },
+                success: (response) => {
+                    return openEventPopup(response.target_event);
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            })
+        }
+
+        function openEventPopup(json) {
+            $('#popup-event-name').text(json.event_name);
+            $('#popup-event-description').text(json.event_description);
+            $('#event-id').val(json.id);
+            if (json.building.building_marker.marker_image) {
+                var marker_image = decodeURIComponent('{{ asset("storage/") }}' + "/" + json.building.building_marker.marker_image); // Decode URL
+                $('#popup-event-image').attr('src', marker_image);
             }
-        })
-    }
+            var eventPopup = $('#popup-event');
+            if (eventPopupStatus == 0) {
+                eventPopup.animate({
+                    right: '7.5%'
+                }, 500)
+                eventPopupStatus = 1;
+            } else {
+                eventPopup.animate({
+                    right: '-100%'
+                }, 500)
+                eventPopupStatus = 0;
+            }
+        }
 
-    function openEventModal(json) {
-        console.log(json)
-        $('#popup-event-name').text(json.event_name);
-        $('#popup-event-description').text(json.event_description);
-        if (json.building.building_marker.marker_image) {
-            var marker_image = decodeURIComponent('{{ asset("storage/") }}' + "/" + json.building.building_marker.marker_image); // Decode URL
-            $('#popup-event-image').attr('src', marker_image);
+        function beginEventNavigation(json) {
+            displayProcedureNavbar(json.event_name, null, json.building.building_name);
+            displaySidebar(json.event_instructions, json.event_description, false);
+            displayRoute(json.building.building_name);
         }
-        var eventPopup = $('#popup-event');
-        if (eventPopupStatus == 0) {
-            eventPopup.animate({
-                right: '7.5%'
+
+        function endEventNavigation() {
+            $('#sidebar-btn').show();
+            var procedures = $('#events-cont');
+            procedures.animate({
+                left: '0%'
             }, 500)
-            eventPopupStatus = 1;
-        } else {
-            eventPopup.animate({
-                right: '-100%'
-            }, 500)
-            eventPopupStatus = 0;
+            procedurePopupStatus = 0;
+            hideProcedureNavbar();
+            instructionsSidebar(false);
+            response_json = {};
+            totalWaypoints = 0;
+            removeRenderedPaths();
+            removeGpsMarkers();
+            resetMap();
         }
-    }
-    // End of Events Functions
+
+        var eventDirectionsButton = document.querySelector('#popup-events-directions-btn');
+        eventDirectionsButton.addEventListener('click', function() {
+            $.ajax({
+                url: '{{ route("events.get") }}',
+                data: {
+                    'id': $('#event-id').val()
+                },
+                success: function(response) {
+                    var eventPopup = $('#popup-event');
+                    eventPopup.animate({
+                        right: '-100%'
+                    }, 500)
+                    eventPopupStatus = 0;
+                    var events = $('#events-cont');
+                    var navbar = $('#navbar');
+                    var map = $('#map');
+                    events.animate({
+                        left: '-20%'
+                    }, 500)
+                    navbar.animate({
+                        width: '70%',
+                        marginLeft: '30%'
+                    }, 500);
+                    map.animate({
+                        width: '70%',
+                        marginLeft: '30%'
+                    }, 500)
+                    beginEventNavigation(response.target_event);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+        // End of Events Functions
+    });
 </script>
 @endsection

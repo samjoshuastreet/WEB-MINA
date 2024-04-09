@@ -69,7 +69,7 @@
                 </figure>
                 <div class="details w-[60%] p-4 flex flex-col">
                     <p id="popup-event-description" class="font-poppins-light mb-2"></p>
-                    <button id="popup-directions-btn" type="button" class="px-3 py-2 text-xs font-poppins-light text-center inline-flex items-center text-white bg-green-500 rounded-lg hover:bg-green-600">
+                    <button id="popup-events-directions-btn" type="button" class="px-3 py-2 text-xs font-poppins-light text-center inline-flex items-center text-white bg-green-500 rounded-lg hover:bg-green-600">
                         <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: #fff;">
                             <path d="m2.295 12.707 8.978 9c.389.39 1.025.391 1.414.002l9.021-9a1 1 0 0 0 0-1.416l-9.021-9a.999.999 0 0 0-1.414.002l-8.978 9a.998.998 0 0 0 0 1.412zm6.707-2.706h5v-2l3 3-3 3v-2h-3v4h-2v-6z"></path>
                         </svg>
@@ -78,5 +78,6 @@
                 </div>
             </div>
         </div>
+        <input type="text" name="event_id" id="event-id" style="visibility: hidden;">
     </div>
 </div>
