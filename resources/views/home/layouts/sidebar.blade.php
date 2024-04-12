@@ -3,7 +3,7 @@
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 </head>
 
-<div id="sidebar" class="fixed top-0 left-[-20%] w-[20%] h-full bg-upsdell-900 flex flex-col gap-2">
+<div id="sidebar" class="fixed top-0 w-full left-[-100%] lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 flex flex-col gap-2 z-50">
     <!-- Title -->
     <h1 class="text-white font-poppins-regular p-2 text-center">Directions</h1>
 
@@ -11,6 +11,9 @@
     <!-- Locator -->
     <div class="locator">
         <!-- Starting point form -->
+        <div id="sidebar-close" class="md:hidden lg:hidden absolute top-2 right-2 close-button w-5 h-5 flex items-center justify-center bg-white border border-gray-300 rounded-full cursor-pointer">
+            <span class="text-black text-[0.75rem]">X</span>
+        </div>
         <form id="sidebar-searchbar" class="flex flex-col items-center">
             <label for="starting-point"></label>
             <div class="input-wrapper">

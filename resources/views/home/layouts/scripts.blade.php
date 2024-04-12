@@ -1,4 +1,6 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="{{ asset('assets/admin/plugins/toastr/toastr.min.js') }}"></script>
+<script src="{{ asset('assets/admin/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 @yield('more_scripts')
 <script>
     var sidebarStatus = 0;
@@ -59,10 +61,15 @@
                 marginLeft: '20%'
             }, 500)
         } else if (sidebarStatus == 1) {
-            sidebar.animate({
-                left: "-20%"
-            }, 500);
-
+            if (window.innerWidth <= 767) {
+                sidebar.animate({
+                    left: "-100%"
+                }, 500);
+            } else {
+                sidebar.animate({
+                    left: "-20%"
+                }, 500);
+            }
             sidebarStatus = 0;
 
             navbar.animate({
@@ -161,9 +168,15 @@
         }, 500)
 
         if (sidebarStatus == 1) {
-            sidebar.animate({
-                left: "-20%"
-            }, 500)
+            if (window.innerWidth <= 767) {
+                sidebar.animate({
+                    left: "-100%"
+                }, 500)
+            } else {
+                sidebar.animate({
+                    left: "-20%"
+                }, 500)
+            }
 
             sidebarStatus = 0;
         }
@@ -188,10 +201,15 @@
         }, 500)
 
         if (sidebarStatus == 1) {
-            sidebar.animate({
-                left: "-20%"
-            }, 500)
-
+            if (window.innerWidth <= 767) {
+                sidebar.animate({
+                    left: "-100%"
+                }, 500)
+            } else {
+                sidebar.animate({
+                    left: "-20%"
+                }, 500)
+            }
             sidebarStatus = 0;
         }
     });
@@ -215,10 +233,15 @@
         }, 500)
 
         if (sidebarStatus == 1) {
-            sidebar.animate({
-                left: "-20%"
-            }, 500)
-
+            if (window.innerWidth <= 767) {
+                sidebar.animate({
+                    left: "-100%"
+                }, 500)
+            } else {
+                sidebar.animate({
+                    left: "-20%"
+                }, 500)
+            }
             sidebarStatus = 0;
         }
     });
@@ -245,10 +268,44 @@
         var navbar = $('#navbar');
         var map = $('#map');
         var sidebar = $('#sidebar'); // Add this line
+        if (window.innerWidth <= 767) {
+            procedures.animate({
+                left: '-100%'
+            }, 500)
+        } else {
+            procedures.animate({
+                left: '-20%'
+            }, 500)
 
-        procedures.animate({
-            left: '-20%'
+        }
+        navbar.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500);
+        map.animate({
+            width: '80%',
+            marginLeft: '20%'
         }, 500)
+        sidebar.animate({ // Add this block
+            left: '0%'
+        }, 500);
+        sidebarStatus = 1;
+    });
+
+    $('#events-close-btn').on('click', function() {
+        var events = $('#events-cont');
+        var navbar = $('#navbar');
+        var map = $('#map');
+        var sidebar = $('#sidebar'); // Add this line
+        if (window.innerWidth <= 767) {
+            events.animate({
+                left: '-100%'
+            }, 500)
+        } else {
+            events.animate({
+                left: '-20%'
+            }, 500)
+        }
         navbar.animate({
             width: '80%',
             marginLeft: '20%'
@@ -264,28 +321,8 @@
         sidebarStatus = 1;
     });
 
-    $('#events-close-btn').on('click', function() {
-        var events = $('#events-cont');
-        var navbar = $('#navbar');
-        var map = $('#map');
-        var sidebar = $('#sidebar'); // Add this line
-
-        events.animate({
-            left: '-20%'
-        }, 500)
-        navbar.animate({
-            width: '80%',
-            marginLeft: '20%'
-        }, 500);
-        map.animate({
-            width: '80%',
-            marginLeft: '20%'
-        }, 500)
-
-        sidebar.animate({ // Add this block
-            left: '0%'
-        }, 500);
-        sidebarStatus = 1;
+    $('#sidebar-close').click(function() {
+        $('#sidebar-btn').click();
     });
 </script>
 </div>

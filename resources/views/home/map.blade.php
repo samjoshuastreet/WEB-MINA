@@ -27,6 +27,20 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     }
 
+    @media only screen and (max-width: 767px) {
+        .ui-autocomplete {
+            max-height: 200px;
+            max-width: 67.5%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1000;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+    }
+
     .ui-state-focus {
         background-color: #f0f0f0;
     }
@@ -88,7 +102,7 @@
     </div>
 </div>
 
-<div id="directions-cont" class="fixed py-8 top-0 left-[-30%] w-[30%] h-full z-30">
+<div id="directions-cont" class="fixed py-8 top-0 w-[30%] left-[-30%] lg:left-[-30%] lg:w-[30%] h-full z-50">
     <h1 class="text-white font-poppins-regular p-2 text-center">Directions Here</h1>
     <div class="flex flex-col items-center gap-2 w-full h-full">
         <div class="w-[80%] h-[80%] rounded-lg bg-white p-2" style="overflow-y: auto;">
@@ -104,7 +118,7 @@
     </div>
 </div>
 
-<div id="procedures-cont" class="fixed py-8 top-0 left-[-20%] w-[20%] h-full bg-upsdell-900 z-30">
+<div id="procedures-cont" class="fixed py-8 top-0 left-[-100%] lg:left-[-20%] w-full lg:w-[20%] h-full bg-upsdell-900 z-50">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" id="procedures-close-btn" fill="white" class="bi bi-x-circle-fill absolute top-[2.5%] right-[5%] hover:cursor-pointer" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
     </svg>
@@ -130,7 +144,7 @@
     </div>
 </div>
 
-<div id="events-cont" class="fixed py-8 top-0 left-[-20%] w-[20%] h-full bg-upsdell-900 z-30">
+<div id="events-cont" class="fixed py-8 top-0 left-[-100%] w-full lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 z-30">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" id="events-close-btn" fill="white" class="bi bi-x-circle-fill absolute top-[2.5%] right-[5%] hover:cursor-pointer" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
     </svg>
@@ -155,10 +169,43 @@
         </ul>
     </div>
 </div>
+
+<!-- Modals -->
+<div id="origin-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Choose a Starting Point
+                </h3>
+                <button type="button" id="origin-modal-close" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5">
+                <form class="space-y-4" action="#">
+                    <div>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                        <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com" required />
+                    </div>
+
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Get Directions</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modals -->
 @endsection
 @section('more_scripts')
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 <script>
     $(document).ready(function() {
         // Map Initialization
@@ -270,16 +317,14 @@
         // Building Information Functions
         $(document).on('click', '.display-marker', function() {
             var samplePopup = $('#popup-sample');
-            if (samplePopupStatus == 0) {
+            if (window.innerWidth <= 767) {
                 samplePopup.animate({
                     right: '7.5%'
                 }, 500)
-                samplePopupStatus = 1;
             } else {
                 samplePopup.animate({
-                    right: '-100%'
+                    right: '7.5%'
                 }, 500)
-                samplePopupStatus = 0;
             }
             var target = $(this).attr('display-marker');
             $('.popup-sample-btn').click();
@@ -570,6 +615,29 @@
                 });
             });
         }
+
+        function determineOriginPoint() {
+            Swal.fire({
+                title: "Do you want to use you current location as your starting point?",
+                showDenyButton: true,
+                confirmButtonText: "Yes",
+                denyButtonText: "No"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                } else {
+                    $('#origin-modal').show().addClass('modal-open');
+                }
+            });
+        }
+
+        $('#origin-modal-close').click(function() {
+            var modal = $('#origin-modal');
+            modal.removeClass('modal-open');
+            setTimeout(function() {
+                modal.hide();
+            }, 200);
+        });
         // End of Dijkstra's Algorithm
 
         // Searchbar Functions
@@ -588,6 +656,20 @@
                 $('#destination').autocomplete({
                     source: building_names
                 });
+
+                // Function to set max-width of .ui-autocomplete to match the input's width
+                function setAutocompleteWidth() {
+                    var inputWidth = $('#starting-point').outerWidth();
+                    $('.ui-autocomplete').css('max-width', inputWidth);
+                }
+
+                // Call the function initially
+                setAutocompleteWidth();
+
+                // Recalculate and set the width whenever the window is resized
+                $(window).resize(function() {
+                    setAutocompleteWidth();
+                });
             },
             error: (error) => {
                 console.log(error);
@@ -598,6 +680,9 @@
             e.preventDefault();
             var data = $(this).serialize();
             data += '&sidebar=true';
+            if (window.innerWidth <= 767) {
+                sidebarToggle(false);
+            }
             if (_gps === false) {
                 $.ajax({
                     url: '{{ route("directions.get.polarpoints") }}',
@@ -620,7 +705,7 @@
                     }
                 })
             } else {
-                var currentLocationSample = [124.24333777347061, 8.240546148594902];
+                var currentLocationSample = [124.2446572386292, 8.2412528560357];
                 nearestLine(currentLocationSample);
             }
         });
@@ -916,48 +1001,48 @@
             });
         }
         // End of Realtime Origin Point
-        var polygonData = {
-            'type': 'FeatureCollection',
-            'features': [{
-                'type': 'Feature',
-                'properties': {
-                    'description': 'School of Engineering Technology'
-                },
-                'geometry': {
-                    'type': 'Polygon',
-                    'coordinates': [
-                        [
-                            [124.24394963376335, 8.240492844326639],
-                            [124.24443740131852, 8.24040243975439],
-                            [124.24453083874386, 8.24122316165223],
-                            [124.24406612293791, 8.24128212387022]
-                        ]
-                    ]
-                }
-            }]
-        };
-        map.on('load', function() {
-            map.addSource('polygon', {
-                'type': 'geojson',
-                'data': polygonData
-            });
+        // var polygonData = {
+        //     'type': 'FeatureCollection',
+        //     'features': [{
+        //         'type': 'Feature',
+        //         'properties': {
+        //             'description': 'School of Engineering Technology'
+        //         },
+        //         'geometry': {
+        //             'type': 'Polygon',
+        //             'coordinates': [
+        //                 [
+        //                     [124.24394963376335, 8.240492844326639],
+        //                     [124.24443740131852, 8.24040243975439],
+        //                     [124.24453083874386, 8.24122316165223],
+        //                     [124.24406612293791, 8.24128212387022]
+        //                 ]
+        //             ]
+        //         }
+        //     }]
+        // };
+        // map.on('load', function() {
+        //     map.addSource('polygon', {
+        //         'type': 'geojson',
+        //         'data': polygonData
+        //     });
 
-            map.addLayer({
-                'id': 'polygon-labels',
-                'type': 'symbol',
-                'source': 'polygon',
-                'layout': {
-                    'text-field': ['get', 'description'],
-                    'text-size': 12,
-                    'text-anchor': 'top',
-                    'symbol-placement': 'point', // Set symbol placement to 'point'
-                    'text-offset': [0, -2] // Adjust text offset to position it above the building
-                },
-                'paint': {
-                    'text-color': '#000000' // Adjust text color as needed
-                }
-            });
-        });
+        //     map.addLayer({
+        //         'id': 'polygon-labels',
+        //         'type': 'symbol',
+        //         'source': 'polygon',
+        //         'layout': {
+        //             'text-field': ['get', 'description'],
+        //             'text-size': 12,
+        //             'text-anchor': 'top',
+        //             'symbol-placement': 'point', // Set symbol placement to 'point'
+        //             'text-offset': [0, -2] // Adjust text offset to position it above the building
+        //         },
+        //         'paint': {
+        //             'text-color': '#000000' // Adjust text color as needed
+        //         }
+        //     });
+        // });
 
         function removeGpsMarkers() {
             var allGpsMarkers = document.querySelectorAll('.gps-marker');
@@ -984,17 +1069,39 @@
         var procedurePopupStatus = 0;
         $('.procedure-item').click(function() {
             var procedurePopup = $('#popup-procedure');
+            var proceduresCont = $('#procedures-cont');
+            var navbar = $('#navbar');
+            var map = $('#map');
             if (procedurePopupStatus == 0) {
                 displayProcedureTimeline($(this).attr('procedure_id'));
+                if (window.innerWidth <= 767) {
+                    proceduresCont.animate({
+                        left: '-100%'
+                    }, 500)
+                    navbar.animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500);
+                    map.animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500)
+                }
                 procedurePopup.animate({
                     right: '7.5%'
                 }, 500)
                 procedurePopupStatus = 1;
             } else {
-                procedurePopup.animate({
-                    right: '-100%'
-                }, 500)
-                procedurePopupStatus = 0;
+                if (window.innerWidth <= 767) {
+                    proceduresCont.animate({
+                        left: '0%'
+                    }, 500)
+                } else {
+                    procedurePopup.animate({
+                        right: '-100%'
+                    }, 500)
+                    procedurePopupStatus = 0;
+                }
             }
         });
         $('.popup-procedure-close-btn').on('click', function() {
@@ -1067,9 +1174,13 @@
         function beginProcedureNagivation(json) {
             $('#sidebar-btn').hide();
             var procedures = $('#procedures-cont');
-            procedures.animate({
-                left: '-20%'
-            }, 500)
+            if (window.innerWidth > 767) {
+                procedures.animate({
+                    left: '-20%'
+                }, 500)
+            } else {
+                $('#popup-event').hide();
+            }
             var procedurePopup = $('#popup-procedure');
             procedurePopup.animate({
                 right: '-100%'
@@ -1119,6 +1230,7 @@
 
         function beginStep(index, totalWaypoints, json) {
             if (index == 0) {
+                determineOriginPoint();
                 displayRoute(json.waypoints[index].building_id);
                 displaySidebar(json.waypoints[index].instructions, json.target_procedure.initial_instructions, true);
             } else {
@@ -1173,7 +1285,7 @@
         }
 
         function locateUser() {
-            var currentLocationSample = [124.24333777347061, 8.240546148594902];
+            var currentLocationSample = [124.2446572386292, 8.2412528560357];
             _gps = true;
             return currentLocationSample;
         }
@@ -1233,6 +1345,41 @@
             removeRenderedPaths();
             removeGpsMarker();
             resetMap();
+        }
+
+        function sidebarToggle(state) {
+            var sidebar = $('#sidebar');
+            var navbar = $('#navbar');
+            var map = $('#map');
+            if (state) {
+                if (window.innerWidth <= 767) {
+                    sidebar.animate({
+                        left: '100%'
+                    }, 500);
+                } else {
+                    sidebar.animate({
+                        left: '20%'
+                    }, 500);
+                }
+            } else {
+                if (window.innerWidth <= 767) {
+                    navbar.animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500);
+                    map.animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500)
+                    sidebar.animate({
+                        left: '-100%'
+                    }, 500);
+                } else {
+                    sidebar.animate({
+                        left: '-20%'
+                    }, 500);
+                }
+            }
         }
 
         // End of Procedures Functions
@@ -1311,6 +1458,19 @@
             }
             var eventPopup = $('#popup-event');
             if (eventPopupStatus == 0) {
+                if (window.innerWidth <= 767) {
+                    $('#events-cont').animate({
+                        left: "-100%"
+                    }, 500);
+                    $('#map').animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500)
+                    $('#navbar').animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500);
+                }
                 eventPopup.animate({
                     right: '7.5%'
                 }, 500)
@@ -1380,6 +1540,15 @@
             });
         });
         // End of Events Functions
+
+        // Smaller Screen
+        if (window.innerWidth <= 767) {
+            $('#procedure-next-btn').hide();
+            $('#procedure-prev-btn').hide();
+            $('#procedure-end-btn').hide();
+            $('#event-end-btn').hide();
+        }
+        // End of Smaller Screens
     });
 </script>
 @endsection

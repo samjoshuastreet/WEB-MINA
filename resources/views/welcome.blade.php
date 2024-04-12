@@ -9,6 +9,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        @media (max-width: 767px) {
+            #navbar-logo {
+                content: url("{{ asset('assets/logos/logo-only.png') }}");
+            }
+        }
+    </style>
 </head>
 
 <body id="top" class="overflow-y-auto overflow-x-hidden">
@@ -17,19 +24,19 @@
     <div id="content">
 
         <div id="cover" class="h-screen w-screen flex justify-center items-center flex-col">
-            <div class="h-[62.5%] w-[100%] relative">
-                <img src="{{ asset('assets/images/landing/cover.png') }}" alt="MSU-IIT Map Logo" class="lg:h-[200px] bottom-[15%] left-[50%] translate-x-[-50%] absolute">
+            <div class="h-[47.5%] lg:h-[62.5%] w-[100%] relative">
+                <img src="{{ asset('assets/images/landing/cover.png') }}" alt="MSU-IIT Map Logo" class="h-[75px] md:h-[150px] lg:h-[200px] bottom-[5%] left-[50%] translate-x-[-50%] absolute">
             </div>
-            <div class="h-[37.5%] w-[100%] text-center">
-                <ul class="flex flex-row justify-center items-start gap-24">
+            <div class="h-[52.5%] lg:h-[37.5%] w-[100%] text-center">
+                <ul class="flex flex-row justify-center items-start">
                     <a href="{{ route('home') }}">
-                        <li class=" bg-upsdell-900 text-white text-sm font-poppins-regular w-[120px] py-1.5 px-1 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Get Started</li>
+                        <li class=" bg-upsdell-900 text-white text-[0.60rem] md:text-[0.90rem] lg:text-sm font-poppins-regular w-[75px] md:w-[110px] lg:w-[120px] py-0.5 md:py-1.5 px-1 md:px-1.5 lg:py-1.5 lg:px-1 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Get Started</li>
                     </a>
-                    <li class="login-btn bg-upsdell-900 text-white text-sm font-poppins-regular w-[120px] py-1.5 px-2 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Login</li>
-                    <li class="register-btn bg-upsdell-900 text-white text-sm font-poppins-regular w-[120px] py-1.5 px-2 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Register</li>
+                    <!-- <li class="login-btn bg-upsdell-900 text-white text-sm font-poppins-regular w-[120px] py-1.5 px-2 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Login</li>
+                    <li class="register-btn bg-upsdell-900 text-white text-sm font-poppins-regular w-[120px] py-1.5 px-2 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Register</li> -->
                 </ul>
             </div>
-            <div id="loginform" class="absolute w-[100%] h-[calc(100vh-50px)] top-0 right-[-100%] bg-white flex flex-col justify-center items-center gap-12 transition duration-500">
+            <!-- <div id="loginform" class="absolute w-[100%] h-[calc(100vh-50px)] top-0 right-[-100%] bg-white flex flex-col justify-center items-center gap-12 transition duration-500">
                 <div class="flex justify-center items-end"><img src="{{ asset('assets/images/landing/cover.png') }}" alt="MSU-IIT Map Logo" class="h-[80px]"></div>
                 <form id="login-form" action="" class="w-[820px] flex flex-col justify-center" method="post">
                     <div class="flex flex-col mx-auto justify-center items-center gap-4 w-[50%] h-fit py-8 rounded-3xl bg-upsdell-900">
@@ -47,8 +54,8 @@
                         <button id="back-btn" class="bg-raisin-500 font-poppins-regular text-white text-sm py-1 px-6 rounded-lg" type="button">Back</button>
                     </div>
                 </form>
-            </div>
-            <div id="registrationform" class="absolute w-[100%] h-[calc(100vh-50px)] left-[-100%] top-0 bg-white flex flex-col justify-center items-center gap-12 transition duration-500">
+            </div> -->
+            <!-- <div id="registrationform" class="absolute w-[100%] h-[calc(100vh-50px)] left-[-100%] top-0 bg-white flex flex-col justify-center items-center gap-12 transition duration-500">
                 <div class="flex justify-center items-end"><img src="{{ asset('assets/images/landing/cover.png') }}" alt="MSU-IIT Map Logo" class="h-[80px]"></div>
                 <form id="registration-form" class="w-[820px] flex flex-col justify-center" method="post">
                     <div class="flex flex-col mx-auto justify-center items-center gap-4 w-[50%] h-fit py-6 rounded-3xl bg-upsdell-900">
@@ -77,7 +84,7 @@
                         <button id="reg-back-btn" class="bg-raisin-500 font-poppins-regular text-white text-sm py-1 px-6 rounded-lg" type="button">Back</button>
                     </div>
                 </form>
-            </div>
+            </div> -->
         </div>
 
         <div id="about" class="flex w-screen h-screen">
@@ -91,7 +98,7 @@
                 </div>
             </div>
             <div class="h-full bg-upsdell-900 p-8 text-white text-lg">
-                <div class="text-container"> 
+                <div class="text-container">
                     <h1>MSU-IIT: Empowering Minds, Transforming Communities</h1>
                     <p class="block mt-1 text-lg leading-tight font-medium text-white">
                         Discover excellence at Mindanao State University – Iligan Institute of Technology (MSU-IIT). Founded in 1968 under Republic Act 5363, MSU-IIT is a leading state university renowned for its commitment to academic excellence, holistic development, and community engagement. Led by Prof. Alizedney M. Ditucalan, JD, LLM, MSU-IIT fosters a diverse and inclusive environment where global competitiveness thrives. Explore our achievements, leadership, and impact on technological advancements in Iligan City. Join us in shaping the future.
@@ -115,13 +122,13 @@
                             <form>
                                 <label for="name"></label>
                                 <input type="text" id="name" name="name" placeholder="Name" class="contact-form-txt" />
-                                
+
                                 <label for="email"></label>
                                 <input type="text" id="email" name="email" placeholder="Email" class="contact-form-txt" />
-                                
+
                                 <label for="message"></label>
                                 <textarea id="message" name="message" placeholder="Message" class="contact-form-txtarea"></textarea>
-                                
+
                                 <input type="submit" name="Submit" class="contact-form-btn" />
                             </form>
                         </div>
