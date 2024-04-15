@@ -100,6 +100,13 @@
             <span class="font-poppins-ultra">Destination:</span> <span id="map-navbar-destination"></span>
         </div>
     </div>
+    <button id="marker-toggle" type="button" class="absolute bottom-10 right-4 z-50 text-upsdell-900 border border-upsdell-900 hover:bg-upsdell-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-upsdell-900 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-upsdell-900 dark:text-upsdell-900 dark:hover:text-white dark:focus:ring-upsdell-900 dark:hover:bg-upsdell-900">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tags" viewBox="0 0 16 16">
+            <path d="M3 2v4.586l7 7L14.586 9l-7-7zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586z" />
+            <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1z" />
+        </svg>
+        <span class="sr-only">Icon description</span>
+    </button>
 </div>
 
 <div id="directions-cont" class="fixed py-8 top-0 w-[30%] left-[-30%] lg:left-[-30%] lg:w-[30%] h-full z-50">
@@ -189,14 +196,12 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5">
-                <form class="space-y-4" action="#">
-                    <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                        <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com" required />
-                    </div>
+                <div>
+                    <label for="custom-starting-point" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Building Select</label>
+                    <input type="search" name="origin" id="custom-starting-point" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Choose starting point..." required autocomplete="off" autofocus required />
+                </div>
 
-                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Get Directions</button>
-                </form>
+                <button type="button" id="custom-starting-point-btn" class="mt-1 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Get Directions</button>
             </div>
         </div>
     </div>
@@ -222,7 +227,8 @@
                 [124.25301604017682, 8.248537110726303] // Northeast bound
             ]
         });
-        map.addControl(new mapboxgl.NavigationControl());
+        map.addControl(new mapboxgl.NavigationControl())
+
 
         // Initialize the GeolocateControl.
         const geolocate = new mapboxgl.GeolocateControl({
@@ -255,6 +261,7 @@
             }
             if (boundary) {
                 data['boundary'] = true;
+                data['boundary_with_name'] = true;
             }
             $.ajax({
                 url: '{{ route("buildings.get") }}',
@@ -279,13 +286,61 @@
                                 .addTo(map);
                         });
                     }
+                    if (boundary) {
+                        var boundaries = response.boundaries;
+                        boundaries.forEach(boundary => {
+                            var cornerData = JSON.parse(boundary.corners);
+                            var coordinates = [];
+                            for (let key in cornerData) {
+                                coordinates.push([cornerData[key].lng, cornerData[key].lat]);
+                            }
+                            var polygonData = {
+                                'type': 'FeatureCollection',
+                                'features': [{
+                                    'type': 'Feature',
+                                    'properties': {
+                                        'description': boundary.building.building_name
+                                    },
+                                    'geometry': {
+                                        'type': 'Polygon',
+                                        'coordinates': [
+                                            coordinates
+                                        ]
+                                    }
+                                }]
+                            };
+                            map.on('load', function() {
+                                map.addSource(`polygon-label-${boundary.building.id}`, {
+                                    'type': 'geojson',
+                                    'data': polygonData
+                                });
+
+                                map.addLayer({
+                                    'id': `polygon-label-${boundary.building.id}`,
+                                    'type': 'symbol',
+                                    'source': `polygon-label-${boundary.building.id}`,
+                                    'layout': {
+                                        'text-field': ['get', 'description'],
+                                        'text-size': 10,
+                                        'text-anchor': 'top',
+                                        'symbol-placement': 'point', // Set symbol placement to 'point'
+                                        'text-offset': [0, -2] // Adjust text offset to position it above the building
+                                    },
+                                    'paint': {
+                                        'text-color': '#000000' // Adjust text color as needed
+                                    }
+                                });
+                                map.setLayoutProperty(`polygon-label-${boundary.building.id}`, 'visibility', 'none');
+                            });
+                        });
+                    }
                 },
                 error: function(error) {
                     console.log(error);
                 }
             })
         }
-        renderElements(false, true, false, false);
+        renderElements(false, true, false, true);
         // End of Element Rendering
 
         // Map Elements Optimizations
@@ -615,20 +670,37 @@
                 });
             });
         }
-
-        function determineOriginPoint() {
-            Swal.fire({
-                title: "Do you want to use you current location as your starting point?",
-                showDenyButton: true,
-                confirmButtonText: "Yes",
-                denyButtonText: "No"
-            }).then((result) => {
-                if (result.isConfirmed) {
-
-                } else {
-                    $('#origin-modal').show().addClass('modal-open');
-                }
+        async function determineOriginPoint() {
+            let determineOriginPointPromise = new Promise(function(myResolve, myReject) {
+                Swal.fire({
+                    title: "Do you want to use you current location as your starting point?",
+                    showDenyButton: true,
+                    confirmButtonText: "Yes, I'll use GPS for my starting point",
+                    denyButtonText: "No, I'll specify my starting point"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        myResolve(true);
+                    } else {
+                        myResolve(false);
+                    }
+                });
             });
+            return await determineOriginPointPromise;
+        }
+
+        async function getOriginPoint() {
+            let getOriginPointPromise = new Promise(function(myResolve, myReject) {
+                var customStartingPointBtn = document.getElementById('custom-starting-point-btn');
+                customStartingPointBtn.addEventListener('click', function() {
+                    var originPointResult = document.getElementById('custom-starting-point').value;
+                    if (originPointResult) {
+                        myResolve(originPointResult);
+                    } else {
+                        myReject(false);
+                    }
+                })
+            })
+            return await getOriginPointPromise;
         }
 
         $('#origin-modal-close').click(function() {
@@ -637,6 +709,7 @@
             setTimeout(function() {
                 modal.hide();
             }, 200);
+            endProcedureNavigation();
         });
         // End of Dijkstra's Algorithm
 
@@ -656,7 +729,9 @@
                 $('#destination').autocomplete({
                     source: building_names
                 });
-
+                $('#custom-starting-point').autocomplete({
+                    source: building_names
+                });
                 // Function to set max-width of .ui-autocomplete to match the input's width
                 function setAutocompleteWidth() {
                     var inputWidth = $('#starting-point').outerWidth();
@@ -796,35 +871,6 @@
             });
         }
 
-        // function locateUser() {
-        //     var thisLine = [
-        //         [124.24372302907886, 8.242335593748535],
-        //         [124.24354731894357, 8.242714235990405]
-        //     ]
-        //     map.addLayer({
-        //         'id': `route-path`,
-        //         'type': 'line',
-        //         'source': {
-        //             'type': 'geojson',
-        //             'data': {
-        //                 'type': 'Feature',
-        //                 'properties': {},
-        //                 'geometry': {
-        //                     'type': 'LineString',
-        //                     'coordinates': thisLine
-        //                 }
-        //             }
-        //         },
-        //         'layout': {
-        //             'line-join': 'round',
-        //             'line-cap': 'round'
-        //         },
-        //         'paint': {
-        //             'line-color': 'blue',
-        //             'line-width': 4
-        //         }
-        //     }, 'waterway-label');
-        // }
         map.on('click', (e) => {
             console.log(e.lngLat);
         });
@@ -1000,49 +1046,6 @@
                 }
             });
         }
-        // End of Realtime Origin Point
-        // var polygonData = {
-        //     'type': 'FeatureCollection',
-        //     'features': [{
-        //         'type': 'Feature',
-        //         'properties': {
-        //             'description': 'School of Engineering Technology'
-        //         },
-        //         'geometry': {
-        //             'type': 'Polygon',
-        //             'coordinates': [
-        //                 [
-        //                     [124.24394963376335, 8.240492844326639],
-        //                     [124.24443740131852, 8.24040243975439],
-        //                     [124.24453083874386, 8.24122316165223],
-        //                     [124.24406612293791, 8.24128212387022]
-        //                 ]
-        //             ]
-        //         }
-        //     }]
-        // };
-        // map.on('load', function() {
-        //     map.addSource('polygon', {
-        //         'type': 'geojson',
-        //         'data': polygonData
-        //     });
-
-        //     map.addLayer({
-        //         'id': 'polygon-labels',
-        //         'type': 'symbol',
-        //         'source': 'polygon',
-        //         'layout': {
-        //             'text-field': ['get', 'description'],
-        //             'text-size': 12,
-        //             'text-anchor': 'top',
-        //             'symbol-placement': 'point', // Set symbol placement to 'point'
-        //             'text-offset': [0, -2] // Adjust text offset to position it above the building
-        //         },
-        //         'paint': {
-        //             'text-color': '#000000' // Adjust text color as needed
-        //         }
-        //     });
-        // });
 
         function removeGpsMarkers() {
             var allGpsMarkers = document.querySelectorAll('.gps-marker');
@@ -1230,9 +1233,30 @@
 
         function beginStep(index, totalWaypoints, json) {
             if (index == 0) {
-                determineOriginPoint();
-                displayRoute(json.waypoints[index].building_id);
-                displaySidebar(json.waypoints[index].instructions, json.target_procedure.initial_instructions, true);
+                determineOriginPoint().then(
+                    function(value) {
+                        var originModeResults = value;
+                        if (originModeResults) {
+                            displayRoute(json.waypoints[index].building_id);
+                            displaySidebar(json.waypoints[index].instructions, json.target_procedure.initial_instructions, 'first');
+                        } else {
+                            $('#origin-modal').show();
+                            getOriginPoint().then(
+                                function(value) {
+                                    displayRoute(json.waypoints[index].building.building_name, value);
+                                    displaySidebar(json.waypoints[index].instructions, json.target_procedure.initial_instructions, 'first');
+                                    $('#origin-modal').hide();
+                                },
+                                function(error) {
+                                    console.log(error)
+                                }
+                            )
+                        }
+                    },
+                    function(error) {
+                        console.log(error)
+                    }
+                );
             } else {
                 displayRoute(json.waypoints[index].building.building_name, json.waypoints[index - 1].building.building_name);
                 displaySidebar(json.waypoints[index].instructions, null, true);
@@ -1321,8 +1345,12 @@
             if (procedure) {
                 $('#procedure-end-btn').show();
                 $('#event-end-btn').hide();
+                if (procedure == 'first') {
+                    $('#procedure-prev-btn').css('visibility', 'invisible');
+                } else {
+                    $('#procedure-prev-btn').css('visibility', 'visible');
+                }
                 $('#procedure-next-btn').css('visibility', 'visible');
-                $('#procedure-prev-btn').css('visibility', 'visible');
             } else {
                 $('#procedure-end-btn').hide();
                 $('#event-end-btn').show();
@@ -1485,8 +1513,31 @@
 
         function beginEventNavigation(json) {
             displayProcedureNavbar(json.event_name, null, json.building.building_name);
-            displaySidebar(json.event_instructions, json.event_description, false);
-            displayRoute(json.building.building_name);
+
+            determineOriginPoint().then(
+                function(value) {
+                    var originModeResults = value;
+                    if (originModeResults) {
+                        displaySidebar(json.event_instructions, json.event_description, false);
+                        displayRoute(json.building.building_name);
+                    } else {
+                        $('#origin-modal').show();
+                        getOriginPoint().then(
+                            function(value) {
+                                displaySidebar(json.event_instructions, json.event_description, false);
+                                displayRoute(json.building.building_name, value);
+                                $('#origin-modal').hide();
+                            },
+                            function(error) {
+                                console.log(error)
+                            }
+                        )
+                    }
+                },
+                function(error) {
+                    console.log(error)
+                }
+            );
         }
 
         function endEventNavigation() {
@@ -1549,6 +1600,24 @@
             $('#event-end-btn').hide();
         }
         // End of Smaller Screens
+
+        // Marker Toggle
+        var markerToggleStatus = 0;
+        var displayMarkers = document.querySelectorAll('.display-marker');
+        map.on('style.load', function() {
+            $('#marker-toggle').click(function() {
+                displayMarkers.forEach(marker => {
+                    marker.style.visibility = 'hidden';
+                })
+            })
+        });
+        // End of Marker Toggle
+
+        // Custom Starting Point
+        $('#custom-origin-form').submit(function() {
+
+        });
+        // End of Custom Starting Point
     });
 </script>
 @endsection
