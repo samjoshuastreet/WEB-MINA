@@ -43,7 +43,7 @@
                                         <th style="width: 16%;">Waypoint A Coordinates</th>
                                         <th style="width: 16%;">Waypoint B Code Name</th>
                                         <th style="width: 16%;">Waypoint B Coordinates</th>
-                                        <td style="width: 16%;">Distance</td>
+                                        <th style="width: 16%;">Distance</th>
                                         <th style="width: 15%;">Action</th>
                                     </tr>
                                 </thead>

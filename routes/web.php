@@ -49,6 +49,7 @@ Route::get('/admin/paths/add-submit', [PathController::class, 'add_submit'])->na
 Route::get('/admin/paths/add-validator', [PathController::class, 'validator'])->name('paths.add.validator');
 Route::get('/admin/paths/edit', [PathController::class, 'edit'])->name('paths.edit');
 Route::get('/admin/paths/delete', [PathController::class, 'delete'])->name('paths.delete');
+Route::get('/admin/paths/reset', [PathController::class, 'reset'])->name('paths.reset');
 
 Route::get('/directions/get', [DirectionsController::class, 'get'])->name('directions.get');
 Route::get('/directions/get/polarpoints', [DirectionsController::class, 'polarpoints'])->name('directions.get.polarpoints');
@@ -58,11 +59,15 @@ Route::get('/procedures/add', [ProcedureController::class, 'add'])->name('proced
 Route::get('/procedures/add/validate', [ProcedureController::class, 'add_validate'])->name('procedures.add.validate');
 Route::get('/procedures/add/submit', [ProcedureController::class, 'add_submit'])->name('procedures.add.submit');
 Route::get('/procedures/get', [ProcedureController::class, 'get'])->name('procedures.get');
+Route::get('/procedures/delete', [ProcedureController::class, 'delete'])->name('procedures.delete');
+Route::get('/procedures/all', [ProcedureController::class, 'all'])->name('procedures.all');
 
 Route::get('/events/index', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/add', [EventController::class, 'add'])->name('events.add');
 Route::get('/events/add/validate', [EventController::class, 'add_validate'])->name('events.add.validate');
 Route::get('/events/get', [EventController::class, 'get'])->name('events.get');
+Route::get('/events/delete', [EventController::class, 'delete'])->name('events.delete');
+Route::get('/events/all', [EventController::class, 'all'])->name('events.all');
 
 Route::get('/msuiit_map', function () {
     return view('msuiit_map');

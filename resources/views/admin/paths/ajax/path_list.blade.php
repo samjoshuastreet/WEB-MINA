@@ -16,6 +16,6 @@
 </tr>
 @empty
 <tr>
-    <td colspan="5" class="text-center">No Records Found</td>
+    <td colspan="7" class="text-center">No Records Found</td>
 </tr>
 @endforelse

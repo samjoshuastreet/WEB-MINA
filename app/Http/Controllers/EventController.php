@@ -53,4 +53,15 @@ class EventController extends Controller
         $building = $target->building->buildingMarker;
         return response()->json(['target_event' => $target]);
     }
+    public function delete(Request $request)
+    {
+        $target = Event::find($request->input('id'));
+        $target->delete();
+        return response()->json(['name' => $target->event_name]);
+    }
+    public function all()
+    {
+        $events = Event::all();
+        return view('admin.events.ajax.list', compact('events'))->render();
+    }
 }

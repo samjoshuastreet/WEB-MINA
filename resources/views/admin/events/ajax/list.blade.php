@@ -18,7 +18,7 @@
                     </li>
                     <div>
                         <li class=" list-inline-item me-3">
-                            <span class="btn btn-sm btn-danger">Delete</span>
+                            <a identifier='{{ $event->id }}' name='{{ $event->event_name }}' class="event-delete-btn"><span class="btn btn-sm btn-danger">Delete</span></a>
                         </li>
                         <li class="list-inline-item me-3">
                             <span class="btn btn-sm btn-primary">View</span>
@@ -29,5 +29,8 @@
         </div>
     </div>
     @empty
+    <div class="col-xl-12 col-sm-12 text-center">
+        No Records Found
+    </div>
     @endforelse
 </div>

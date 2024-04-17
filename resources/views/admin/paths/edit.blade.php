@@ -56,6 +56,7 @@
                     <button id="deselect-btn" type="button" class="btn btn-sm btn-secondary ml-1" style="display: none;">Deselect</button>
                 </div>
                 <a href="{{ route('paths.add') }}" class="btn btn-sm btn-primary mt-2 mr-2 py-2 px-4" style="position: absolute; z-index: 20; top: 0; right: 0;">Add Path</a>
+                <a id="path-reset-btn" class="btn btn-sm btn-danger mb-2 mr-2 py-1 px-1" style="position: absolute; z-index: 20; bottom: 0; right: 0;">Reset Paths</a>
             </div>
         </div>
     </div>
@@ -139,18 +140,17 @@
                 }
             });
             deselectBtn.style.display = '';
-            editBtn.style.display = '';
+            // editBtn.style.display = '';
             deleteBtn.style.display = '';
         }
     }
 
     function pathDeselected() {
-        map.setPaintProperty(`path-${selectedPath}`, 'line-color', 'blue');
         selectedPath = null;
         renderPaths();
         originalLineColor = 'blue';
         deselectBtn.style.display = 'none';
-        editBtn.style.display = 'none';
+        // editBtn.style.display = 'none';
         deleteBtn.style.display = 'none';
         $('#path-codes-cont').hide();
         $('#path-codes').text('');
@@ -216,7 +216,7 @@
         editMoveBtn.style.display = 'none';
         deleteBtn.style.display = '';
         deselectBtn.style.display = '';
-        editBtn.style.display = '';
+        // editBtn.style.display = '';
         originalLineColor = 'blue';
         map.setPaintProperty(`path-${selectedPath}`, 'line-color', 'blue');
         $('#instructions').text('Select an action.');
@@ -285,6 +285,16 @@
                         [path.wp_b_lng, path.wp_b_lat]
                     ]
                     const pathId = `path-${path.id.toString()}`;
+                    var lineColor;
+                    if (path.type == 'outdoor') {
+                        lineColor = 'blue';
+                    } else if (path.type == 'indoor') {
+                        lineColor = '#FC0FC0';
+                    } else if (path.type == 'pedestrian lane') {
+                        lineColor = 'yellow';
+                    } else if (path.type == 'road') {
+                        lineColor = 'black';
+                    }
                     map.addLayer({
                         'id': `path-${path.id.toString()}`,
                         'type': 'line',
@@ -304,7 +314,7 @@
                             'line-cap': 'round'
                         },
                         'paint': {
-                            'line-color': 'blue',
+                            'line-color': lineColor,
                             'line-width': [
                                 'interpolate',
                                 ['linear'],
@@ -329,7 +339,7 @@
 
                     map.on('mouseleave', pathId, function() {
                         if (moveMode == false) {
-                            map.setPaintProperty(pathId, 'line-color', originalLineColor);
+                            map.setPaintProperty(pathId, 'line-color', lineColor);
                             map.getCanvas().style.cursor = '';
                         }
                     });
@@ -365,5 +375,31 @@
             }
         });
     }
+
+    $('#path-reset-btn').click(function() {
+        Swal.fire({
+            title: 'Resetting the path network means deleting all the existing paths in the database. Are you sure you want to reset the network of paths?',
+            showDenyButton: true,
+            confirmButtonText: 'Reset Paths',
+            denyButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '{{ route("paths.reset") }}',
+                    data: '',
+                    success: (response) => {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'The network of paths has successfully been reset!'
+                        })
+                        renderPaths()
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                })
+            }
+        })
+    });
 </script>
 @endsection

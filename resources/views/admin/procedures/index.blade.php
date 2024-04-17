@@ -45,4 +45,56 @@
 </div>
 @endsection
 @section('more_scripts')
+<script>
+    var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+    });
+
+    function renderList() {
+        $.ajax({
+            url: '{{ route("procedures.all") }}',
+            data: '',
+            success: (html) => {
+                $('#procedure-list').html(html);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        })
+    }
+    const deleteBtns = document.querySelectorAll('.procedure-delete-btn');
+    deleteBtns.forEach(function(delBtn) {
+        delBtn.addEventListener('click', function() {
+            Swal.fire({
+                title: `Are you sure you want to delete the procedure '${$(this).attr('name')}'?`,
+                showDenyButton: true,
+                confirmButtonText: 'Yes',
+                denyButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var id = $(this).attr('identifier');
+                    $.ajax({
+                        url: '{{ route("procedures.delete") }}',
+                        data: {
+                            id: id
+                        },
+                        success: (response) => {
+                            Toast.fire({
+                                icon: 'success',
+                                title: `${response.name} has been deleted successfully!`
+                            });
+                            renderList();
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        }
+                    })
+                }
+            });
+        })
+    });
+</script>
 @endsection

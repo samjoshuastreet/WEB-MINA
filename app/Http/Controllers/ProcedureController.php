@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Procedure;
 use App\Models\ProcedureWaypoint;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Validator;
 
 class ProcedureController extends Controller
@@ -98,5 +99,20 @@ class ProcedureController extends Controller
             $waypoints[$key]->photo = $waypoint->building->buildingMarker->marker_image;
         }
         return response()->json(['success' => true, 'target_procedure' => $target, 'waypoints' => $waypoints]);
+    }
+    public function delete(Request $request)
+    {
+        $target = Procedure::find($request->input('id'));
+        $waypoints = $target->waypoints;
+        foreach ($waypoints as $waypoint) {
+            $waypoint->delete();
+        }
+        $target->delete();
+        return response()->json(['name' => $target->procedure_name]);
+    }
+    public function all()
+    {
+        $procedures = Procedure::all();
+        return view('admin.procedures.ajax.list', compact('procedures'))->render();
     }
 }

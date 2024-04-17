@@ -92,11 +92,22 @@
                 </div>
                 <div id="coordinates-cont" class="bg-light rounded mt-2 ml-2 p-2 d-flex justify-content-center align-items-center border" style="position: absolute; z-index: 2; top: 0; left: 0;">
                     <small class="m-0 mr-2"><span id="instructions" class="text-bold">Step 1: Make a waypoint or choose an existing endpoint.</span> Coordinates: <span id="coordinates-lat" class="text-success"></span>, <span id="coordinates-long" class="text-info"></span>.
-                        <input id="wp-a-code" name="wp_a_code" type="test" placeholder="Code Name" style="width: 100px" maxlength="3">
-                        <input id="wp-b-code" name="wp_b_code" type="test" placeholder="Code Name" style="width: 100px" maxlength="3">
+                        <input id="wp-a-code" name="wp_a_code" type="text" placeholder="Code Name" style="width: 100px" maxlength="3">
+                        <input id="wp-b-code" name="wp_b_code" type="text" placeholder="Code Name" style="width: 100px" maxlength="3">
+                        <input id="landmark" name="landmark" type="text" placeholder="State the nearest landmark for directions guide" style="width: 500px; display: none;">
+                        <select id='path-type-select' name='type' style='display: none;'>
+                            <option value=''>Select a path type</option>
+                            <option value='indoor'>Indoor</option>
+                            <option value='outdoor'>Outdoor</option>
+                            <option value='pedestrian lane'>Pedestrian Lane</option>
+                            <option value='road'>Road</option>
+                        </select>
+                        <label for='cardinal-direction' id='cardinal-direction-label' style='display:none;'>Facing: </label>
+                        <input type="text" name="cardinal-direction" id="cardinal-direction" style="display: none;" readonly>
                     </small>
                     <button id="wp-a-save-btn" type="button" class="btn btn-sm btn-primary">Save</button>
                     <button id="wp-b-save-btn" type="button" class="btn btn-sm btn-primary" style="display: none;">Save</button>
+                    <button id="landmark-save-btn" type="button" class="btn btn-sm btn-primary" style="display: none;">Save</button>
                     <button id="add-path-btn" type="button" class="btn btn-sm btn-primary" style="display: none;">Add</button>
                     <button id="cancel-coordinates-btn" type="button" class="btn btn-sm btn-danger ml-1">Cancel</button>
                 </div>
@@ -397,6 +408,18 @@
                         [path.wp_a_lng, path.wp_a_lat],
                         [path.wp_b_lng, path.wp_b_lat]
                     ]
+                    const paint = {
+                        'line-width': 4
+                    }
+                    if (path.type == 'outdoor') {
+                        paint['line-color'] = 'blue';
+                    } else if (path.type == 'indoor') {
+                        paint['line-color'] = '#FC0FC0';
+                    } else if (path.type == 'pedestrian lane') {
+                        paint['line-color'] = 'yellow';
+                    } else if (path.type == 'road') {
+                        paint['line-color'] = 'black';
+                    }
                     map.addLayer({
                         'id': path.id.toString(),
                         'type': 'line',
@@ -415,10 +438,7 @@
                             'line-join': 'round',
                             'line-cap': 'round'
                         },
-                        'paint': {
-                            'line-color': 'blue',
-                            'line-width': 4
-                        }
+                        'paint': paint
                     }, 'waterway-label');
                     const ael = document.createElement('div');
                     ael.className = 'marker';
@@ -474,6 +494,11 @@
         $('#coordinates-long').text('');
         $('#wp-a-code').val('').hide();
         $('#wp-b-code').val('').hide();
+        $('#landmark').val('').hide();
+        $('#landmark-save-btn').hide();
+        $('#path-type-select').val('').hide();
+        $('#cardinal-direction').hide();
+        $('#cardinal-direction-label').hide();
         resetMarkerColors();
         buildingConnection = false;
         buildingConnectionA = null;
@@ -496,7 +521,7 @@
             $.ajax({
                 url: '{{ route("paths.add.validator") }}',
                 data: {
-                    'code': $('#wp-a-code').val(),
+                    'code': $('#wp-a-code').val().toUpperCase(),
                     'redMarkers': redMarkers,
                     'buildingConnection': buildingConnection
                 },
@@ -525,7 +550,7 @@
                         $.ajax({
                             url: '{{ route("paths.add.validator") }}',
                             data: {
-                                'code': $('#wp-a-code').val(),
+                                'code': $('#wp-a-code').val().toUpperCase(),
                                 'codes': codes,
                                 'entrypoint_validation': true,
                                 'connection': connection
@@ -546,7 +571,7 @@
                                     const el = document.createElement('div');
                                     el.className = 'marker';
                                     const codeValue = document.getElementById('wp-a-code').value;
-                                    el.innerHTML = `<span class="marker-label">${codeValue}</span>`;
+                                    el.innerHTML = `<span class="marker-label">${codeValue.toUpperCase()}</span>`;
                                     wp_a = new mapboxgl.Marker(el)
                                         .setLngLat(lngLat)
                                         .addTo(map);
@@ -591,7 +616,7 @@
             $.ajax({
                 url: '{{ route("paths.add.validator") }}',
                 data: {
-                    'code': $('#wp-b-code').val(),
+                    'code': $('#wp-b-code').val().toUpperCase(),
                     'redMarkers': redMarkers,
                     'buildingConnection': buildingConnection
                 },
@@ -621,7 +646,7 @@
                             $.ajax({
                                 url: '{{ route("paths.add.validator") }}',
                                 data: {
-                                    'code': $('#wp-b-code').val(),
+                                    'code': $('#wp-b-code').val().toUpperCase(),
                                     'codes': codes,
                                     'entrypoint_validation': true,
                                     'connection': connection
@@ -642,7 +667,7 @@
                                         const el = document.createElement('div');
                                         el.className = 'marker';
                                         const codeValue = document.getElementById('wp-b-code').value; // Get value from input field
-                                        el.innerHTML = `<span class="marker-label">${codeValue}</span>`;
+                                        el.innerHTML = `<span class="marker-label">${codeValue.toUpperCase()}</span>`;
                                         wp_b = new mapboxgl.Marker(el)
                                             .setLngLat(bLngLat)
                                             .addTo(map);
@@ -671,12 +696,20 @@
                                                 'line-width': 8
                                             }
                                         }, 'waterway-label');
-
-                                        $('#instructions').text('Step 3: Recheck if you are satistied with the path.');
+                                        $('#instructions').text('Step 3: Provide a landmark for navigation guide (optional). And declare the path type.');
                                         $('#wp-b-save-btn').hide();
                                         $('#wp-b-code').hide();
-                                        $('#add-path-btn').show();
-
+                                        $('#landmark').show();
+                                        $('#path-type-select').show();
+                                        $('#landmark-save-btn').show();
+                                        $('#cardinal-direction').show();
+                                        $('#cardinal-direction-label').show();
+                                        $('#cardinal-direction').val(getCardinalDirection(
+                                            turf.bearing(
+                                                turf.point([aLngLat.lng, aLngLat.lat]),
+                                                turf.point([bLngLat.lng, bLngLat.lat])
+                                            )
+                                        ));
                                         const {
                                             lineDistance
                                         } = turf;
@@ -712,6 +745,37 @@
         }
     });
 
+    $(document).on('click', '#landmark-save-btn', () => {
+        $.ajax({
+            url: '{{ route("paths.add.validator") }}',
+            data: {
+                'landmark': $('#landmark').val(),
+                'type': $('#path-type-select').val(),
+                'landmarkWithType': true
+            },
+            success: (response) => {
+                console.log(response)
+                if (response.success === true) {
+                    $('#instructions').text('Step 4: Recheck if you are satistied with the path.');
+                    $('#landmark').hide();
+                    $('#path-type-select').hide();
+                    $('#landmark-save-btn').hide();
+                    $('#cardinal-direction-label').hide();
+                    $('#cardinal-direction').hide();
+                    $('#add-path-btn').show();
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Path type is required.'
+                    });
+                }
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        })
+    })
+
     $(document).on('click', '#add-path-btn', () => {
         $.ajax({
             url: '{{ route("paths.add.submit") }}',
@@ -723,6 +787,9 @@
                 'wp_b_lat': wp_b.getLngLat().lat,
                 'wp_b_code': $('#wp-b-code').val(),
                 'weight': wp_distance,
+                'landmark': $('#landmark').val(),
+                'type': $('#path-type-select').val(),
+                'cardinal_direction': $('#cardinal-direction').val(),
                 'building_connection': buildingConnection,
                 'buildingConnectionA': buildingConnectionA,
                 'buildingConnectionB': buildingConnectionB
@@ -742,5 +809,13 @@
             }
         });
     });
+
+    function getCardinalDirection(bearing) {
+        const cardinals = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest', 'North'];
+        console.log(bearing)
+        const index = (Math.round(bearing / 45) + 8) % 8;
+        console.log(index)
+        return cardinals[index];
+    }
 </script>
 @endsection

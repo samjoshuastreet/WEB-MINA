@@ -18,6 +18,8 @@ class Path extends Model
         'wp_b_lng',
         'wp_b_lat',
         'wp_b_code',
-        'weight'
+        'weight',
+        'landmark',
+        'type'
     ];
 }

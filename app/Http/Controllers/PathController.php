@@ -33,6 +33,9 @@ class PathController extends Controller
         $path->wp_b_lat = $request->input('wp_b_lat');
         $path->wp_b_code = $request->input('wp_b_code');
         $path->weight = $request->input('weight');
+        $path->landmark = $request->input('landmark');
+        $path->type = $request->input('type');
+        $path->cardinal_direction = $request->input('cardinal_direction');
         if ($request->input('building_connection') == 'true') {
             if ($request->input('buildingConnectionA')) {
                 $target = $request->input('buildingConnectionA');
@@ -154,6 +157,17 @@ class PathController extends Controller
     }
     public function validator(Request $request)
     {
+        if ($request->input('landmarkWithType')) {
+            $validator = Validator::make($request->all(), [
+                'landmark' => 'nullable',
+                'type' => 'required'
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['success' => false]);
+            } else {
+                return response()->json(['success' => true]);
+            }
+        }
         if ($request->input('redMarkers') == "true") {
             $entries = BuildingEntrypoint::all();
             $decodedEntries = [];
@@ -234,5 +248,21 @@ class PathController extends Controller
         }
         $path->delete();
         return response()->json(['codes' => $codes]);
+    }
+    public function reset()
+    {
+        $paths = Path::all();
+        foreach ($paths as $path) {
+            if ($path->entrance == 'true') {
+                $building = Building::find($path->connected_building);
+                if ($building->connection_count <= 1) {
+                    $building->status = 'inactive';
+                }
+                $building->connection_count -= 1;
+                $building->save();
+            }
+            $path->delete();
+        }
+        return response()->json(['success' => true]);
     }
 }
