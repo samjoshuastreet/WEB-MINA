@@ -88,6 +88,9 @@
 @section('content')
 <div id="map" class="relative w-full h-[calc(100vh-50px)] mt-[50px]">
     @include('home.layouts.popups')
+    @include('home.layouts.sidebar_right')
+    <button id='right-sidebar-btn' class="z-50 absolute top-0 left-0 h-4 w-10 bg-black text-white">Show</button>
+    <button id='right-sidebar-close-btn' class="z-50 absolute top-0 left-10 h-4 w-10 bg-black text-white">Hide</button>
     <div id="map-navbar" class="absolute top-1 left-[50%] translate-x-[-50%] z-50 bg-transparent rounded-md text-white-900 text-white font-poppins-light w-[80%] h-[35px] p-1 flex justify-between" style="display: none;">
         <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
             <span class="font-poppins-ultra"><span id="navbar-mode">"Procedure</span>:</span>
@@ -1618,6 +1621,30 @@
 
         });
         // End of Custom Starting Point
+
+        // Right Sidebar
+        $('#right-sidebar-btn').click(function() {
+            openRightSidebar();
+        })
+        $('#right-sidebar-close-btn').click(function() {
+            closeRightSidebar();
+        })
+        // End of Right Sidebar
     });
+
+    function openRightSidebar() {
+        $('#right-sidebar').show();
+        $('#right-sidebar').animate({
+            right: '0'
+        });
+    }
+
+    function closeRightSidebar() {
+        $('#right-sidebar').animate({
+            right: '-30%'
+        }, function() {
+            $('#right-sidebar').hide();
+        });
+    }
 </script>
 @endsection

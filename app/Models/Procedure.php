@@ -22,4 +22,19 @@ class Procedure extends Model
     {
         return $this->hasMany(ProcedureWaypoint::class, 'procedure_id');
     }
+
+    public function accessLevel()
+    {
+        $access_level = $this->access_level;
+
+        if ($access_level == "1") {
+            return 'Guest Level';
+        } elseif ($access_level == "2") {
+            return 'Student Level';
+        } elseif ($access_level == "3") {
+            return 'Faculty Level';
+        } else {
+            return 'Unknown Level';
+        }
+    }
 }
