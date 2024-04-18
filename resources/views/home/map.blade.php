@@ -2,6 +2,18 @@
 @section('title', 'MSU-IIT Map - Home')
 @section('more_links')
 <style>
+    .custom-marker {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #808080;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        line-height: 20px;
+    }
+
     .display-marker {
         background-image: url('{{ asset("assets/logos/logo-only.png") }}');
         background-size: cover;
@@ -89,8 +101,6 @@
 <div id="map" class="relative w-full h-[calc(100vh-50px)] mt-[50px]">
     @include('home.layouts.popups')
     @include('home.layouts.sidebar_right')
-    <button id='right-sidebar-btn' class="z-50 absolute top-0 left-0 h-4 w-10 bg-black text-white">Show</button>
-    <button id='right-sidebar-close-btn' class="z-50 absolute top-0 left-10 h-4 w-10 bg-black text-white">Hide</button>
     <div id="map-navbar" class="absolute top-1 left-[50%] translate-x-[-50%] z-50 bg-transparent rounded-md text-white-900 text-white font-poppins-light w-[80%] h-[35px] p-1 flex justify-between" style="display: none;">
         <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
             <span class="font-poppins-ultra"><span id="navbar-mode">"Procedure</span>:</span>
@@ -110,6 +120,7 @@
         </svg>
         <span class="sr-only">Icon description</span>
     </button>
+    <div class="absolute top-2 left-2 z-50 bg-upsdell-900 px-1 rounded-md font-poppins-regular text-white">Facing: <span id="currently-facing" class="font-bold"></span></div>
 </div>
 
 <div id="directions-cont" class="fixed py-8 top-0 w-[30%] left-[-30%] lg:left-[-30%] lg:w-[30%] h-full z-50">
@@ -417,7 +428,7 @@
         var gps_json = {};
         var npl_json = {};
 
-        function renderDirection(route, gps_origin) {
+        function renderRoute(route, gps_origin) {
             var allDisplayBoundaries = map.getStyle().layers.filter(function(layer) {
                 return layer.id.startsWith('route-path-');
             });
@@ -449,17 +460,150 @@
             samplePopup.animate({
                 right: '-100%'
             }, 500)
+            getDirections(route);
         }
+
+        function customRound(number) {
+            var decimalPart = number - Math.floor(number);
+            if (decimalPart >= 0.5) {
+                return Math.ceil(number);
+            } else {
+                return Math.floor(number);
+            }
+        }
+
+        async function getDirections(route) {
+            try {
+                var paths = await getPathsFromRoute(route);
+                var facing;
+                var weight;
+                var directions = [];
+                var prevCode = route[0];
+                // Assuming your array is named 'pathsArray'
+                paths.forEach(function(item, loopNumber) {
+                    if (item.path) {
+                        facing = item.path.cardinal_direction;
+                        weight = customRound(item.path.weight);
+                        if (item.path.landmark) {
+                            directions.push(`Head ${weight}m ${facing} near ${item.path.landmark}`);
+                        } else {
+                            directions.push(`Head ${weight}m ${facing}`);
+                        }
+
+                        // Create a custom HTML element for the marker
+                        var el = document.createElement('div');
+                        el.className = 'custom-marker';
+                        el.textContent = loopNumber + 1; // Display loopNumber with an offset of 1
+
+                        // Create the marker and set its position
+                        if (prevCode == item.path.wp_a_code) {
+                            var marker = new mapboxgl.Marker(el)
+                                .setLngLat([item.path.wp_b_lng, item.path.wp_b_lat]) // Assuming these are the coordinates of the point
+                                .addTo(map);
+                            prevCode = item.path.wp_b_code;
+                        } else {
+                            var marker = new mapboxgl.Marker(el)
+                                .setLngLat([item.path.wp_a_lng, item.path.wp_a_lat]) // Assuming these are the coordinates of the point
+                                .addTo(map);
+                            prevCode = item.path.wp_a_code
+                        }
+
+                    }
+                });
+                printDirections(directions);
+                openRightSidebar();
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function printDirections(directions) {
+            directions.forEach(function(thisDirections, loopNumber) {
+                if (loopNumber === directions.length - 1) {
+                    // This is the last iteration
+                    document.getElementById('directions-step-cont').innerHTML += `
+                        <div class="direction-group relative">
+                            <span id="step-no" class="text-[0.75rem] bg-metallicGold-900 rounded-full font-bold mr-2 h-5 w-5 flex items-center justify-center absolute top-0 left-0">${loopNumber + 1}</span>
+                            <p class="indent-6">${thisDirections}</p>
+                        </div>
+                    `;
+                } else {
+                    // Not the last iteration
+                    document.getElementById('directions-step-cont').innerHTML += `
+                        <div class="direction-group relative">
+                            <span id="step-no" class="text-[0.75rem] bg-metallicGold-900 rounded-full font-bold mr-2 h-5 w-5 flex items-center justify-center absolute top-0 left-0">${loopNumber + 1}</span>
+                            <p class="indent-6">${thisDirections}</p>
+                        </div>
+                        <hr class="my-2 border-[rgb(0,0,0,0.5)]">
+                    `;
+                }
+            });
+        }
+
+        async function getPathsFromRoute(route) {
+            var pathInstances = [];
+            var loopEnd = route.length - 1;
+            console.log(loopEnd);
+
+            for (let loopNumber = 0; loopNumber < loopEnd; loopNumber++) {
+                console.log(loopNumber);
+                var data = {
+                    'a': route[loopNumber],
+                    'b': route[loopNumber + 1],
+                    'single_search': true
+                };
+                if (loopNumber === 0) {
+                    data['first'] = true;
+                } else if (loopNumber === loopEnd - 1) {
+                    data['last'] = true;
+                }
+                console.log(data);
+
+                try {
+                    var value = await findPath(data);
+                    pathInstances.push(value);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            console.log(pathInstances);
+            return pathInstances;
+        }
+
+
+        async function findPath(data) {
+            try {
+                var response = await $.ajax({
+                    url: '{{ route("paths.find") }}',
+                    data: data,
+                });
+                return response;
+            } catch (error) {
+                console.log(error);
+                throw error;
+            }
+        }
+
 
         function renderPath(a, b, raw = false, first = false) {
             if (raw === false) {
+                var data = {
+                    'a': a,
+                    'b': b,
+                    'single_search': true
+                }
+                if (first) {
+                    if (first == 'last') {
+                        data['last'] = true;
+                    } else {
+                        data['first'] = true;
+                    }
+                }
                 $.ajax({
                     url: '{{ route("paths.find") }}',
-                    data: {
-                        'a': a,
-                        'b': b,
-                        'single_search': true
-                    },
+                    data: data,
                     success: function(response) {
                         if (!response.skip) {
                             const lineCoordinates = [
@@ -469,6 +613,21 @@
                             if (first) {
                                 gpsSuccess([response.path.wp_a_lng, response.path.wp_a_lat],
                                     [response.path.wp_b_lng, response.path.wp_b_lat]);
+                                if (first) {
+                                    var markerCoordinates;
+                                    if (response.aFirst) {
+                                        markerCoordinates = [response.path.wp_a_lng, response.path.wp_a_lat];
+                                    } else {
+                                        markerCoordinates = [response.path.wp_b_lng, response.path.wp_b_lat];
+                                    }
+                                    var marker = new mapboxgl.Marker({
+                                            color: 'red'
+                                        })
+                                        .setLngLat(markerCoordinates)
+                                        .addTo(map);
+                                    var markerElement = marker.getElement();
+                                    markerElement.className += ' start-marker';
+                                }
                             }
                             map.addLayer({
                                 'id': `route-path-${response.path.id.toString()}`,
@@ -493,7 +652,6 @@
                                     'line-width': 4
                                 }
                             }, 'waterway-label');
-
                         }
                     },
                     error: function(error) {
@@ -537,6 +695,12 @@
                     a[0],
                     b[0]
                 ];
+                const el = document.createElement('div');
+                el.className = 'start-marker';
+                el.style.color = 'green';
+                var marker = new mapboxgl.Marker(el)
+                    .setLngLat(a[0])
+                    .addTo(map);
                 map.addLayer({
                     'id': `route-path-gps`,
                     'type': 'line',
@@ -618,7 +782,7 @@
                 url: '{{ route("directions.get") }}',
                 data: data,
                 success: (response) => {
-                    renderDirection(response.route);
+                    renderRoute(response.route);
                 },
                 error: (error) => {
                     console.log(error);
@@ -663,7 +827,7 @@
 
                             // Check if all requests are completed
                             if (completedRequests === totalRequests) {
-                                renderDirection(shortestRoute[0]);
+                                renderRoute(shortestRoute[0]);
                             }
                         },
                         error: function(error) {
@@ -824,9 +988,17 @@
 
         function removeGpsMarker() {
             var gpsMarkers = document.querySelectorAll('.gps-marker');
+            var startMarkers = document.querySelectorAll('.start-marker');
+            var customMarkers = document.querySelectorAll('.custom-marker');
             gpsMarkers.forEach(function(gpsMarker) {
                 gpsMarker.remove();
             })
+            startMarkers.forEach(function(startMarker) {
+                startMarker.remove();
+            })
+            customMarkers.forEach(function(customMarker) {
+                customMarker.remove();
+            });
         }
 
         function resetMap() {
@@ -1623,28 +1795,56 @@
         // End of Custom Starting Point
 
         // Right Sidebar
-        $('#right-sidebar-btn').click(function() {
-            openRightSidebar();
-        })
-        $('#right-sidebar-close-btn').click(function() {
+        $('#directions-end-btn').click(function() {
             closeRightSidebar();
+            $('#directions-step-cont').html('');
+            var sidebar = $('#sidebar');
+            var navbar = $('#navbar');
+            var map = $('#map');
+            sidebar.animate({
+                left: "0%"
+            }, 500);
+            navbar.animate({
+                width: '100%',
+                marginLeft: '0%'
+            }, 500);
+            map.animate({
+                width: '100%',
+                marginLeft: '0%'
+            }, 500)
+            removeGpsMarker();
+            removeRenderedPaths();
         })
+
+        function openRightSidebar() {
+            $('#right-sidebar').show();
+            $('#right-sidebar').animate({
+                right: '0'
+            });
+            var sidebar = $('#sidebar');
+            var navbar = $('#navbar');
+            var map = $('#map');
+            sidebar.animate({
+                left: "0%"
+            }, 500);
+            navbar.animate({
+                width: '100%',
+                marginLeft: '0%'
+            }, 500);
+            map.animate({
+                width: '100%',
+                marginLeft: '0%',
+            }, 500)
+        }
+
+        function closeRightSidebar() {
+            $('#right-sidebar').animate({
+                right: '-30%'
+            }, function() {
+                $('#right-sidebar').hide();
+            });
+        }
         // End of Right Sidebar
     });
-
-    function openRightSidebar() {
-        $('#right-sidebar').show();
-        $('#right-sidebar').animate({
-            right: '0'
-        });
-    }
-
-    function closeRightSidebar() {
-        $('#right-sidebar').animate({
-            right: '-30%'
-        }, function() {
-            $('#right-sidebar').hide();
-        });
-    }
 </script>
 @endsection
