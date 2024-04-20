@@ -17,10 +17,27 @@
     .display-marker {
         background-image: url('{{ asset("assets/logos/logo-only.png") }}');
         background-size: cover;
-        width: 20px;
-        height: 20px;
+        width: 30px;
+        height: 30px;
         border-radius: 100%;
         cursor: pointer;
+        border: white 2px solid;
+    }
+
+    .display-label {
+        color: #fff;
+        font-size: 10px;
+        width: fit-content;
+        height: 20px;
+        border-radius: 10px;
+        background-color: #202020;
+        font-weight: bold;
+        padding: 2.5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        line-height: 20px;
     }
 
     .ui-autocomplete::-webkit-scrollbar {
@@ -120,7 +137,7 @@
         </svg>
         <span class="sr-only">Icon description</span>
     </button>
-    <div class="absolute top-2 left-2 z-50 bg-upsdell-900 px-1 rounded-md font-poppins-regular text-white">Facing: <span id="currently-facing" class="font-bold"></span></div>
+    <div id="currently-facing-cont" class="absolute top-2 left-2 z-50 bg-transparent px-1 py-2 rounded-md font-poppins-regular text-black outline-offset-1" style='display: none;'>Facing: <span id="currently-facing" class="font-bold bg-green-500 rounded-md text-black px-1 py-1"></span></div>
 </div>
 
 <div id="directions-cont" class="fixed py-8 top-0 w-[30%] left-[-30%] lg:left-[-30%] lg:w-[30%] h-full z-50">
@@ -298,54 +315,46 @@
                             var thisMarker = new mapboxgl.Marker(el)
                                 .setLngLat(coordinates)
                                 .addTo(map);
+                            const ell = document.createElement('div');
+                            ell.textContent = marker.building.building_name;
+                            ell.className = 'display-label';
+                            ell.style.display = 'none';
+                            var labelMarker = new mapboxgl.Marker(ell)
+                                .setLngLat(coordinates)
+                                .addTo(map);
                         });
                     }
                     if (boundary) {
                         var boundaries = response.boundaries;
                         boundaries.forEach(boundary => {
-                            var cornerData = JSON.parse(boundary.corners);
-                            var coordinates = [];
-                            for (let key in cornerData) {
-                                coordinates.push([cornerData[key].lng, cornerData[key].lat]);
+                            const fillColor = boundary.building_details.color;
+                            var temp = JSON.parse(boundary.corners);
+                            var boundaryCoordinates = [];
+                            for (let key in temp) {
+                                if (temp.hasOwnProperty(key)) {
+                                    boundaryCoordinates.push([temp[key].lng, temp[key].lat]);
+                                }
                             }
-                            var polygonData = {
-                                'type': 'FeatureCollection',
-                                'features': [{
-                                    'type': 'Feature',
-                                    'properties': {
-                                        'description': boundary.building.building_name
-                                    },
-                                    'geometry': {
-                                        'type': 'Polygon',
-                                        'coordinates': [
-                                            coordinates
-                                        ]
+                            map.addLayer({
+                                id: `polygon-display-${boundary.id}`,
+                                type: 'fill-extrusion',
+                                source: {
+                                    type: 'geojson',
+                                    data: {
+                                        type: 'Feature',
+                                        geometry: {
+                                            type: 'Polygon',
+                                            coordinates: [boundaryCoordinates]
+                                        }
                                     }
-                                }]
-                            };
-                            map.on('load', function() {
-                                map.addSource(`polygon-label-${boundary.building.id}`, {
-                                    'type': 'geojson',
-                                    'data': polygonData
-                                });
-
-                                map.addLayer({
-                                    'id': `polygon-label-${boundary.building.id}`,
-                                    'type': 'symbol',
-                                    'source': `polygon-label-${boundary.building.id}`,
-                                    'layout': {
-                                        'text-field': ['get', 'description'],
-                                        'text-size': 10,
-                                        'text-anchor': 'top',
-                                        'symbol-placement': 'point', // Set symbol placement to 'point'
-                                        'text-offset': [0, -2] // Adjust text offset to position it above the building
-                                    },
-                                    'paint': {
-                                        'text-color': '#000000' // Adjust text color as needed
-                                    }
-                                });
-                                map.setLayoutProperty(`polygon-label-${boundary.building.id}`, 'visibility', 'none');
-                            });
+                                },
+                                layout: {},
+                                paint: {
+                                    'fill-extrusion-color': fillColor,
+                                    'fill-extrusion-height': 4,
+                                    'fill-extrusion-opacity': 0.8
+                                }
+                            }, 'boundary-latest-19j3o8');
                         });
                     }
                 },
@@ -354,7 +363,15 @@
                 }
             })
         }
-        renderElements(false, true, false, true);
+        map.on('style.load', function() {
+            renderElements(false, true, false, true);
+        });
+
+        function showMapLayers() {
+            map.getStyle().layers.forEach(function(layer) {
+                console.log(layer.id);
+            });
+        }
         // End of Element Rendering
 
         // Map Elements Optimizations
@@ -367,14 +384,14 @@
                     marker.style.width = '100px';
                     marker.style.height = '100px';
                 } else if (zoom >= 19 && zoom < 20) {
+                    marker.style.width = '75px';
+                    marker.style.height = '75px';
+                } else if (zoom >= 18 && zoom < 20) {
                     marker.style.width = '50px';
                     marker.style.height = '50px';
-                } else if (zoom >= 18 && zoom < 20) {
-                    marker.style.width = '35px';
-                    marker.style.height = '35px';
                 } else if (zoom >= 17 && zoom < 18) {
-                    marker.style.width = '20px';
-                    marker.style.height = '20px';
+                    marker.style.width = '30px';
+                    marker.style.height = '30px';
                 } else {
                     marker.style.width = '10px';
                     marker.style.height = '10px';
@@ -428,7 +445,7 @@
         var gps_json = {};
         var npl_json = {};
 
-        function renderRoute(route, gps_origin) {
+        function renderRoute(route, non_raw = null, gpsMode = null) {
             var allDisplayBoundaries = map.getStyle().layers.filter(function(layer) {
                 return layer.id.startsWith('route-path-');
             });
@@ -450,7 +467,6 @@
                         renderPath(route[i], route[i + 1], false, true);
                     } else if (i == route.length - 2) {
                         renderPath(route[i], route[i + 1]);
-                        console.log('last path')
                     } else {
                         renderPath(route[i], route[i + 1]);
                     }
@@ -460,7 +476,15 @@
             samplePopup.animate({
                 right: '-100%'
             }, 500)
-            getDirections(route);
+            if (non_raw) {
+                getDirections(route, true);
+            } else {
+                if (gpsMode) {
+                    getDirections(route, false, true);
+                } else {
+                    getDirections(route);
+                }
+            }
         }
 
         function customRound(number) {
@@ -472,9 +496,12 @@
             }
         }
 
-        async function getDirections(route) {
+        async function getDirections(route, non_raw = null, gpsMode = null) {
+            $('#procedure-end-btn').show();
+            console.log(route)
             try {
-                var paths = await getPathsFromRoute(route);
+                var paths = await getPathsFromRoute(route)
+                console.log(paths)
                 var facing;
                 var weight;
                 var directions = [];
@@ -482,37 +509,154 @@
                 // Assuming your array is named 'pathsArray'
                 paths.forEach(function(item, loopNumber) {
                     if (item.path) {
-                        facing = item.path.cardinal_direction;
-                        weight = customRound(item.path.weight);
-                        if (item.path.landmark) {
-                            directions.push(`Head ${weight}m ${facing} near ${item.path.landmark}`);
-                        } else {
-                            directions.push(`Head ${weight}m ${facing}`);
-                        }
-
+                        var wp_a = [item.path.wp_a_lng, item.path.wp_a_lat];
+                        var wp_b = [item.path.wp_b_lng, item.path.wp_b_lat];
                         // Create a custom HTML element for the marker
                         var el = document.createElement('div');
                         el.className = 'custom-marker';
                         el.textContent = loopNumber + 1; // Display loopNumber with an offset of 1
-
-                        // Create the marker and set its position
-                        if (prevCode == item.path.wp_a_code) {
+                        if (prevCode == 'NPL') {
+                            if (route[2] == paths[2].path.wp_a_code) {
+                                wp_a = [paths[2].path.wp_a_lng, paths[2].path.wp_a_lat];
+                                wp_b = [paths[2].path.wp_b_lng, paths[2].path.wp_b_lat];
+                            } else {
+                                wp_a = [paths[2].path.wp_b_lng, paths[2].path.wp_b_lat];
+                                wp_b = [paths[2].path.wp_a_lng, paths[2].path.wp_a_lat];
+                            }
+                            prevCode = route[3];
                             var marker = new mapboxgl.Marker(el)
-                                .setLngLat([item.path.wp_b_lng, item.path.wp_b_lat]) // Assuming these are the coordinates of the point
+                                .setLngLat(wp_b) // Assuming these are the coordinates of the point
                                 .addTo(map);
-                            prevCode = item.path.wp_b_code;
+                            weight = customRound(turf.distance(
+                                turf.point(wp_a),
+                                turf.point(wp_b), {
+                                    units: 'meters'
+                                }
+                            ));
+                            directions.push(`Head ${weight}m ${facing}`);
                         } else {
-                            var marker = new mapboxgl.Marker(el)
-                                .setLngLat([item.path.wp_a_lng, item.path.wp_a_lat]) // Assuming these are the coordinates of the point
-                                .addTo(map);
-                            prevCode = item.path.wp_a_code
+                            // Create the marker and set its position
+                            if (prevCode == item.path.wp_a_code) {
+                                var marker = new mapboxgl.Marker(el)
+                                    .setLngLat([item.path.wp_b_lng, item.path.wp_b_lat]) // Assuming these are the coordinates of the point
+                                    .addTo(map);
+                                facing = getCardinalDirection(
+                                    turf.bearing(
+                                        turf.point([item.path.wp_a_lng, item.path.wp_a_lat]),
+                                        turf.point([item.path.wp_b_lng, item.path.wp_b_lat])
+                                    )
+                                );
+                                prevCode = item.path.wp_b_code;
+                            } else {
+                                var marker = new mapboxgl.Marker(el)
+                                    .setLngLat([item.path.wp_a_lng, item.path.wp_a_lat]) // Assuming these are the coordinates of the point
+                                    .addTo(map);
+                                facing = getCardinalDirection(
+                                    turf.bearing(
+                                        turf.point([item.path.wp_b_lng, item.path.wp_b_lat]),
+                                        turf.point([item.path.wp_a_lng, item.path.wp_a_lat])
+                                    )
+                                );
+                                prevCode = item.path.wp_a_code
+                            }
+                            weight = customRound(item.path.weight);
+                            if (item.path.landmark) {
+                                directions.push(`Head ${weight}m ${facing} near ${item.path.landmark}`);
+                            } else {
+                                directions.push(`Head ${weight}m ${facing}`);
+                            }
                         }
-
+                    } else {
+                        var el = document.createElement('div');
+                        el.className = 'custom-marker';
+                        el.textContent = loopNumber + 1;
+                        if (loopNumber == 0 && route[0] == 'GPS') {
+                            el.style.zIndex = '100';
+                            wp_a = [gps_json.coordinates[0], gps_json.coordinates[1]];
+                            wp_b = [npl_json.coordinates[0], npl_json.coordinates[1]];
+                            var marker = new mapboxgl.Marker(el)
+                                .setLngLat(wp_b) // Assuming these are the coordinates of the point
+                                .addTo(map);
+                            facing = getCardinalDirection(
+                                turf.bearing(
+                                    turf.point(wp_a),
+                                    turf.point(wp_b)
+                                )
+                            );
+                            prevCode = 'GPS';
+                            weight = customRound(turf.distance(
+                                turf.point(wp_a),
+                                turf.point(wp_b), {
+                                    units: 'meters'
+                                }
+                            ));
+                            directions.push(`Head ${weight}m ${facing}`);
+                        } else if (loopNumber == 1 && route[1] == 'NPL' && route.length > 3) {
+                            wp_a = [npl_json.coordinates[0], npl_json.coordinates[1]];
+                            if (route[2] == paths[2].path.wp_a_code) {
+                                wp_b = [paths[2].path.wp_a_lng, paths[2].path.wp_a_lat];
+                            } else {
+                                wp_b = [paths[2].path.wp_b_lng, paths[2].path.wp_b_lat];
+                            }
+                            var marker = new mapboxgl.Marker(el)
+                                .setLngLat(wp_b) // Assuming these are the coordinates of the point
+                                .addTo(map);
+                            facing = getCardinalDirection(
+                                turf.bearing(
+                                    turf.point(wp_a),
+                                    turf.point(wp_b)
+                                )
+                            );
+                            prevCode = 'NPL';
+                            weight = customRound(turf.distance(
+                                turf.point(wp_a),
+                                turf.point(wp_b), {
+                                    units: 'meters'
+                                }
+                            ));
+                            directions.push(`Head ${weight}m ${facing}`);
+                        } else if (loopNumber == 1 && route[1] == 'NPL' && route.length === 3) {
+                            $.ajax({
+                                url: '{{ route("paths.find") }}',
+                                data: {
+                                    'half': true,
+                                    'code': route[2]
+                                },
+                                success: (response) => {
+                                    return response.result_path;
+                                },
+                                error: (error) => {
+                                    console.log(error)
+                                }
+                            }).then((result) => {
+                                wp_a = [npl_json.coordinates[0], npl_json.coordinates[1]];
+                                wp_b = result.result_path;
+                                var marker = new mapboxgl.Marker(el)
+                                    .setLngLat(wp_b) // Assuming these are the coordinates of the point
+                                    .addTo(map);
+                                facing = getCardinalDirection(
+                                    turf.bearing(
+                                        turf.point(wp_a),
+                                        turf.point(wp_b)
+                                    )
+                                );
+                                weight = customRound(turf.distance(
+                                    turf.point(wp_a),
+                                    turf.point(wp_b), {
+                                        units: 'meters'
+                                    }
+                                ));
+                                directions.push(`Head ${weight}m ${facing}`);
+                            })
+                        }
                     }
                 });
                 printDirections(directions);
-                openRightSidebar();
-
+                if (non_raw) {
+                    openRightSidebar(true);
+                } else {
+                    openRightSidebar();
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -544,10 +688,8 @@
         async function getPathsFromRoute(route) {
             var pathInstances = [];
             var loopEnd = route.length - 1;
-            console.log(loopEnd);
 
             for (let loopNumber = 0; loopNumber < loopEnd; loopNumber++) {
-                console.log(loopNumber);
                 var data = {
                     'a': route[loopNumber],
                     'b': route[loopNumber + 1],
@@ -558,7 +700,6 @@
                 } else if (loopNumber === loopEnd - 1) {
                     data['last'] = true;
                 }
-                console.log(data);
 
                 try {
                     var value = await findPath(data);
@@ -567,8 +708,6 @@
                     console.log(error);
                 }
             }
-
-            console.log(pathInstances);
             return pathInstances;
         }
 
@@ -729,7 +868,6 @@
                     })
                     .setLngLat(a[0], a[1])
                     .addTo(map);
-                console.log(a);
                 gpsSuccess(a[0], b[0]);
             } else if (raw == 'half') {
                 $.ajax({
@@ -790,7 +928,7 @@
             })
         });
 
-        function multipleCalculations(origin_points, destination_points, additionalData = null) {
+        function multipleCalculations(origin_points, destination_points, additionalData = null, non_raw = null) {
             var shortestRoute = null;
             var totalRequests = origin_points.length * destination_points.length;
             var completedRequests = 0;
@@ -827,7 +965,15 @@
 
                             // Check if all requests are completed
                             if (completedRequests === totalRequests) {
-                                renderRoute(shortestRoute[0]);
+                                if (non_raw) {
+                                    renderRoute(shortestRoute[0], true);
+                                } else {
+                                    if (additionalData) {
+                                        renderRoute(shortestRoute[0], false, true);
+                                    } else {
+                                        renderRoute(shortestRoute[0]);
+                                    }
+                                }
                             }
                         },
                         error: function(error) {
@@ -919,6 +1065,7 @@
         });
 
         $('#sidebar-searchbar').submit(function(e) {
+            removeGpsMarker();
             e.preventDefault();
             var data = $(this).serialize();
             data += '&sidebar=true';
@@ -947,7 +1094,7 @@
                     }
                 })
             } else {
-                var currentLocationSample = [124.2446572386292, 8.2412528560357];
+                var currentLocationSample = [124.24436541380965, 8.23990409574499];
                 nearestLine(currentLocationSample);
             }
         });
@@ -1206,15 +1353,29 @@
                     for (let key in destination_decoded) {
                         destination_points.push(destination_decoded[key].code);
                     }
-                    multipleCalculations(
-                        GPS,
-                        destination_points, {
-                            'nearestPathId': path.id,
-                            'GPSNPL': GPSNPL,
-                            'NPLA': NPLA,
-                            'NPLB': NPLB
-                        }
-                    );
+                    if (procedure) {
+                        multipleCalculations(
+                            GPS,
+                            destination_points, {
+                                'nearestPathId': path.id,
+                                'GPSNPL': GPSNPL,
+                                'NPLA': NPLA,
+                                'NPLB': NPLB
+                            },
+                            true
+                        );
+                    } else {
+                        multipleCalculations(
+                            GPS,
+                            destination_points, {
+                                'nearestPathId': path.id,
+                                'GPSNPL': GPSNPL,
+                                'NPLA': NPLA,
+                                'NPLB': NPLB
+                            },
+                            false
+                        );
+                    }
                 },
                 error: (error) => {
                     console.log(error);
@@ -1407,6 +1568,7 @@
         });
 
         function beginStep(index, totalWaypoints, json) {
+            $('#directions-step-cont').empty();
             if (index == 0) {
                 determineOriginPoint().then(
                     function(value) {
@@ -1469,7 +1631,7 @@
                         for (let key in destination_decoded) {
                             destination_points.push(destination_decoded[key].code);
                         }
-                        multipleCalculations(origin_points, destination_points);
+                        multipleCalculations(origin_points, destination_points, null, true);
                     },
                     error: (error) => {
                         console.log(error);
@@ -1548,6 +1710,7 @@
             removeRenderedPaths();
             removeGpsMarker();
             resetMap();
+            $('#directions-end-btn').click().show();
         }
 
         function sidebarToggle(state) {
@@ -1777,15 +1940,27 @@
         // End of Smaller Screens
 
         // Marker Toggle
-        var markerToggleStatus = 0;
-        var displayMarkers = document.querySelectorAll('.display-marker');
-        map.on('style.load', function() {
-            $('#marker-toggle').click(function() {
-                displayMarkers.forEach(marker => {
-                    marker.style.visibility = 'hidden';
-                })
-            })
-        });
+        var markerToggleStatus = 1;
+        var markerToggleButton = document.getElementById('marker-toggle');
+        markerToggleButton.addEventListener('click', function() {
+            var displayMarkersElements = document.querySelectorAll('.display-marker');
+            var displayLabelsElements = document.querySelectorAll('.display-label');
+            displayMarkersElements.forEach(function(displayMarkersElement) {
+                if (markerToggleStatus) {
+                    displayMarkersElement.style.display = 'none';
+                } else {
+                    displayMarkersElement.style.display = '';
+                }
+            });
+            displayLabelsElements.forEach(function(displayLabelsElement) {
+                if (markerToggleStatus) {
+                    displayLabelsElement.style.display = '';
+                } else {
+                    displayLabelsElement.style.display = 'none';
+                }
+            });
+            markerToggleStatus = markerToggleStatus ? 0 : 1;
+        })
         // End of Marker Toggle
 
         // Custom Starting Point
@@ -1797,7 +1972,8 @@
         // Right Sidebar
         $('#directions-end-btn').click(function() {
             closeRightSidebar();
-            $('#directions-step-cont').html('');
+            var directionsStepCont = $('#directions-step-cont');
+            directionsStepCont.empty();
             var sidebar = $('#sidebar');
             var navbar = $('#navbar');
             var map = $('#map');
@@ -1805,18 +1981,18 @@
                 left: "0%"
             }, 500);
             navbar.animate({
-                width: '100%',
-                marginLeft: '0%'
+                width: '80%',
+                marginLeft: '20%'
             }, 500);
             map.animate({
-                width: '100%',
-                marginLeft: '0%'
+                width: '80%',
+                marginLeft: '20%'
             }, 500)
             removeGpsMarker();
             removeRenderedPaths();
         })
 
-        function openRightSidebar() {
+        function openRightSidebar(non_raw = null) {
             $('#right-sidebar').show();
             $('#right-sidebar').animate({
                 right: '0'
@@ -1824,27 +2000,43 @@
             var sidebar = $('#sidebar');
             var navbar = $('#navbar');
             var map = $('#map');
-            sidebar.animate({
-                left: "0%"
-            }, 500);
-            navbar.animate({
-                width: '100%',
-                marginLeft: '0%'
-            }, 500);
-            map.animate({
-                width: '100%',
-                marginLeft: '0%',
-            }, 500)
+            if (!non_raw) {
+                sidebar.animate({
+                    left: "-30%"
+                }, 500);
+                navbar.animate({
+                    width: '100%',
+                    marginLeft: '0%'
+                }, 500);
+                map.animate({
+                    width: '100%',
+                    marginLeft: '0%',
+                }, 500)
+            } else {
+                $('#directions-end-btn').hide();
+            }
         }
 
         function closeRightSidebar() {
             $('#right-sidebar').animate({
-                right: '-30%'
+                right: '0%'
             }, function() {
                 $('#right-sidebar').hide();
             });
         }
-        // End of Right Sidebar
+
+        function getCardinalDirection(bearing) {
+            const cardinals = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest', 'North'];
+            const index = (Math.round(bearing / 45) + 8) % 8;
+            return cardinals[index];
+        }
+
+        map.on('rotate', function() {
+            $('#currently-facing-cont').show();
+            var currentBearing = map.getBearing();
+            var result = getCardinalDirection(currentBearing);
+            $('#currently-facing').text(result);
+        });
     });
 </script>
 @endsection

@@ -20,4 +20,8 @@ class BuildingDetails extends Model
     {
         return $this->belongsTo(Building::class, 'building_id');
     }
+    public function buildingType()
+    {
+        return $this->belongsTo(BuildingType::class, 'building_type');
+    }
 }

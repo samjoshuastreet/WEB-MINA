@@ -25,17 +25,17 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-center">
                                 <a href="{{ route('buildings.add') }}"><button type="button" class="btn btn-primary btn-md mb-3">Add a Building</button></a>
                             </div>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th style="width: 15%;">Image</th>
-                                        <th style="width: 20%;">Name</th>
-                                        <th style="width: 30%;">Description</th>
-                                        <th style="width: 10%;">Status</th>
-                                        <th style="width: 10%;">Active Entrance</th>
+                                        <th style="width: 25%;">Name</th>
+                                        <th style="width: 15%;">Type</th>
+                                        <th style="width: 15%;">Status</th>
+                                        <th style="width: 15%;">Active Entrance</th>
                                         <th style="width: 15%;">Action</th>
                                     </tr>
                                 </thead>

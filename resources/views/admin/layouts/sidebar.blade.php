@@ -21,7 +21,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-header">MAP ELEMENTS</li>
-                <li class="nav-item {{ Route::currentRouteName() == 'buildings.index' || Route::currentRouteName() == 'buildings.add' ? 'menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteName() == 'buildings.index' || Route::currentRouteName() == 'buildings.add' || Route::currentRouteName() == 'buildings.types' ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ Route::currentRouteName() == 'buildings' || Route::currentRouteName() == 'buildings_add' ? 'active' : '' }} d-flex justify-center-start align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building nav-item mr-2" viewBox="0 0 16 16">
                             <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
@@ -43,6 +43,12 @@
                             <a href="{{ route('buildings.index') }}" class="nav-link {{ Route::currentRouteName() == 'buildings.index' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Manage Buildings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('buildings.types') }}" class="nav-link {{ Route::currentRouteName() == 'buildings.types' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Building Types</p>
                             </a>
                         </li>
                     </ul>

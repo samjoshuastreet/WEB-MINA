@@ -40,6 +40,10 @@ Route::get('/admin/buildings/{id}/view', [BuildingController::class, 'view'])->n
 Route::get('/admin/buildings/delete', [BuildingController::class, 'delete'])->name('buildings.delete');
 Route::get('/admin/buildings/delete-validator', [BuildingController::class, 'delete_validator'])->name('buildings.delete.validator');
 Route::post('/admin/buildings/add-submit', [BuildingController::class, 'add_submit'])->name('buildings.add.submit');
+Route::get('/admin/buildings/types', [BuildingController::class, 'types'])->name('buildings.types');
+Route::get('/admin/buildings/types/add', [BuildingController::class, 'types_add'])->name('buildings.types.add');
+Route::get('/admin/buildings/types/reload', [BuildingController::class, 'types_reload'])->name('buildings.types.reload');
+Route::get('/admin/buildings/types/delete', [BuildingController::class, 'types_delete'])->name('buildings.types.delete');
 
 Route::get('/admin/paths', [PathController::class, 'index'])->name('paths.index');
 Route::get('/admin/paths/get', [PathController::class, 'get'])->name('paths.get');

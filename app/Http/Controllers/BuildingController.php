@@ -9,6 +9,7 @@ use App\Models\BuildingMarker;
 use App\Models\BuildingDetails;
 use App\Models\BuildingBoundary;
 use App\Models\BuildingEntrypoint;
+use App\Models\BuildingType;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,7 +22,8 @@ class BuildingController extends Controller
     }
     public function add()
     {
-        return view('admin.buildings.add');
+        $types = BuildingType::all();
+        return view('admin.buildings.add', compact('types'));
     }
     public function edit($id)
     {
@@ -119,6 +121,7 @@ class BuildingController extends Controller
                     $building_details = new BuildingDetails();
                     $building_details->building_description = $request->input('building_description');
                     $building_details->building_id = $building_id;
+                    $building_details->building_type = $request->input('building_type');
                     $building_details->save();
                 }
                 $building_entrypoints = new BuildingEntrypoint();
@@ -156,6 +159,9 @@ class BuildingController extends Controller
 
         if ($request->input('marker')) {
             $markers = BuildingMarker::all();
+            foreach ($markers as $marker) {
+                $building_names = $marker->building;
+            }
             $results['markers'] = $markers->map(function ($marker) {
                 $marker->markers = json_decode($marker->markers, true);
                 return $marker;
@@ -172,17 +178,29 @@ class BuildingController extends Controller
 
         if ($request->input('boundary')) {
             $boundaries = BuildingBoundary::all();
-            $results['boundaries'] = $boundaries->map(function ($boundary) {
+            // Assuming BuildingBoundary has a relationship with Building
+            $boundaries = $boundaries->map(function ($boundary) {
+                // Access building_details through the building relationship
+                $buildingDetails = $boundary->building->buildingDetails->buildingType;
+                // Assuming $boundary->building is an instance of Building model
+                // You can access building_details like this
+                $boundary->building_details = $buildingDetails;
+                // Decode corners if necessary
                 $boundary->corners = json_decode($boundary->corners, true);
                 return $boundary;
             });
+            $results['boundaries'] = $boundaries;
+
             if ($request->input('boundary_with_name')) {
+                // No need to map here, as we're not transforming the data
                 $building_names = $boundaries->map(function ($boundary) {
+                    // Assuming you need building details here
                     $results['building'] = $boundary->building;
                     $results['marker'] = $boundary->building->buildingMarker;
                 });
             }
         }
+
 
         return response()->json($results);
 
@@ -213,5 +231,40 @@ class BuildingController extends Controller
     {
         $buildings = Building::all();
         return view('admin.buildings.ajax.building_list', compact('buildings'))->render();
+    }
+    public function types()
+    {
+        $types = BuildingType::all();
+        return view('admin.buildings.types', compact('types'));
+    }
+    public function types_add(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:building_types,name',
+            'color' => 'required|unique:building_types,color'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'msg' => $validator->errors()->toArray()]);
+        } else {
+            $type = BuildingType::create([
+                'name' => $request->input('name'),
+                'color' => $request->input('color')
+            ]);
+            return response()->json(['success' => true, 'name' => $type->name]);
+        }
+    }
+    public function types_reload()
+    {
+        $types = BuildingType::all();
+        return view('admin.buildings.ajax.types_list', compact('types'))->render();
+    }
+    public function types_delete(Request $request)
+    {
+        $target = BuildingType::find($request->input('id'));
+        if ($request->input('confirm')) {
+            $target->delete();
+        }
+        return response()->json(['success' => true, 'name' => $target->name]);
     }
 }

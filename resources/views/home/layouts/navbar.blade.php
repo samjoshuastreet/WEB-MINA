@@ -4,6 +4,22 @@
         <svg xmlns="http://www.w3.org/2000/svg" fill="white" id="sidebar-btn" class="bi bi-list h-[25px] lg:h-[30px] hover:cursor-pointer" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
         </svg>
+        <div class="flex justify-end items-center h-full w-full">
+            <ul class="flex gap-1 md:gap-8 lg:gap-5 lg:mr-6">
+                <li class="text-white font-poppins-ultra text-[0.65rem] md:text-[0.90rem] lg:text-[1rem] px-1 py-0 lg:px-2 lg:py-1 group relative overflow-hidden hover:cursor-pointer">
+                    <a href="{{ route('home') }}">
+                        <span class="relative z-10">Legend</span>
+                        <span class="absolute inset-x-0 bottom-0 h-0.5 bg-white origin-center transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
+                    </a>
+                </li>
+                <li class="text-white font-poppins-ultra text-[0.65rem] md:text-[0.90rem] lg:text-[1rem] px-1 py-0 lg:px-2 lg:py-1 group relative overflow-hidden hover:cursor-pointer">
+                    <a href="{{ route('home') }}">
+                        <span class="relative z-10">Help</span>
+                        <span class="absolute inset-x-0 bottom-0 h-0.5 bg-white origin-center transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
         <a href="{{ route('home') }}" class="bg-white rounded-xl p-1 flex items-center lg:ml-6 lg:h-[75%]">
             <img src="{{ asset('assets/logos/logo-full.png') }}" class="h-6 lg:h-8 lg:mr-1" alt="MSU-IIT Map Logo">
         </a>

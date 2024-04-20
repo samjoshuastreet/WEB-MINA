@@ -114,6 +114,16 @@
                                 <td style="width: 25%" class="text-bold">Building Description</td>
                                 <td class=""><textarea id="building_description" name="building_description" class="form-control" rows="4" cols="50" placeholder="Give this building a description."></textarea></td>
                             </tr>
+                            <tr>
+                                <td style="width: 25%" class="text-bold">Building Type</td>
+                                <td class="">
+                                    <select name="building_type" id="building-type-select" class='form-control'>
+                                        @foreach($types as $type)
+                                        <option value='{{ $type->id }}' style="color: {{ $type->color }};">{{ $type->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -288,6 +298,7 @@
                         .addTo(map);
                 });
                 response.boundaries.forEach(boundary => {
+                    const fillColor = boundary.building.building_details.building_type.color;
                     var temp = JSON.parse(boundary.corners);
                     var boundaryCoordinates = [];
                     for (let key in temp) {
@@ -310,7 +321,7 @@
                         },
                         layout: {},
                         paint: {
-                            'fill-color': '#87ceeb',
+                            'fill-color': fillColor,
                             'fill-opacity': 1
                         }
                     }, 'waterway-label');
@@ -746,6 +757,7 @@
         formData.append('status', 'inactive');
         formData.append('building_description', document.getElementById('building_description').value);
         formData.append('marker_image', fileInput.files[0]);
+        formData.append('building_type', $('#building-type-select').val());
         $.ajax({
             url: '{{ route("buildings.add.submit") }}',
             data: formData,
