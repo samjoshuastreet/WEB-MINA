@@ -138,7 +138,12 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-header mt-4">USERS</li>
+                <li class="nav-header mt-4">FEEDBACK</li>
+                <a href="{{ route('feedbacks.index') }}" class="nav-link {{ Route::currentRouteName() == 'feedbacks.index' ? 'active' : '' }}">
+                    <i class="fa fa-bug nav-icon"></i>
+                    <p class="ml-1">Feedback Reports</p>
+                </a>
+                <!-- <li class="nav-header mt-4">USERS</li>
                 <li class="nav-item">
                     <a href="#" class="nav-link d-flex justify-center-start align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building nav-item mr-2" viewBox="0 0 16 16">
@@ -177,7 +182,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

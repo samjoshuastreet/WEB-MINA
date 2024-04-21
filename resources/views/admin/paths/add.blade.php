@@ -104,6 +104,11 @@
                         </select>
                         <label for='cardinal-direction' id='cardinal-direction-label' style='display:none;'>Facing: </label>
                         <input type="text" name="cardinal-direction" id="cardinal-direction" style="display: none;" readonly>
+                        <!-- <label for='path-exit-select' id='path-exit-select-label' style='display:none;'>One Way: </label>
+                        <select id='path-exit-select' name='isOneWay' style='display: none;'>
+                            <option value='false'>False</option>
+                            <option value='true'>True</option>
+                        </select> -->
                     </small>
                     <button id="wp-a-save-btn" type="button" class="btn btn-sm btn-primary">Save</button>
                     <button id="wp-b-save-btn" type="button" class="btn btn-sm btn-primary" style="display: none;">Save</button>
@@ -498,6 +503,8 @@
         $('#landmark-save-btn').hide();
         $('#path-type-select').val('').hide();
         $('#cardinal-direction').hide();
+        //    $('#path-exit-select').hide();
+        //     $('#path-exit-select-label').hide();
         $('#cardinal-direction-label').hide();
         resetMarkerColors();
         buildingConnection = false;
@@ -703,6 +710,9 @@
                                         $('#path-type-select').show();
                                         $('#landmark-save-btn').show();
                                         $('#cardinal-direction').show();
+                                        // $('#path-exit-select').show();
+                                        // $('#path-exit-select-label').show();
+                                        $('#cardinal-direction').show();
                                         $('#cardinal-direction-label').show();
                                         $('#cardinal-direction').val(getCardinalDirection(
                                             turf.bearing(
@@ -763,6 +773,8 @@
                     $('#cardinal-direction-label').hide();
                     $('#cardinal-direction').hide();
                     $('#add-path-btn').show();
+                    // $('#path-exit-select').hide();
+                    // $('#path-exit-select-label').hide();
                 } else {
                     Toast.fire({
                         icon: 'error',
@@ -789,6 +801,7 @@
                 'weight': wp_distance,
                 'landmark': $('#landmark').val(),
                 'type': $('#path-type-select').val(),
+                // 'isOneWay': $('#path-exit-select').val(),
                 'cardinal_direction': $('#cardinal-direction').val(),
                 'building_connection': buildingConnection,
                 'buildingConnectionA': buildingConnectionA,

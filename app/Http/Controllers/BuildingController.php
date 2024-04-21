@@ -149,6 +149,12 @@ class BuildingController extends Controller
             foreach ($buildings as $key => $building) {
                 $building_names[] = $building->building_name;
             }
+            if ($request->input('active')) {
+                $building_names = $buildings->filter(function ($building) {
+                    return $building->status === 'active';
+                })->pluck('building_name')->toArray();
+                return response()->json(['names' => $building_names]);
+            }
             return response()->json(['names' => $building_names]);
         }
         $results = [];

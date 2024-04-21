@@ -21,5 +21,6 @@ class Path extends Model
         'weight',
         'landmark',
         'type'
+        // 'isOneWay'
     ];
 }

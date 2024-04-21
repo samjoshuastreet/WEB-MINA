@@ -9,6 +9,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\ProcedureController;
 use App\Http\Controllers\DirectionsController;
+use App\Http\Controllers\FeedbackReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,14 @@ Route::get('/logout_user', [AuthController::class, 'logout_user'])->name('logout
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+Route::get('/home/feedback-report/validate', [FeedbackReportController::class, 'add_validate'])->name('home.feedback.validate');
+Route::get('/home/feedback-report/submit', [FeedbackReportController::class, 'submit'])->name('home.feedback.submit');
+
+Route::get('/admin/feedback', [FeedbackReportController::class, 'index'])->name('feedbacks.index');
+Route::get('/admin/feedback/all', [FeedbackReportController::class, 'all'])->name('feedbacks.all');
+Route::get('/admin/feedback/edit', [FeedbackReportController::class, 'edit'])->name('feedbacks.edit');
+Route::get('/admin/feedback/delete', [FeedbackReportController::class, 'delete'])->name('feedbacks.delete');
 
 Route::get('/admin/buildings', [BuildingController::class, 'index'])->name('buildings.index');
 Route::get('/admin/buildings/reload', [BuildingController::class, 'reload'])->name('buildings.reload');

@@ -70,6 +70,15 @@
         }
     }
 
+    .modal {
+        transition: opacity 0.25s ease;
+    }
+
+    body.modal-active {
+        overflow-x: hidden;
+        overflow-y: visible !important;
+    }
+
     .ui-state-focus {
         background-color: #f0f0f0;
     }
@@ -118,7 +127,8 @@
 <div id="map" class="relative w-full h-[calc(100vh-50px)] mt-[50px]">
     @include('home.layouts.popups')
     @include('home.layouts.sidebar_right')
-    <div id="map-navbar" class="absolute top-1 left-[50%] translate-x-[-50%] z-50 bg-transparent rounded-md text-white-900 text-white font-poppins-light w-[80%] h-[35px] p-1 flex justify-between" style="display: none;">
+    <button class="modal-open bg-transparent border border-gray-500 hover:border-indigo-500 text-gray-500 hover:text-indigo-500 font-bold py-2 px-4 rounded-full" style='display: none;'>Open Modal</button>
+    <div id="map-navbar" class="absolute top-1 left-[50%] translate-x-[-50%] z-50 bg-transparent rounded-md text-white-900 text-white font-poppins-light w-[80%] h-[35px] ml-10 p-1 flex gap-2 justify-start" style="display: none;">
         <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
             <span class="font-poppins-ultra"><span id="navbar-mode">"Procedure</span>:</span>
             <spam id="map-navbar-name"></span>
@@ -130,8 +140,8 @@
             <span class="font-poppins-ultra">Destination:</span> <span id="map-navbar-destination"></span>
         </div>
     </div>
-    <button id="marker-toggle" type="button" class="absolute bottom-10 right-4 z-50 text-upsdell-900 border border-upsdell-900 hover:bg-upsdell-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-upsdell-900 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-upsdell-900 dark:text-upsdell-900 dark:hover:text-white dark:focus:ring-upsdell-900 dark:hover:bg-upsdell-900">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tags" viewBox="0 0 16 16">
+    <button id="marker-toggle" type="button" class="absolute bottom-10 right-4 z-[100] text-upsdell-900 border bg-white border-[#7e7e7e] hover:bg-[#bbbbbb] hover:text-white focus:ring-4 focus:outline-none focus:ring-upsdell-900 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-upsdell-900 dark:text-upsdell-900 dark:hover:text-white dark:focus:ring-upsdell-900 dark:hover:bg-upsdell-900">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-tags" viewBox="0 0 16 16">
             <path d="M3 2v4.586l7 7L14.586 9l-7-7zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586z" />
             <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1z" />
         </svg>
@@ -143,15 +153,17 @@
 <div id="directions-cont" class="fixed py-8 top-0 w-[30%] left-[-30%] lg:left-[-30%] lg:w-[30%] h-full z-50">
     <h1 class="text-white font-poppins-regular p-2 text-center">Directions Here</h1>
     <div class="flex flex-col items-center gap-2 w-full h-full">
-        <div class="w-[80%] h-[80%] rounded-lg bg-white p-2" style="overflow-y: auto;">
-            <div id="initial-instructions-cont" class="font-poppins-light text-[0.80rem]"></div>
-            <div id="instructions-cont" class="font-poppins-light text-[0.80rem]"></div>
-        </div>
-        <div class="w-[80%] bg-transparent flex justify-between">
-            <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-prev-btn">Prev</button>
-            <button type="button" class="shine bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-end-btn">End</button>
-            <button type="button" class="shine bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="event-end-btn">End</button>
-            <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-next-btn">Next</button>
+        <div class="w-[80%] h-[80%] rounded-lg bg-white p-2 flex flex-col flex-between" style="overflow-y: auto;">
+            <div class="h-[95%]">
+                <div id="initial-instructions-cont" class="font-poppins-light text-[0.80rem]"></div>
+                <div id="instructions-cont" class="font-poppins-light text-[0.80rem]"></div>
+            </div>
+            <div class="w-[100%] h-[5%] bg-transparent flex justify-between">
+                <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-prev-btn">Prev</button>
+                <button type="button" class="shine bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-end-btn">End</button>
+                <button type="button" class="shine bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="event-end-btn">End</button>
+                <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-next-btn">Next</button>
+            </div>
         </div>
     </div>
 </div>
@@ -237,6 +249,58 @@
         </div>
     </div>
 </div>
+<div class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
+    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+
+        <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
+            <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+            </svg>
+            <span class="text-sm">(Esc)</span>
+        </div>
+
+        <!-- Add margin if you want to see some of the overlay behind the modal-->
+        <div class="modal-content py-4 text-left px-6">
+            <!--Title-->
+            <div class="flex justify-between items-center pb-3">
+                <p class="text-2xl font-bold">Report a Bug or Give Feedbacks</p>
+                <div class="modal-close cursor-pointer z-50">
+                    <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                        <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!--Body-->
+            <form id="report-form" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                        Name (Optional)
+                    </label>
+                    <input id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                        Message
+                    </label>
+                    <textarea id="message" name="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 " placeholder="Write your feedback here..."></textarea>
+                </div>
+
+
+                <!--Footer-->
+                <div class="flex justify-end pt-2">
+                    <button type="submit" class="px-4 bg-transparent p-3 rounded-lg text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2">Submit</button>
+                    <button type="button" class="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400">Close</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- Open the modal using ID.showModal() method -->
+
 <!-- End of Modals -->
 @endsection
 @section('more_scripts')
@@ -563,7 +627,19 @@
                             if (item.path.landmark) {
                                 directions.push(`Head ${weight}m ${facing} near ${item.path.landmark}`);
                             } else {
-                                directions.push(`Head ${weight}m ${facing}`);
+                                if (loopNumber < paths.length - 1) {
+                                    if (item.path.type == 'indoor') {
+                                        directions.push(`<span class="font-bold text-[#e81e63]">Indoor:</span> Head ${weight}m ${facing}`);
+                                    } else if (item.path.type == 'pedestrian lane') {
+                                        directions.push(`<span class="font-bold text-[#f0ad4e]">You are crossing the road!</span> Look left and right, then head ${weight}m ${facing}`);
+                                    } else {
+                                        directions.push(`Head ${weight}m ${facing}`);
+                                    }
+                                } else if (loopNumber == paths.length - 1) {
+                                    directions.push(`Head ${weight}m ${facing} and head inside your <span class="font-bold text-[#5cb85c]">destination</span>`);
+                                } else {
+                                    directions.push(`Head ${weight}m ${facing}`);
+                                }
                             }
                         }
                     } else {
@@ -768,6 +844,16 @@
                                     markerElement.className += ' start-marker';
                                 }
                             }
+                            var pathColor;
+                            if (response.path.type == 'indoor') {
+                                pathColor = 'pink';
+                            } else if (response.path.type == 'outdoor') {
+                                pathColor = 'blue';
+                            } else if (response.path.type == 'pedestrian lane') {
+                                pathColor = 'yellow';
+                            } else if (response.path.type == 'road') {
+                                pathColor = 'black';
+                            }
                             map.addLayer({
                                 'id': `route-path-${response.path.id.toString()}`,
                                 'type': 'line',
@@ -787,10 +873,10 @@
                                     'line-cap': 'round'
                                 },
                                 'paint': {
-                                    'line-color': 'blue',
+                                    'line-color': pathColor,
                                     'line-width': 4
                                 }
-                            }, 'waterway-label');
+                            }, 'boundary-latest-19j3o8');
                         }
                     },
                     error: function(error) {
@@ -1032,10 +1118,12 @@
         $.ajax({
             url: '{{ route("buildings.get") }}',
             data: {
-                'names': true
+                'names': true,
+                'active': true
             },
             success: (response) => {
                 building_names = response.names;
+                console.log(building_names)
                 $('#starting-point').autocomplete({
                     source: building_names
                 });
@@ -2037,6 +2125,99 @@
             var result = getCardinalDirection(currentBearing);
             $('#currently-facing').text(result);
         });
+
+        // Modals
+
+        var openmodal = document.querySelectorAll('.modal-open')
+        for (var i = 0; i < openmodal.length; i++) {
+            openmodal[i].addEventListener('click', function(event) {
+                event.preventDefault()
+                toggleModal()
+            })
+        }
+
+        const overlay = document.querySelector('.modal-overlay')
+        overlay.addEventListener('click', toggleModal)
+
+        var closemodal = document.querySelectorAll('.modal-close')
+        for (var i = 0; i < closemodal.length; i++) {
+            closemodal[i].addEventListener('click', toggleModal)
+        }
+
+        document.onkeydown = function(evt) {
+            evt = evt || window.event
+            var isEscape = false
+            if ("key" in evt) {
+                isEscape = (evt.key === "Escape" || evt.key === "Esc")
+            } else {
+                isEscape = (evt.keyCode === 27)
+            }
+            if (isEscape && document.body.classList.contains('modal-active')) {
+                toggleModal()
+            }
+        };
+
+
+        function toggleModal() {
+            const body = document.querySelector('body')
+            const modal = document.querySelector('.modal')
+            modal.classList.toggle('opacity-0')
+            modal.classList.toggle('pointer-events-none')
+            body.classList.toggle('modal-active')
+        }
+
+        // End of Modals
+
+        // Bug reports
+        $('#report').click(function() {
+            $('.modal-open').click();
+        })
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        $('#report-form').submit(function(e) {
+            e.preventDefault();
+            var data = $(this).serialize();
+            console.log(data);
+            $.ajax({
+                url: '{{ route("home.feedback.validate") }}',
+                data: data,
+                success: (response) => {
+                    if (response.success === true) {
+                        $.ajax({
+                            url: '{{ route("home.feedback.submit") }}',
+                            data: data,
+                            success: (response) => {
+                                $('.modal-close').click();
+                                $('#name').val('');
+                                $('#message').val('');
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: 'Your message has been sent! We appreciate your feedback.'
+                                })
+                            },
+                            error: (error) => {
+                                console.log(error)
+                            }
+                        })
+                    } else if (response.success === false) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'The Message Field is Required!'
+                        })
+                    }
+                },
+                error: (error) => {
+                    console.log(error)
+                }
+            })
+        })
+        // End of bug reports
+
     });
 </script>
 @endsection

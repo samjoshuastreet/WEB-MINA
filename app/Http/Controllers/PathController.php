@@ -34,6 +34,7 @@ class PathController extends Controller
         $path->wp_b_code = $request->input('wp_b_code');
         $path->weight = $request->input('weight');
         $path->landmark = $request->input('landmark');
+        // $path->isOneWay = $request->input('isOneWay');
         $path->type = $request->input('type');
         $path->cardinal_direction = $request->input('cardinal_direction');
         if ($request->input('building_connection') == 'true') {
