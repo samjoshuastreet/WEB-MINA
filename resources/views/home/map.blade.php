@@ -299,6 +299,75 @@
         </div>
     </div>
 </div>
+<div id="map-legend" class="absolute top-[50%] left-[-100%] translate-x-[-50%] translate-y-[-50%] z-[105]" style="visibility: hidden;">
+    <div class="relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96">
+        <div class="p-6">
+            <h5 class="text-center block mb-2 font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
+                MAP LEGEND
+            </h5>
+            <h6 class="text-lg font-sans mb-2 font-bold">Buildings</h6>
+            @foreach($building_types as $bType)
+            <div class='w-full flex gap-2'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ $bType->color }}" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M3 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5H15v-18a.75.75 0 0 0 0-1.5H3ZM6.75 19.5v-2.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-3a.75.75 0 0 1-.75-.75ZM6 6.75A.75.75 0 0 1 6.75 6h.75a.75.75 0 0 1 0 1.5h-.75A.75.75 0 0 1 6 6.75ZM6.75 9a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75ZM6 12.75a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 0 1.5h-.75a.75.75 0 0 1-.75-.75ZM10.5 6a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75Zm-.75 3.75A.75.75 0 0 1 10.5 9h.75a.75.75 0 0 1 0 1.5h-.75a.75.75 0 0 1-.75-.75ZM10.5 12a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75ZM16.5 6.75v15h5.25a.75.75 0 0 0 0-1.5H21v-12a.75.75 0 0 0 0-1.5h-4.5Zm1.5 4.5a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Zm.75 2.25a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75v-.008a.75.75 0 0 0-.75-.75h-.008ZM18 17.25a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Z" clip-rule="evenodd" />
+                </svg>
+                <p>{{ $bType->name }}</p>
+            </div>
+            @endforeach
+            <h6 class="text-lg font-sans mb-2 mt-4 font-bold">Paths</h6>
+            <div class='w-full flex gap-3 ml-2'>
+                <svg width="10.560498" height="20.144857" viewBox="0 0 2.7941318 5.3299935" version="1.1" id="svg1" xml:space="preserve" inkscape:export-filename="bitmap.svg" inkscape:export-xdpi="96" inkscape:export-ydpi="96" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                    <sodipodi:namedview id="namedview1" pagecolor="#505050" bordercolor="#eeeeee" borderopacity="1" inkscape:showpageshadow="0" inkscape:pageopacity="0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#505050" inkscape:document-units="mm" />
+                    <defs id="defs1" />
+                    <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(-1.7779341,-0.54758489)">
+                        <path style="fill:#e81e63" d="M 1.7779341,3.2125818 V 0.54758489 H 2.3713115 2.964689 v 0.0676659 0.0676659 H 3.175 3.385311 V 0.61525083 0.54758489 H 3.9786885 4.572066 V 3.2125818 5.8775786 H 3.9786885 3.385311 V 5.8099127 5.7422467 H 3.175 2.964689 v 0.067666 0.067666 H 2.3713115 1.7779341 Z M 3.385311,4.8990251 V 4.6179512 H 3.175 2.964689 V 4.8990251 5.180099 H 3.175 3.385311 Z m 0,-1.1242956 V 3.4936556 H 3.175 2.964689 V 3.7747295 4.0558034 H 3.175 3.385311 Z m 0,-1.1242955 V 2.3693601 H 3.175 2.964689 V 2.650434 2.9315079 H 3.175 3.385311 Z m 0,-1.1242956 V 1.2450645 H 3.175 2.964689 V 1.5261384 1.8072123 H 3.175 3.385311 Z" id="path1" />
+                    </g>
+                </svg>
+                <p>Indoor</p>
+            </div>
+            <div class='w-full flex gap-3 ml-2'>
+                <svg width="10.560498" height="20.144857" viewBox="0 0 2.7941318 5.3299935" version="1.1" id="svg1" xml:space="preserve" inkscape:export-filename="bitmap.svg" inkscape:export-xdpi="96" inkscape:export-ydpi="96" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                    <sodipodi:namedview id="namedview1" pagecolor="#505050" bordercolor="#eeeeee" borderopacity="1" inkscape:showpageshadow="0" inkscape:pageopacity="0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#505050" inkscape:document-units="mm" />
+                    <defs id="defs1" />
+                    <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(-1.7779341,-0.54758489)">
+                        <path style="fill:blue" d="M 1.7779341,3.2125818 V 0.54758489 H 2.3713115 2.964689 v 0.0676659 0.0676659 H 3.175 3.385311 V 0.61525083 0.54758489 H 3.9786885 4.572066 V 3.2125818 5.8775786 H 3.9786885 3.385311 V 5.8099127 5.7422467 H 3.175 2.964689 v 0.067666 0.067666 H 2.3713115 1.7779341 Z M 3.385311,4.8990251 V 4.6179512 H 3.175 2.964689 V 4.8990251 5.180099 H 3.175 3.385311 Z m 0,-1.1242956 V 3.4936556 H 3.175 2.964689 V 3.7747295 4.0558034 H 3.175 3.385311 Z m 0,-1.1242955 V 2.3693601 H 3.175 2.964689 V 2.650434 2.9315079 H 3.175 3.385311 Z m 0,-1.1242956 V 1.2450645 H 3.175 2.964689 V 1.5261384 1.8072123 H 3.175 3.385311 Z" id="path1" />
+                    </g>
+                </svg>
+                <p>Outdoor</p>
+            </div>
+            <div class='w-full flex gap-3 ml-2'>
+                <svg width="10.560498" height="20.144857" viewBox="0 0 2.7941318 5.3299935" version="1.1" id="svg1" xml:space="preserve" inkscape:export-filename="bitmap.svg" inkscape:export-xdpi="96" inkscape:export-ydpi="96" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                    <sodipodi:namedview id="namedview1" pagecolor="#505050" bordercolor="#eeeeee" borderopacity="1" inkscape:showpageshadow="0" inkscape:pageopacity="0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#505050" inkscape:document-units="mm" />
+                    <defs id="defs1" />
+                    <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(-1.7779341,-0.54758489)">
+                        <path style="fill:yellow" d="M 1.7779341,3.2125818 V 0.54758489 H 2.3713115 2.964689 v 0.0676659 0.0676659 H 3.175 3.385311 V 0.61525083 0.54758489 H 3.9786885 4.572066 V 3.2125818 5.8775786 H 3.9786885 3.385311 V 5.8099127 5.7422467 H 3.175 2.964689 v 0.067666 0.067666 H 2.3713115 1.7779341 Z M 3.385311,4.8990251 V 4.6179512 H 3.175 2.964689 V 4.8990251 5.180099 H 3.175 3.385311 Z m 0,-1.1242956 V 3.4936556 H 3.175 2.964689 V 3.7747295 4.0558034 H 3.175 3.385311 Z m 0,-1.1242955 V 2.3693601 H 3.175 2.964689 V 2.650434 2.9315079 H 3.175 3.385311 Z m 0,-1.1242956 V 1.2450645 H 3.175 2.964689 V 1.5261384 1.8072123 H 3.175 3.385311 Z" id="path1" />
+                    </g>
+                </svg>
+                <p>Pedestrian Lane</p>
+            </div>
+            <div class='w-full flex gap-3 ml-2'>
+                <svg width="10.560498" height="20.144857" viewBox="0 0 2.7941318 5.3299935" version="1.1" id="svg1" xml:space="preserve" inkscape:export-filename="bitmap.svg" inkscape:export-xdpi="96" inkscape:export-ydpi="96" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                    <sodipodi:namedview id="namedview1" pagecolor="#505050" bordercolor="#eeeeee" borderopacity="1" inkscape:showpageshadow="0" inkscape:pageopacity="0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#505050" inkscape:document-units="mm" />
+                    <defs id="defs1" />
+                    <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(-1.7779341,-0.54758489)">
+                        <path style="fill:black" d="M 1.7779341,3.2125818 V 0.54758489 H 2.3713115 2.964689 v 0.0676659 0.0676659 H 3.175 3.385311 V 0.61525083 0.54758489 H 3.9786885 4.572066 V 3.2125818 5.8775786 H 3.9786885 3.385311 V 5.8099127 5.7422467 H 3.175 2.964689 v 0.067666 0.067666 H 2.3713115 1.7779341 Z M 3.385311,4.8990251 V 4.6179512 H 3.175 2.964689 V 4.8990251 5.180099 H 3.175 3.385311 Z m 0,-1.1242956 V 3.4936556 H 3.175 2.964689 V 3.7747295 4.0558034 H 3.175 3.385311 Z m 0,-1.1242955 V 2.3693601 H 3.175 2.964689 V 2.650434 2.9315079 H 3.175 3.385311 Z m 0,-1.1242956 V 1.2450645 H 3.175 2.964689 V 1.5261384 1.8072123 H 3.175 3.385311 Z" id="path1" />
+                    </g>
+                </svg>
+                <p>Road</p>
+            </div>
+        </div>
+        <div class="p-6 pt-0">
+            <a href="#" class="inline-block">
+                <button class="flex items-center gap-2 px-4 py-2 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none hover:bg-gray-900/10 active:bg-gray-900/20" type="button">
+                    Learn More
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                    </svg>
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
 <!-- Open the modal using ID.showModal() method -->
 
 <!-- End of Modals -->
@@ -2217,6 +2286,22 @@
             })
         })
         // End of bug reports
+
+        // Legend
+        $('#legend-btn').click(function() {
+            if ($('#map-legend').css('visibility') == 'visible') {
+                $('#map-legend').animate({
+                    'left': '-0%'
+                }, 250, function() {
+                    $('#map-legend').css('visibility', 'hidden');
+                })
+            } else {
+                $('#map-legend').css('visibility', 'visible').animate({
+                    'left': '50%'
+                }, 250);
+            }
+        })
+        // End of Legend
 
     });
 </script>

@@ -7,10 +7,10 @@
         <div class="flex justify-end items-center h-full w-full">
             <ul class="flex gap-1 md:gap-8 lg:gap-5 lg:mr-6">
                 <li class="text-white font-poppins-ultra text-[0.65rem] md:text-[0.90rem] lg:text-[1rem] px-1 py-0 lg:px-2 lg:py-1 group relative overflow-hidden hover:cursor-pointer">
-                    <a href="{{ route('home') }}">
+                    <button id="legend-btn">
                         <span class="relative z-10">Legend</span>
                         <span class="absolute inset-x-0 bottom-0 h-0.5 bg-white origin-center transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
-                    </a>
+                    </button>
                 </li>
                 <li class="text-white font-poppins-ultra text-[0.65rem] md:text-[0.90rem] lg:text-[1rem] px-1 py-0 lg:px-2 lg:py-1 group relative overflow-hidden hover:cursor-pointer">
                     <a href="{{ route('home') }}">
