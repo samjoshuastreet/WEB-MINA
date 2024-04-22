@@ -12,12 +12,12 @@
                         <span class="absolute inset-x-0 bottom-0 h-0.5 bg-white origin-center transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
                     </button>
                 </li>
-                <li class="text-white font-poppins-ultra text-[0.65rem] md:text-[0.90rem] lg:text-[1rem] px-1 py-0 lg:px-2 lg:py-1 group relative overflow-hidden hover:cursor-pointer">
+                <!-- <li class="text-white font-poppins-ultra text-[0.65rem] md:text-[0.90rem] lg:text-[1rem] px-1 py-0 lg:px-2 lg:py-1 group relative overflow-hidden hover:cursor-pointer">
                     <a href="{{ route('home') }}">
                         <span class="relative z-10">Help</span>
                         <span class="absolute inset-x-0 bottom-0 h-0.5 bg-white origin-center transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
                     </a>
-                </li>
+                </li> -->
             </ul>
         </div>
         <a href="{{ route('home') }}" class="bg-white rounded-xl p-1 flex items-center lg:ml-6 lg:h-[75%]">

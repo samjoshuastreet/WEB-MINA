@@ -17,8 +17,8 @@
     .display-marker {
         background-image: url('{{ asset("assets/logos/logo-only.png") }}');
         background-size: cover;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         border-radius: 100%;
         cursor: pointer;
         border: white 2px solid;
@@ -151,20 +151,45 @@
 </div>
 
 <div id="directions-cont" class="fixed py-8 top-0 w-[30%] left-[-30%] lg:left-[-30%] lg:w-[30%] h-full z-50">
-    <h1 class="text-white font-poppins-regular p-2 text-center">Directions Here</h1>
-    <div class="flex flex-col items-center gap-2 w-full h-full">
-        <div class="w-[80%] h-[80%] rounded-lg bg-white p-2 flex flex-col flex-between" style="overflow-y: auto;">
-            <div class="h-[95%]">
-                <div id="initial-instructions-cont" class="font-poppins-light text-[0.80rem]"></div>
-                <div id="instructions-cont" class="font-poppins-light text-[0.80rem]"></div>
-            </div>
-            <div class="w-[100%] h-[5%] bg-transparent flex justify-between">
-                <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-prev-btn">Prev</button>
-                <button type="button" class="shine bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-end-btn">End</button>
-                <button type="button" class="shine bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="event-end-btn">End</button>
-                <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-next-btn">Next</button>
+    <h1 class="text-white font-poppins-regular p-1 text-center">Procedure Process Flow</h1>
+    <div class="flex flex-row items-center justify-center gap-1 px-1 w-full h-full">
+        <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-5 px-1 rounded focus:outline-none focus:shadow-outline w-[7.5%] font-poppins-regular flex justify-center items-center text-[1rem]" id="procedure-prev-btn">&lt;</button>
+        <div class="w-[80%] h-[90%] rounded-lg bg-white p-2 flex flex-col flex-between" style="overflow-y: auto;">
+            <div class="h-[95%]" id="procedure-timeline" style="overflow-y: scroll; -ms-overflow-style: none; scrollbar-width: none;">
+                <!-- Timeline -->
+                <div>
+                    <div id='procedure-timeline-navbar'>
+                        <div class="grow pt-0.5 pb-2">
+                            <h3 class="flex gap-x-1.5 font-semibold text-gray-800 dark:text-white justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1f9597" class="w-6 h-6">
+                                    <path fill-rule="evenodd" d="M3 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5H15v-18a.75.75 0 0 0 0-1.5H3ZM6.75 19.5v-2.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-3a.75.75 0 0 1-.75-.75ZM6 6.75A.75.75 0 0 1 6.75 6h.75a.75.75 0 0 1 0 1.5h-.75A.75.75 0 0 1 6 6.75ZM6.75 9a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75ZM6 12.75a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 0 1.5h-.75a.75.75 0 0 1-.75-.75ZM10.5 6a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75Zm-.75 3.75A.75.75 0 0 1 10.5 9h.75a.75.75 0 0 1 0 1.5h-.75a.75.75 0 0 1-.75-.75ZM10.5 12a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75ZM16.5 6.75v15h5.25a.75.75 0 0 0 0-1.5H21v-12a.75.75 0 0 0 0-1.5h-4.5Zm1.5 4.5a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Zm.75 2.25a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75v-.008a.75.75 0 0 0-.75-.75h-.008ZM18 17.25a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span id="procedure-name"></span>
+                            </h3>
+                            <p id='procedure-description' class="mt-2 indent-4 text-justify text-sm text-gray-600 dark:text-neutral-400">
+                            </p>
+                            <div class="mt-1 -ms-1 p-1 inline-flex items-center gap-x-2 text-xs rounded-lg border border-transparent text-gray-500 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400">
+                                Number of Waypoints: <span id="procedure-waypoint-count" class="font-bold text-black"></span>
+                            </div>
+                        </div>
+                        <hr class="mb-2">
+                        <h1 class='text-center font-gordita-ultra mb-2'>Timeline Starts Here</h1>
+                    </div>
+                    <div id="timeline-body">
+                    </div>
+                    <div id="timeline-footer mb-2">
+                        <div class="w-[100%] h-[5%] bg-transparent flex justify-center">
+                            <button type="button" class="shine bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="procedure-end-btn">End</button>
+                            <button type="button" class="shine bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-12 font-poppins-regular flex justify-center items-center text-[0.75rem]" id="event-end-btn">End</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Timeline -->
+                <!-- <div id="initial-instructions-cont" class="font-poppins-light text-[0.80rem]"></div>
+                <div id="instructions-cont" class="font-poppins-light text-[0.80rem]"></div> -->
             </div>
         </div>
+        <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-5 px-1 rounded focus:outline-none focus:shadow-outline w-[7.5%] font-poppins-regular flex justify-center items-center text-[1rem]" id="procedure-next-btn">></button>
     </div>
 </div>
 
@@ -514,17 +539,17 @@
 
             markers.forEach(marker => {
                 if (zoom >= 20) {
-                    marker.style.width = '100px';
-                    marker.style.height = '100px';
+                    marker.style.width = '130px';
+                    marker.style.height = '130px';
                 } else if (zoom >= 19 && zoom < 20) {
-                    marker.style.width = '75px';
-                    marker.style.height = '75px';
+                    marker.style.width = '90px';
+                    marker.style.height = '90px';
                 } else if (zoom >= 18 && zoom < 20) {
-                    marker.style.width = '50px';
-                    marker.style.height = '50px';
+                    marker.style.width = '60px';
+                    marker.style.height = '60px';
                 } else if (zoom >= 17 && zoom < 18) {
-                    marker.style.width = '30px';
-                    marker.style.height = '30px';
+                    marker.style.width = '40px';
+                    marker.style.height = '40px';
                 } else {
                     marker.style.width = '10px';
                     marker.style.height = '10px';
@@ -1667,8 +1692,87 @@
         var totalWaypoints = 0;
         var response_json = {};
 
+        function setSidebarTimeline(json) {
+            console.log(json)
+            $('#procedure-name').text(json.target_procedure.procedure_name);
+            $('#procedure-description').text(json.target_procedure.procedure_description);
+            $('#procedure-waypoint-count').text(json.waypoints.length.toString());
+            var timelineBody = document.getElementById('timeline-body');
+            timelineBody.innerHTML = ``;
+            json.waypoints.forEach(function(waypoint, loopNumber) {
+                timelineBody.innerHTML += `
+                <!-- Item -->
+                    <div class="flex gap-x-2" id="timeline-step-item-${loopNumber + 1}">
+                        <!-- Left Content -->
+                        <div class="w-16 text-end">
+                            <span id="timeline-step-all-${loopNumber + 1}" class="text-xs text-black dark:text-neutral-400">Step <span id="timeline-step-${loopNumber + 1}"></span>${loopNumber + 1}</span>
+                        </div>
+                        <!-- End Left Content -->
+
+                        <!-- Icon -->
+                        <div id="timeline-step-${loopNumber + 1}-line" class="relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200 dark:after:bg-gray-700">
+                            <div class="relative z-10 size-7 flex justify-center items-center">
+                                <div id="timeline-step-${loopNumber + 1}-circle" class="size-2 rounded-full bg-gray-400 dark:bg-gray-600"></div>
+                            </div>
+                        </div>
+                        <!-- End Icon -->
+
+                        <!-- Right Content -->
+                        <div class="grow pt-0.5 pb-8">
+                            <h3 class="flex gap-x-1.5 font-semibold text-gray-800 dark:text-white">
+                                <p>Destination:<br><span id="timeline-step-destination">${waypoint.building.building_name}</span></p>
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-neutral-400">
+                            ${waypoint.instructions}
+                            </p>
+                        </div>
+                        <!-- End Right Content -->
+                    </div>
+                <!-- End Item -->
+            `;
+            })
+        }
+
+
+        function updateSidebar(index, totalWaypoints) {
+            var loopNumber = index + 1;
+            var totalLoop = totalWaypoints + 1;
+            const container = document.getElementById('procedure-timeline');
+            const element = document.getElementById(`timeline-step-item-${loopNumber}`);
+            const yCoordinate = element.offsetTop - container.offsetTop;
+            if (loopNumber > 1) {
+                container.scrollTo({
+                    top: yCoordinate,
+                    behavior: 'smooth'
+                });
+            }
+            if (loopNumber > 0) {
+                for (var x = totalLoop; x >= 0; x--) {
+                    console.log(x)
+                    if (x > loopNumber) {
+                        $(document).find(`#timeline-step-${x}-circle`).addClass('bg-gray-400').removeClass('bg-green-400').removeClass('bg-yellow-400')
+                        $(document).find(`#timeline-step-${x}-line`).addClass('after:bg-gray-200').removeClass('after:bg-green-200').removeClass('after:bg-yellow-200')
+                        $(document).find(`#timeline-step-all-${x}`).addClass('text-black').removeClass('text-green-400').removeClass('text  -yellow-400')
+                    } else if (x === loopNumber) {
+                        $(document).find(`#timeline-step-${x}-circle`).removeClass('bg-gray-400').addClass('bg-yellow-400')
+                        $(document).find(`#timeline-step-${x}-line`).removeClass('after:bg-gray-200').addClass('after:bg-yellow-200')
+                        $(document).find(`#timeline-step-all-${x}`).removeClass('text-black').addClass('text-yellow-400')
+                    } else {
+                        $(document).find(`#timeline-step-${x}-circle`).removeClass('bg-gray-400').removeClass('bg-yellow-400').addClass('bg-green-400')
+                        $(document).find(`#timeline-step-${x}-line`).removeClass('after:bg-gray-200').removeClass('after:bg-yellow-200').addClass('after:bg-green-200')
+                        $(document).find(`#timeline-step-all-${x}`).removeClass('text-black').removeClass('text-yellow-400').addClass('text-green-400')
+                    }
+                }
+            } else {
+                $(document).find(`#timeline-step-${loopNumber}-circle`).removeClass('bg-gray-400').addClass('bg-green-400')
+                $(document).find(`#timeline-step-${loopNumber}-line`).removeClass('after:bg-gray-200').addClass('after:bg-green-200')
+                $(document).find(`#timeline-step-all-${loopNumber}`).removeClass('text-black').addClass('text-green-400')
+            }
+        }
+
         function beginProcedureNagivation(json) {
             $('#sidebar-btn').hide();
+            setSidebarTimeline(json);
             var procedures = $('#procedures-cont');
             if (window.innerWidth > 767) {
                 procedures.animate({
@@ -1696,12 +1800,12 @@
             set: function(value) {
                 beginStep(value, (totalWaypoints), response_json);
                 _procedure_step = value;
-                $('#procedure-next-btn').css('visibility', 'visible');
-                $('#procedure-prev-btn').css('visibility', 'visible');
+                $('#procedure-prev-btn').prop('disabled', false).removeClass('bg-gray-900').addClass('bg-blue-500').addClass('hover:bg-blue-600');
+                $('#procedure-next-btn').prop('disabled', false).removeClass('bg-gray-900').addClass('bg-blue-500').addClass('hover:bg-blue-600');
                 if (value == 0) {
-                    $('#procedure-prev-btn').css('visibility', 'hidden');
+                    $('#procedure-prev-btn').prop('disabled', true).removeClass('bg-blue-500').removeClass('hover:bg-blue-600').addClass('bg-gray-900');
                 } else if (value == totalWaypoints) {
-                    $('#procedure-next-btn').css('visibility', 'hidden');
+                    $('#procedure-next-btn').prop('disabled', true).removeClass('bg-blue-500').removeClass('hover:bg-blue-600').addClass('bg-gray-900');
                 }
             }
         });
@@ -1755,7 +1859,7 @@
                 displayRoute(json.waypoints[index].building.building_name, json.waypoints[index - 1].building.building_name);
                 displaySidebar(json.waypoints[index].instructions, null, true);
             }
-            displayProcedureNavbar(json.target_procedure.procedure_name, json.waypoints[index].step_no, json.waypoints[index].building.building_name); // procedure name, step name, destination name
+            updateSidebar(index, totalWaypoints);
         }
 
         function displayRoute(destination, origin = null) {
@@ -1794,11 +1898,6 @@
                         console.log(error);
                     }
                 })
-                // get destination (building) entrypoints
-                // get origin (building) entrypoints
-                // directions.get
-                // display route
-                // display walking distance
             }
         }
 
@@ -1829,13 +1928,13 @@
         function displaySidebar(instructions, initial = null, procedure) {
             instructionsSidebar(true);
             $('#initial-instructions-cont').text('');
-            if (initial) {
-                $('#initial-instructions-cont').text(initial);
-                $('#initial-instructions-cont').addClass('mb-8');
-            } else {
-                $('#initial-instructions-cont').removeClass('mb-8');
-            }
-            $('#instructions-cont').text(instructions);
+            // if (initial) {
+            //     $('#initial-instructions-cont').text(initial);
+            //     $('#initial-instructions-cont').addClass('mb-8');
+            // } else {
+            //     $('#initial-instructions-cont').removeClass('mb-8');
+            // }
+            // $('#instructions-cont').text(instructions);
             if (procedure) {
                 $('#procedure-end-btn').show();
                 $('#event-end-btn').hide();
@@ -1856,11 +1955,14 @@
         function endProcedureNavigation() {
             $('#sidebar-btn').show();
             var procedures = $('#procedures-cont');
+            var sidebar = $('#sidebar');
             procedures.animate({
                 left: '0%'
             }, 500)
+            sidebar.animate({
+                left: '-20%'
+            }, 500);
             procedurePopupStatus = 0;
-            hideProcedureNavbar();
             instructionsSidebar(false);
             response_json = {};
             totalWaypoints = 0;
@@ -1868,6 +1970,7 @@
             removeGpsMarker();
             resetMap();
             $('#directions-end-btn').click().show();
+            sidebarToggle(false);
         }
 
         function sidebarToggle(state) {
