@@ -655,11 +655,8 @@
         }
 
         async function getDirections(route, non_raw = null, gpsMode = null) {
-            $('#procedure-end-btn').show();
-            console.log(route)
             try {
                 var paths = await getPathsFromRoute(route)
-                console.log(paths)
                 var facing;
                 var weight;
                 var directions = [];
@@ -1217,7 +1214,6 @@
             },
             success: (response) => {
                 building_names = response.names;
-                console.log(building_names)
                 $('#starting-point').autocomplete({
                     source: building_names
                 });
@@ -1457,7 +1453,7 @@
                         if (returnValue) {
                             resolve(nearestLineString.properties.id);
                         } else {
-                            resolve(nearestPointOnLine(currentLoc, nearestLineString.properties.id));
+                            resolve(nearestPointOnLine(currentLoc, nearestLineString.properties.id, true)); //this
                         }
                     },
                     error: (error) => {
@@ -1466,6 +1462,8 @@
                 });
             });
         }
+
+        var currentStepDestination;
 
         function nearestPointOnLine(currentLoc, nearestLine, procedure = null) {
             const {
@@ -1520,7 +1518,7 @@
                 units: 'meters'
             });
             if (procedure) {
-                var destination = document.getElementById('map-navbar-destination').innerText;
+                var destination = currentStepDestination;
             } else {
                 var destination = document.getElementById('destination').value;
             }
@@ -1735,6 +1733,7 @@
 
 
         function updateSidebar(index, totalWaypoints) {
+            currentStepDestination = response_json.waypoints[index].building.building_name;
             var loopNumber = index + 1;
             var totalLoop = totalWaypoints + 1;
             const container = document.getElementById('procedure-timeline');
@@ -2066,7 +2065,7 @@
                     'id': id
                 },
                 success: (response) => {
-                    return openEventPopup(response.target_event);
+                    openEventPopup(response.target_event, response.status, response.start, response.end);
                 },
                 error: (error) => {
                     console.log(error);
@@ -2074,10 +2073,27 @@
             })
         }
 
-        function openEventPopup(json) {
+        function openEventPopup(json, status, start, end) {
             $('#popup-event-name').text(json.event_name);
             $('#popup-event-description').text(json.event_description);
             $('#event-id').val(json.id);
+
+            if (status == 'On Going') {
+                $('#event-badge').html(`
+                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">On Going</span>
+                <span class="font-bold text-red-500 text-[0.60rem]">Ending at ${end}</span>
+                `);
+            } else if (status == 'Ended') {
+                $('#event-badge').html(`
+                <span class="bg-red-100 text-red-800 font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">Ended</span>
+                `);
+            } else if (status == 'Upcoming') {
+                $('#event-badge').html(`
+                <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">Upcoming</span>
+                <span class="font-bold text-green-500 text-[0.60rem]">Starting at ${start}</span>
+                `);
+            }
+
             if (json.building.building_marker.marker_image) {
                 var marker_image = decodeURIComponent('{{ asset("storage/") }}' + "/" + json.building.building_marker.marker_image); // Decode URL
                 $('#popup-event-image').attr('src', marker_image);
@@ -2110,8 +2126,6 @@
         }
 
         function beginEventNavigation(json) {
-            displayProcedureNavbar(json.event_name, null, json.building.building_name);
-
             determineOriginPoint().then(
                 function(value) {
                     var originModeResults = value;
@@ -2131,6 +2145,41 @@
                             }
                         )
                     }
+                    $('#procedure-name').text(json.event_name)
+                    $('#procedure-description').text(json.event_description)
+                    $('#procedure-waypoint-count').text('1')
+                    currentStepDestination = json.building.building_name
+                    var timelineBody = document.getElementById('timeline-body');
+                    timelineBody.innerHTML = `
+                    <!-- Item -->
+                    <div class="flex gap-x-2" id="event-item">
+                            <!-- Left Content -->
+                            <div class="w-16 text-end">
+                                Location
+                            </div>
+                            <!-- End Left Content -->
+
+                            <!-- Icon -->
+                            <div id="event-line" class="relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200 dark:after:bg-gray-700">
+                                <div class="relative z-10 size-7 flex justify-center items-center">
+                                    <div id="event-circle" class="size-2 rounded-full bg-gray-400 dark:bg-gray-600"></div>
+                                </div>
+                            </div>
+                            <!-- End Icon -->
+
+                            <!-- Right Content -->
+                            <div class="grow pt-0.5 pb-8">
+                                <h3 class="flex gap-x-1.5 font-semibold text-gray-800 dark:text-white">
+                                    <p>Destination:<br><span id="timeline-step-destination">${json.building.building_name}</span></p>
+                                </h3>
+                                <p class="mt-1 text-sm text-gray-600 dark:text-neutral-400">
+                                ${json.event_instructions}
+                                </p>
+                            </div>
+                            <!-- End Right Content -->
+                        </div>
+                    <!-- End Item -->
+                    `;
                 },
                 function(error) {
                     console.log(error)
@@ -2152,6 +2201,8 @@
             removeRenderedPaths();
             removeGpsMarkers();
             resetMap();
+            $('#directions-end-btn').click().show();
+            sidebarToggle(false);
         }
 
         var eventDirectionsButton = document.querySelector('#popup-events-directions-btn');
@@ -2329,7 +2380,6 @@
             }
         };
 
-
         function toggleModal() {
             const body = document.querySelector('body')
             const modal = document.querySelector('.modal')
@@ -2354,7 +2404,6 @@
         $('#report-form').submit(function(e) {
             e.preventDefault();
             var data = $(this).serialize();
-            console.log(data);
             $.ajax({
                 url: '{{ route("home.feedback.validate") }}',
                 data: data,

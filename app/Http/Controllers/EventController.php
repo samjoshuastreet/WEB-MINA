@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,8 +51,18 @@ class EventController extends Controller
     public function get(Request $request)
     {
         $target = Event::find($request->input('id'));
+        $today = Carbon::today();
+        $start = Carbon::parse($target->start_date)->format('F d (h:i A)');
+        $end = Carbon::parse($target->end_date)->format('F d (h:i A)');
+        if ($today >= $target->end_date) {
+            $status = 'Ended';
+        } elseif ($today < $target->end_date && $today >= $target->start_date) {
+            $status = 'On Going';
+        } else {
+            $status = 'Upcoming';
+        }
         $building = $target->building->buildingMarker;
-        return response()->json(['target_event' => $target]);
+        return response()->json(['target_event' => $target, 'status' => $status, 'end' => $end, 'start' => $start]);
     }
     public function delete(Request $request)
     {

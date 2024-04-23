@@ -81,6 +81,7 @@ Route::get('/events/add/validate', [EventController::class, 'add_validate'])->na
 Route::get('/events/get', [EventController::class, 'get'])->name('events.get');
 Route::get('/events/delete', [EventController::class, 'delete'])->name('events.delete');
 Route::get('/events/all', [EventController::class, 'all'])->name('events.all');
+Route::get('/events/active', [EventController::class, 'active'])->name('events.active');
 
 Route::get('/msuiit_map', function () {
     return view('msuiit_map');

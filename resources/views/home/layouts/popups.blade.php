@@ -68,6 +68,8 @@
                     <img id="popup-event-image" class="w-full h-auto max-w-full rounded-lg" alt="">
                 </figure>
                 <div class="details w-[60%] p-4 flex flex-col">
+                    <div id="event-badge" class="mb-1">
+                    </div>
                     <p id="popup-event-description" class="font-poppins-light mb-2"></p>
                     <button id="popup-events-directions-btn" type="button" class="px-3 py-2 text-xs font-poppins-light text-center inline-flex items-center text-white bg-green-500 rounded-lg hover:bg-green-600">
                         <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: #fff;">
