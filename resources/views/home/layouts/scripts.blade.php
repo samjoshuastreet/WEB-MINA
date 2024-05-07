@@ -1,6 +1,10 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="{{ asset('assets/admin/plugins/toastr/toastr.min.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+<script src="
+https://cdn.jsdelivr.net/npm/use-geolocation-api@1.1.0/dist/index.umd.min.js
+"></script>
+
 @yield('more_scripts')
 <script>
     var sidebarStatus = 0;

@@ -23,6 +23,25 @@ class PathController extends Controller
     {
         return view('admin.paths.add');
     }
+    public function disable(Request $request)
+    {
+        $target = Path::find($request->input('id'));
+        $target->type = 'disabled';
+        $target->save();
+        return response()->json(['success' => true]);
+    }
+    public function enable(Request $request)
+    {
+        $target = Path::find($request->input('id'));
+        $target->type = 'outdoor';
+        $target->save();
+        return response()->json(['success' => true]);
+    }
+    public function render()
+    {
+        $paths = Path::all();
+        return view('admin.paths.ajax.path_list', compact('paths'))->render();
+    }
     public function add_submit(Request $request)
     {
         $path = new Path();

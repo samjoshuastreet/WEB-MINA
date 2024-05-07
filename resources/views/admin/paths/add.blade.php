@@ -101,6 +101,7 @@
                             <option value='outdoor'>Outdoor</option>
                             <option value='pedestrian lane'>Pedestrian Lane</option>
                             <option value='road'>Road</option>
+                            <option value='disabled'>Disabled</option>
                         </select>
                         <label for='cardinal-direction' id='cardinal-direction-label' style='display:none;'>Facing: </label>
                         <input type="text" name="cardinal-direction" id="cardinal-direction" style="display: none;" readonly>

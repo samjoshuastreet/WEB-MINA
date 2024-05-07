@@ -63,6 +63,9 @@ Route::get('/admin/paths/add-validator', [PathController::class, 'validator'])->
 Route::get('/admin/paths/edit', [PathController::class, 'edit'])->name('paths.edit');
 Route::get('/admin/paths/delete', [PathController::class, 'delete'])->name('paths.delete');
 Route::get('/admin/paths/reset', [PathController::class, 'reset'])->name('paths.reset');
+Route::get('/admin/paths/enable', [PathController::class, 'enable'])->name('paths.enable');
+Route::get('/admin/paths/disable', [PathController::class, 'disable'])->name('paths.disable');
+Route::get('/admin/paths/list/render', [PathController::class, 'render'])->name('paths.list.render');
 
 Route::get('/directions/get', [DirectionsController::class, 'get'])->name('directions.get');
 Route::get('/directions/get/polarpoints', [DirectionsController::class, 'polarpoints'])->name('directions.get.polarpoints');

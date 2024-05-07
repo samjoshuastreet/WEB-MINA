@@ -140,6 +140,12 @@
             <span class="font-poppins-ultra">Destination:</span> <span id="map-navbar-destination"></span>
         </div>
     </div>
+    <button id="directions-toggle" type="button" class="absolute bottom-[13%] right-4 z-[100] text-upsdell-900 border bg-white border-[#7e7e7e] hover:bg-[#bbbbbb] hover:text-white focus:ring-4 focus:outline-none focus:ring-upsdell-900 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-upsdell-900 dark:text-upsdell-900 dark:hover:text-white dark:focus:ring-upsdell-900 dark:hover:bg-upsdell-900">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-geo" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.3 1.3 0 0 0-.37.265.3.3 0 0 0-.057.09V14l.002.008.016.033a.6.6 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.6.6 0 0 0 .146-.15l.015-.033L12 14v-.004a.3.3 0 0 0-.057-.09 1.3 1.3 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465s-2.462-.172-3.34-.465c-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411" />
+        </svg>
+        <span class="sr-only">Icon description</span>
+    </button>
     <button id="marker-toggle" type="button" class="absolute bottom-10 right-4 z-[100] text-upsdell-900 border bg-white border-[#7e7e7e] hover:bg-[#bbbbbb] hover:text-white focus:ring-4 focus:outline-none focus:ring-upsdell-900 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-upsdell-900 dark:text-upsdell-900 dark:hover:text-white dark:focus:ring-upsdell-900 dark:hover:bg-upsdell-900">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-tags" viewBox="0 0 16 16">
             <path d="M3 2v4.586l7 7L14.586 9l-7-7zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586z" />
@@ -150,7 +156,7 @@
     <div id="currently-facing-cont" class="absolute top-2 left-2 z-50 bg-transparent px-1 py-2 rounded-md font-poppins-regular text-black outline-offset-1" style='display: none;'>Facing: <span id="currently-facing" class="font-bold bg-green-500 rounded-md text-black px-1 py-1"></span></div>
 </div>
 
-<div id="directions-cont" class="fixed py-8 top-0 w-[30%] left-[-30%] lg:left-[-30%] lg:w-[30%] h-full z-50">
+<div id="directions-cont" class="fixed py-8 top-0 w-[100%] left-[-100%] lg:left-[-30%] lg:w-[30%] h-full z-50">
     <h1 class="text-white font-poppins-regular p-1 text-center">Procedure Process Flow</h1>
     <div class="flex flex-row items-center justify-center gap-1 px-1 w-full h-full">
         <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-5 px-1 rounded focus:outline-none focus:shadow-outline w-[7.5%] font-poppins-regular flex justify-center items-center text-[1rem]" id="procedure-prev-btn">&lt;</button>
@@ -530,6 +536,8 @@
                 console.log(layer.id);
             });
         }
+
+
         // End of Element Rendering
 
         // Map Elements Optimizations
@@ -1154,7 +1162,10 @@
                             }
                         },
                         error: function(error) {
-                            console.log(error);
+                            Toast.fire({
+                                icon: 'warning',
+                                title: error.responseJSON.message
+                            })
                         }
                     });
                 });
@@ -1272,8 +1283,7 @@
                     }
                 })
             } else {
-                var currentLocationSample = [124.24436541380965, 8.23990409574499];
-                nearestLine(currentLocationSample);
+                nearestLine(currentLocation);
             }
         });
         // End of Searchbar Functions
@@ -1292,8 +1302,27 @@
             });
         }
 
+        function isOutsideCampus(point) {
+            var features = map.queryRenderedFeatures(point); // acquires boundaries outside the campus
+            console.log(features)
+            var isOutside = false; // Assume the point is inside the campus by default
+            if (features.length > 0) {
+                features.forEach(function(feature) {
+
+                    if (feature.layer.id === 'boundary-latest-19j3o8') {
+
+                        isOutside = true; // If the point is outside the campus, set isOutside to false
+                    }
+                });
+            }
+            return isOutside; // Return the final result after checking all features
+        }
+
+        // I have a bunch of polygons from 
+
         var originPointInput = document.getElementById('starting-point');
         var currentLocBtn = document.getElementById('current-location');
+        var currentLocation;
         var _gps = false;
         Object.defineProperty(window, 'gps', {
             get: function() {
@@ -1301,12 +1330,33 @@
             },
             set: function(value) {
                 if (value === true) {
+                    currentGeoposition.then((position) => {
+                        currentLocation = position;
+                        console.log(currentLocation)
+                        // var isOutside = turf.booleanPointInPolygon(turf.point(currentLocation), boundaryLayer);
+                        // console.log(isOutside)
+                        // if (isOutside) {
+                        //     Toast.fire({
+                        //         title: 'You cannot use GPS outside the campus!',
+                        //         icon: 'warning'
+                        //     })
+                        //     gps = false
+                        // }
+                    }).catch((error) => {
+                        console.log(error)
+                        Toast.fire({
+                            title: 'Allow location access then reload this page',
+                            icon: 'warning'
+                        })
+                        gps = false
+                    });
                     disableOriginInput();
                     _gps = true;
                 } else if (value === false) {
                     enableOriginInput();
                     removeGpsMarker();
                     _gps = false;
+                    currentLocation = '';
                 }
             }
         });
@@ -1797,6 +1847,7 @@
                 return _procedure_step;
             },
             set: function(value) {
+                removeGpsMarker();
                 beginStep(value, (totalWaypoints), response_json);
                 _procedure_step = value;
                 $('#procedure-prev-btn').prop('disabled', false).removeClass('bg-gray-900').addClass('bg-blue-500').addClass('hover:bg-blue-600');
@@ -1835,7 +1886,6 @@
                         var originModeResults = value;
                         if (originModeResults) {
                             displayRoute(json.waypoints[index].building_id);
-                            displaySidebar(json.waypoints[index].instructions, json.target_procedure.initial_instructions, 'first');
                         } else {
                             $('#origin-modal').show();
                             getOriginPoint().then(
@@ -1861,16 +1911,25 @@
             updateSidebar(index, totalWaypoints);
         }
 
-        function displayRoute(destination, origin = null) {
+        function displayRoute(destination, origin = null, event = null) {
             if (!origin) {
                 var gps_point = locateUser();
-                nearestLineNew(gps_point, true)
-                    .then(nearestLineId => {
-                        var nearestPointOnLineCoords = nearestPointOnLine(gps_point, nearestLineId, destination);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                gps_point = [124.24468480009568, 8.241310194494716];
+                if (!gps_point) {
+                    endProcedureNavigation()
+                } else {
+                    if (!event) {
+                        displaySidebar(response_json.waypoints[0].instructions, response_json.target_procedure.initial_instructions, 'first');
+                    }
+
+                    nearestLineNew(gps_point, true)
+                        .then(nearestLineId => {
+                            var nearestPointOnLineCoords = nearestPointOnLine(gps_point, nearestLineId, destination);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                }
             } else {
                 gps = false;
                 $.ajax({
@@ -1901,9 +1960,13 @@
         }
 
         function locateUser() {
-            var currentLocationSample = [124.2446572386292, 8.2412528560357];
-            _gps = true;
-            return currentLocationSample;
+            gps = true;
+            if (currentLocation) {
+                return currentLocation;
+            } else {
+                return false
+            }
+
         }
 
         function displayProcedureNavbar(name, step, destination) {
@@ -2126,12 +2189,13 @@
         }
 
         function beginEventNavigation(json) {
+            $('#directions-step-cont').empty();
             determineOriginPoint().then(
                 function(value) {
                     var originModeResults = value;
                     if (originModeResults) {
                         displaySidebar(json.event_instructions, json.event_description, false);
-                        displayRoute(json.building.building_name);
+                        displayRoute(json.building.building_name, false, true);
                     } else {
                         $('#origin-modal').show();
                         getOriginPoint().then(
@@ -2455,6 +2519,53 @@
         })
         // End of Legend
 
+        // GPS
+
+        let currentGeoposition = new Promise(function(myResolve, myReject) {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        var currentPosition = [position.coords.longitude, position.coords.latitude];
+                        currentPosition = [124.24468480009568, 8.241310194494716];
+                        myResolve(currentPosition);
+                    },
+                    (error) => {
+                        myReject(error);
+                    }, {
+                        enableHighAccuracy: true, // Request high accuracy location
+                        maximumAge: 0, // Disable caching of the locationm
+                    }
+                );
+                // "Producing Code" (May take some time)
+            } else {
+                Toast.fire({
+                    title: 'Geolocation is not available!',
+                    icon: 'warning'
+                })
+                gps = false
+            }
+        });
+
+        // End of GPS
+        var directionsMarkerStatus = 0;
+        $('#directions-toggle').click(function() {
+            toggleDirectionsMarker(directionsMarkerStatus)
+        });
+
+        function toggleDirectionsMarker(status) {
+            var directionsMarker = document.querySelectorAll('.custom-marker');
+            directionsMarker.forEach(function(thisMarker) {
+
+                if (status) {
+                    thisMarker.style.visibility = 'visible';
+                    directionsMarkerStatus = 0;
+                } else {
+                    thisMarker.style.visibility = 'hidden';
+                    directionsMarkerStatus = 1;
+                }
+
+            });
+        }
     });
 </script>
 @endsection

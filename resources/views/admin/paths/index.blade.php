@@ -33,7 +33,7 @@
                             <div class="d-flex justify-content-start">
                                 <a href="{{ route('paths.add') }}"><button type="button" class="btn btn-primary btn-md mb-3">Add a Path</button></a>
                                 <a href="{{ route('paths.edit') }}"><button type="button" class="btn btn-primary btn-md mb-3 ml-1">Path Editor</button></a>
-                                <button id="view-modal-btn" type="button" class="btn btn-warning btn-md mb-3 ml-1" data-toggle="modal" data-target="#view-modal">View Map</button>
+                                <!-- <button id="view-modal-btn" type="button" class="btn btn-warning btn-md mb-3 ml-1" data-toggle="modal" data-target="#view-modal">View Map</button> -->
                             </div>
                             <table class="table table-bordered">
                                 <thead>
@@ -99,5 +99,60 @@
             [124.25301604017682, 8.248537110726303] // Northeast bound
         ]
     });
+
+    function renderList() {
+        $.ajax({
+            url: '{{ route("paths.list.render") }}',
+            data: '',
+            success: (html) => {
+                $('#building-list').html(html)
+                attachListeners()
+            },
+            error: (error) => {
+                console.log(error)
+            }
+        })
+    }
+
+    function attachListeners() {
+        var disableBtns = document.querySelectorAll('.disable-btn');
+        disableBtns.forEach(function(disableBtn) {
+            disableBtn.addEventListener('click', function() {
+                console.log('hello')
+                $.ajax({
+                    url: '{{ route("paths.disable") }}',
+                    data: {
+                        'id': $(this).attr('data-id')
+                    },
+                    success: (response) => {
+                        renderList()
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                })
+            })
+        });
+
+        var enableBtns = document.querySelectorAll('.enable-btn');
+        enableBtns.forEach(function(enableBtn) {
+            enableBtn.addEventListener('click', function() {
+                console.log('hello')
+                $.ajax({
+                    url: '{{ route("paths.enable") }}',
+                    data: {
+                        'id': $(this).attr('data-id')
+                    },
+                    success: (response) => {
+                        renderList()
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                })
+            })
+        });
+    }
+    attachListeners()
 </script>
 @endsection

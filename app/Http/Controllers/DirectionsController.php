@@ -17,18 +17,22 @@ class DirectionsController extends Controller
         $paths = Path::all();
         if ($request->input('gps')) {
             foreach ($paths as $path) {
-                if ($path->id == $request->input('nearest_path_id')) {
-                    $graph->add('GPS', 'NPL', $request->input('GPSNPL'));
-                    $graph->add('NPL', $path->wp_a_code, $request->input('NPLA'));
-                    $graph->add('NPL', $path->wp_b_code, $request->input('NPLB'));
+                if ($path->type !== 'disabled') {
+                    if ($path->id == $request->input('nearest_path_id')) {
+                        $graph->add('GPS', 'NPL', $request->input('GPSNPL'));
+                        $graph->add('NPL', $path->wp_a_code, $request->input('NPLA'));
+                        $graph->add('NPL', $path->wp_b_code, $request->input('NPLB'));
+                    }
+                    $graph->add($path->wp_a_code, $path->wp_b_code, $path->weight);
                 }
-                $graph->add($path->wp_a_code, $path->wp_b_code, $path->weight);
             }
             $route = $graph->search('GPS', $destination);
             $weight = $graph->cost($route);
         } else {
             foreach ($paths as $path) {
-                $graph->add($path->wp_a_code, $path->wp_b_code, $path->weight);
+                if ($path->type !== 'disabled') {
+                    $graph->add($path->wp_a_code, $path->wp_b_code, $path->weight);
+                }
             }
             $route = $graph->search($origin, $destination);
             $weight = $graph->cost($route);
