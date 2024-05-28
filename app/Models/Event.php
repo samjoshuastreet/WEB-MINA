@@ -57,4 +57,28 @@ class Event extends Model
         }
         return $status;
     }
+
+    public static function onGoingEvents($limit = null)
+    {
+        $today = Carbon::today();
+        $query = self::where('start_date', '<=', $today)->where('end_date', '>=', $today);
+
+        return $limit ? $query->take($limit)->get() : $query->get();
+    }
+
+    public static function endedEvents($limit = null)
+    {
+        $today = Carbon::today();
+        $query = self::where('end_date', '<', $today);
+
+        return $limit ? $query->take($limit)->get() : $query->get();
+    }
+
+    public static function upcomingEvents($limit = null)
+    {
+        $today = Carbon::today();
+        $query = self::where('start_date', '>', $today);
+
+        return $limit ? $query->take($limit)->get() : $query->get();
+    }
 }

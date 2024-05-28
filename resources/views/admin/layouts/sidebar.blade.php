@@ -10,10 +10,10 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ asset('assets/images/users/user-default.jpg') }}" class="img-circle elevation-2" alt="Admin Profile Photo">
+                <img src="{{ asset('assets/images/users/user-default.png') }}" class="img-circle elevation-2" alt="Admin Profile Photo">
             </div>
             <div class="info">
-                <a href="{{ route('dashboard') }}" class="d-block">Default Admin</a>
+                <a href="{{ route('dashboard') }}" class="d-block">Dashboard</a>
             </div>
         </div>
 

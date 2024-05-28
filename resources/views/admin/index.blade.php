@@ -8,11 +8,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Dashboard v3</h1>
+                    <h1 class="m-0">Dashboard</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">Dashboard</li>
+                        <li class="breadcrumb-item active">Home</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -24,252 +24,275 @@
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header border-0">
-                            <div class="d-flex justify-content-between">
-                                <h3 class="card-title">Online Store Visitors</h3>
-                                <a href="javascript:void(0);">View Report</a>
-                            </div>
+                <div class="col-lg-12">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Map View</h3>
                         </div>
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <p class="d-flex flex-column">
-                                    <span class="text-bold text-lg">820</span>
-                                    <span>Visitors Over Time</span>
-                                </p>
-                                <p class="ml-auto d-flex flex-column text-right">
-                                    <span class="text-success">
-                                        <i class="fas fa-arrow-up"></i> 12.5%
-                                    </span>
-                                    <span class="text-muted">Since last week</span>
-                                </p>
-                            </div>
-                            <!-- /.d-flex -->
-
-                            <div class="position-relative mb-4">
-                                <canvas id="visitors-chart" height="200"></canvas>
-                            </div>
-
-                            <div class="d-flex flex-row justify-content-end">
-                                <span class="mr-2">
-                                    <i class="fas fa-square text-primary"></i> This Week
-                                </span>
-
-                                <span>
-                                    <i class="fas fa-square text-gray"></i> Last Week
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.card -->
-
-                    <div class="card">
-                        <div class="card-header border-0">
-                            <h3 class="card-title">Products</h3>
-                            <div class="card-tools">
-                                <a href="#" class="btn btn-tool btn-sm">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                <a href="#" class="btn btn-tool btn-sm">
-                                    <i class="fas fa-bars"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body table-responsive p-0">
-                            <table class="table table-striped table-valign-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Price</th>
-                                        <th>Sales</th>
-                                        <th>More</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                                            Some Product
-                                        </td>
-                                        <td>$13 USD</td>
-                                        <td>
-                                            <small class="text-success mr-1">
-                                                <i class="fas fa-arrow-up"></i>
-                                                12%
-                                            </small>
-                                            12,000 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                                            Another Product
-                                        </td>
-                                        <td>$29 USD</td>
-                                        <td>
-                                            <small class="text-warning mr-1">
-                                                <i class="fas fa-arrow-down"></i>
-                                                0.5%
-                                            </small>
-                                            123,234 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                                            Amazing Product
-                                        </td>
-                                        <td>$1,230 USD</td>
-                                        <td>
-                                            <small class="text-danger mr-1">
-                                                <i class="fas fa-arrow-down"></i>
-                                                3%
-                                            </small>
-                                            198 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                                            Perfect Item
-                                            <span class="badge bg-danger">NEW</span>
-                                        </td>
-                                        <td>$199 USD</td>
-                                        <td>
-                                            <small class="text-success mr-1">
-                                                <i class="fas fa-arrow-up"></i>
-                                                63%
-                                            </small>
-                                            87 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col-md-6 -->
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header border-0">
-                            <div class="d-flex justify-content-between">
-                                <h3 class="card-title">Sales</h3>
-                                <a href="javascript:void(0);">View Report</a>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <p class="d-flex flex-column">
-                                    <span class="text-bold text-lg">$18,230.00</span>
-                                    <span>Sales Over Time</span>
-                                </p>
-                                <p class="ml-auto d-flex flex-column text-right">
-                                    <span class="text-success">
-                                        <i class="fas fa-arrow-up"></i> 33.1%
-                                    </span>
-                                    <span class="text-muted">Since last month</span>
-                                </p>
-                            </div>
-                            <!-- /.d-flex -->
-
-                            <div class="position-relative mb-4">
-                                <canvas id="sales-chart" height="200"></canvas>
-                            </div>
-
-                            <div class="d-flex flex-row justify-content-end">
-                                <span class="mr-2">
-                                    <i class="fas fa-square text-primary"></i> This year
-                                </span>
-
-                                <span>
-                                    <i class="fas fa-square text-gray"></i> Last year
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.card -->
-
-                    <div class="card">
-                        <div class="card-header border-0">
-                            <h3 class="card-title">Online Store Overview</h3>
-                            <div class="card-tools">
-                                <a href="#" class="btn btn-sm btn-tool">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                <a href="#" class="btn btn-sm btn-tool">
-                                    <i class="fas fa-bars"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                                <p class="text-success text-xl">
-                                    <i class="ion ion-ios-refresh-empty"></i>
-                                </p>
-                                <p class="d-flex flex-column text-right">
-                                    <span class="font-weight-bold">
-                                        <i class="ion ion-android-arrow-up text-success"></i> 12%
-                                    </span>
-                                    <span class="text-muted">CONVERSION RATE</span>
-                                </p>
-                            </div>
-                            <!-- /.d-flex -->
-                            <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                                <p class="text-warning text-xl">
-                                    <i class="ion ion-ios-cart-outline"></i>
-                                </p>
-                                <p class="d-flex flex-column text-right">
-                                    <span class="font-weight-bold">
-                                        <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
-                                    </span>
-                                    <span class="text-muted">SALES RATE</span>
-                                </p>
-                            </div>
-                            <!-- /.d-flex -->
-                            <div class="d-flex justify-content-between align-items-center mb-0">
-                                <p class="text-danger text-xl">
-                                    <i class="ion ion-ios-people-outline"></i>
-                                </p>
-                                <p class="d-flex flex-column text-right">
-                                    <span class="font-weight-bold">
-                                        <i class="ion ion-android-arrow-down text-danger"></i> 1%
-                                    </span>
-                                    <span class="text-muted">REGISTRATION RATE</span>
-                                </p>
-                            </div>
-                            <!-- /.d-flex -->
+                        <div class="card-body" style='height: 300px; width: 100%;'>
+                            <div id="map" style='height: 100%; width: 100%;'></div>
                         </div>
                     </div>
                 </div>
                 <!-- /.col-md-6 -->
             </div>
             <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card card-secondary">
+                                <div class="card-header">
+                                    <h3 class="card-title">Map Elements and Procedures</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-info elevation-1"><i class="fa fa-building"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Number of Buildings</span>
+                                            <span class="info-box-number">
+                                                {{ $building_count }}
+                                                <small>buildings</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-success elevation-1"><i class="fa fa-door-open"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Number of Offices</span>
+                                            <span class="info-box-number">
+                                                {{ $office_count }}
+                                                <small>offices</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-road"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Number of Paths</span>
+                                            <span class="info-box-number">
+                                                {{ $path_count }}
+                                                <small>created paths</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-dark elevation-1"><i class="fas fa-route"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Number of Procedures</span>
+                                            <span class="info-box-number">
+                                                {{ $procedure_count }}
+                                                <small>procedures</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card card-warning">
+                                <div class="card-header">
+                                    <h3 class="card-title">Events</h3>
+                                </div>
+                                <div class="card-body">
+                                    <h6>On Going Events</h6>
+                                    <ul class="products-list product-list-in-card pl-2 pr-2 shadow-lg rounded-lg">
+                                        @forelse($onGoingEvents as $event)
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="{{ asset('storage/' . $event->building->buildingMarker->marker_image) }}" alt="Product Image" class="img-size-50">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="javascript:void(0)" class="product-title">{{ $event->event_name }}</a>
+                                                <br>
+                                                <a class="badge badge-success">{{ $event->building->building_name }}</a>
+                                                <span class="product-description">
+                                                    {{ $event->event_description }}
+                                                </span>
+                                            </div>
+                                        </li>
+                                        @empty
+                                        <li class="item">
+                                            <span class="text-muted">There are currently no on going events.</span>
+                                        </li>
+                                        @endforelse
+                                        @if(count($onGoingEvents) === 3)
+                                        <li class='item text-center'><a href="{{ route('events.index') }}">See all</a></li>
+                                        @endif
+                                    </ul>
+                                    <hr>
+                                    <h6>Upcoming Events</h6>
+                                    <ul class="products-list product-list-in-card pl-2 pr-2 shadow-lg rounded-lg">
+                                        @forelse($upcomingEvents as $event)
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="{{ asset('storage/' . $event->building->buildingMarker->marker_image) }}" alt="Product Image" class="img-size-50">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="javascript:void(0)" class="product-title">{{ $event->event_name }}</a>
+                                                <br>
+                                                <a class="badge badge-warning">{{ $event->building->building_name }}</a>
+                                                <span class="product-description">
+                                                    {{ $event->event_description }}
+                                                </span>
+                                            </div>
+                                        </li>
+                                        @empty
+                                        <li class="item">
+                                            <span class="text-muted">There are currently no on going events.</span>
+                                        </li>
+                                        @endforelse
+                                        @if(count($upcomingEvents) === 3)
+                                        <li class='item text-center'><a href="{{ route('events.index') }}">See all</a></li>
+                                        @endif
+                                    </ul>
+                                    <hr>
+                                    <h6>Ended Events</h6>
+                                    <ul class="products-list product-list-in-card pl-2 pr-2 shadow-lg rounded-lg">
+                                        @forelse($endedEvents as $event)
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="{{ asset('storage/' . $event->building->buildingMarker->marker_image) }}" alt="Product Image" class="img-size-50">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="javascript:void(0)" class="product-title">{{ $event->event_name }}</a>
+                                                <br>
+                                                <a class="badge badge-danger">{{ $event->building->building_name }}</a>
+                                                <span class="product-description">
+                                                    {{ $event->event_description }}
+                                                </span>
+                                            </div>
+                                        </li>
+                                        @empty
+                                        <li class="item">
+                                            <span class="text-muted">There are currently no on going events.</span>
+                                        </li>
+                                        @endforelse
+                                        @if(count($endedEvents) === 3)
+                                        <li class='item text-center'><a href="{{ route('events.index') }}">See all</a></li>
+                                        @endif
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card card-danger">
+                                <div class="card-header">
+                                    <h3 class="card-title">Feedbacks</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="info-box mb-3 bg-primary">
+                                        <span class="info-box-icon"><i class="fas fa-envelope"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">New</span>
+                                            <span class="info-box-number">{{ $fIP }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="info-box mb-3 bg-warning">
+                                        <span class="info-box-icon"><i class="fas fa-spinner"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Pending</span>
+                                            <span class="info-box-number">{{ $fp }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="info-box mb-3 bg-dark">
+                                        <span class="info-box-icon"><i class="fas fa-pause"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Paused</span>
+                                            <span class="info-box-number">{{ $fr }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="info-box mb-3 bg-success">
+                                        <span class="info-box-icon"><i class="fas fa-check"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Resolved</span>
+                                            <span class="info-box-number">{{ $fn }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- /.container-fluid -->
     </div>
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+@endsection
+@section('more_scripts')
+<script>
+    $(document).ready(function() {
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic2Ftc3RyZWV0IiwiYSI6ImNsczRxb29mdTE1ZmkybHBjcHBhcG9xN2kifQ.SpJ2sxffT8PRfQjFtYgg6Q';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/samstreet/clu2rl1ub024601oigzn6960q',
+            zoom: 16.30,
+            minZoom: 16.30,
+            maxZoom: 17,
+            center: [124.2438547179179, 8.2414298468554],
+            bearing: -95,
+            pitch: 45,
+            maxBounds: [
+                [124.23616973647256, 8.233619024568284], // Southwest bound
+                [124.25301604017682, 8.248537110726303] // Northeast bound
+            ],
+            interactive: false
+        });
+        map.on('style.load', function() {
+            $.ajax({
+                url: '{{ route("buildings.get") }}',
+                data: {
+                    'boundary': true
+                },
+                success: function(response) {
+                    var boundaries = response.boundaries;
+                    boundaries.forEach(boundary => {
+                        const fillColor = boundary.building_details.color;
+                        var temp = JSON.parse(boundary.corners);
+                        var boundaryCoordinates = [];
+                        for (let key in temp) {
+                            if (temp.hasOwnProperty(key)) {
+                                boundaryCoordinates.push([temp[key].lng, temp[key].lat]);
+                            }
+                        }
+                        map.addLayer({
+                            id: `polygon-display-${boundary.id}`,
+                            type: 'fill-extrusion',
+                            source: {
+                                type: 'geojson',
+                                data: {
+                                    type: 'Feature',
+                                    geometry: {
+                                        type: 'Polygon',
+                                        coordinates: [boundaryCoordinates]
+                                    }
+                                }
+                            },
+                            layout: {},
+                            paint: {
+                                'fill-extrusion-color': fillColor,
+                                'fill-extrusion-height': 4,
+                                'fill-extrusion-opacity': 0.8
+                            }
+                        }, 'boundary-latest-19j3o8');
+                    });
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            })
+        })
+    });
+</script>
 @endsection

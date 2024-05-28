@@ -127,6 +127,7 @@
 <div id="map" class="relative w-full h-[calc(100vh-50px)] mt-[50px]">
     @include('home.layouts.popups')
     @include('home.layouts.sidebar_right')
+    @include('home.layouts.spinners')
     <button class="modal-open bg-transparent border border-gray-500 hover:border-indigo-500 text-gray-500 hover:text-indigo-500 font-bold py-2 px-4 rounded-full" style='display: none;'>Open Modal</button>
     <div id="map-navbar" class="absolute top-1 left-[50%] translate-x-[-50%] z-50 bg-transparent rounded-md text-white-900 text-white font-poppins-light w-[80%] h-[35px] ml-10 p-1 flex gap-2 justify-start" style="display: none;">
         <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
@@ -905,6 +906,7 @@
                             <p class="indent-6">${thisDirections}</p>
                         </div>
                     `;
+                    spinner(3)
                 } else {
                     // Not the last iteration
                     document.getElementById('directions-step-cont').innerHTML += `
@@ -1041,6 +1043,10 @@
                                     })
                                     .setLngLat([response.path.wp_b_lng, response.path.wp_b_lat])
                                     .addTo(map);
+                                spinner(2)
+                            }
+                            if (first) {
+                                spinner(1)
                             }
                         }
                     },
@@ -2807,6 +2813,26 @@
                 }
 
             });
+        }
+
+        // spinners
+        function spinner(state) {
+            $('#spinner').show()
+            switch (state) {
+                case 1:
+                    $('#step-one').show()
+                    $('#sidebar, #directions-cont').css('pointer-events', 'none')
+                    break;
+                case 2:
+                    $('#step-one').hide()
+                    $('#step-two').show()
+                    break;
+                case 3:
+                    $('#step-two').hide()
+                    $('#spinner').hide()
+                    $('#sidebar, #directions-cont').css('pointer-events', 'auto')
+                    break;
+            }
         }
     });
 </script>

@@ -11,6 +11,27 @@ class FeedbackReport extends Model
     protected $table = 'feedback_reports';
     protected $fillable = [
         'name',
-        'message'
+        'message',
+        'status'
     ];
+
+    public static function inProgCount()
+    {
+        return self::where('status', 'In Progress')->count();
+    }
+
+    public static function pausedCount()
+    {
+        return self::where('status', 'Paused')->count();
+    }
+
+    public static function resolvedCount()
+    {
+        return self::where('status', 'Resolved')->count();
+    }
+
+    public static function newCount()
+    {
+        return self::where('status', 'New')->count();
+    }
 }
