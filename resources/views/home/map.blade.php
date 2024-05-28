@@ -251,6 +251,32 @@
     </div>
 </div>
 
+<div id="offices-cont" class="fixed py-8 top-0 left-[-100%] w-full lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 z-30 transition">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" id="offices-close-btn" fill="white" class="bi bi-x-circle-fill absolute top-[2.5%] right-[5%] hover:cursor-pointer" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+    </svg>
+    <h1 class="text-white font-poppins-regular p-2 text-center">Offices</h1>
+    <div class="flex justify-center mt-2">
+        <ul class="w-[90%] text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            @if(count($offices) > 1)
+            @foreach($offices as $office)
+            @if ($loop->first)
+            <li data-id='{{ $office->id }}' class="office-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{ $office->office_name }}</li>
+            @elseif ($loop->last)
+            <li data-id='{{ $office->id }}' class="office-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light px-4 py-2 border-t border-gray-200 rounded-b-lg dark:border-gray-600">{{ $office->office_name }}</li>
+            @else
+            <li data-id='{{ $office->id }}' class="office-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light border px-4 py-2">{{ $office->office_name }}</li>
+            @endif
+            @endforeach
+            @elseif(count($offices) == 1)
+            <li data-id='{{ $offices[0]->id }}' class="office-item hover:cursor-pointer hover:bg-gray-300 w-full font-poppins-light px-4 py-2 rounded-lg border-gray-200 dark:border-gray-600">{{ $offices[0]->office_name }}</li>
+            @else
+            <li class="w-full font-poppins-light px-4 py-2 border-b rounded-lg border-gray-200 dark:border-gray-600">No Records Found</li>
+            @endif
+        </ul>
+    </div>
+</div>
+
 <!-- Modals -->
 <div id="origin-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
@@ -274,8 +300,37 @@
                     <label for="custom-starting-point" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Building Select</label>
                     <input type="search" name="origin" id="custom-starting-point" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Choose starting point..." required autocomplete="off" autofocus required />
                 </div>
-
                 <button type="button" id="custom-starting-point-btn" class="mt-1 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Get Directions</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<div id="office-origin-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Choose a Starting Point
+                </h3>
+                <button type="button" id="office-origin-modal-close" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5">
+                <div>
+                    <label for="custom-starting-point" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Building Select</label>
+                    <input type="search" name="origin" id="office-custom-starting-point" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Choose starting point..." required autocomplete="off" autofocus required />
+                </div>
+
+                <button type="button" id="office-custom-starting-point-btn" class="mt-1 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Get Directions</button>
             </div>
         </div>
     </div>
@@ -336,7 +391,20 @@
             <h5 class="text-center block mb-2 font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
                 MAP LEGEND
             </h5>
-            <h6 class="text-lg font-sans mb-2 font-bold">Buildings</h6>
+            <h6 class="text-lg font-sans mb-2 font-bold">Markers</h6>
+            <div class='w-full flex gap-2'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                </svg>
+                <p>Starting Location</p>
+            </div>
+            <div class='w-full flex gap-2'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                </svg>
+                <p>Destionation Location</p>
+            </div>
+            <h6 class="text-lg font-sans mt-4 mb-2 font-bold">Buildings</h6>
             @foreach($building_types as $bType)
             <div class='w-full flex gap-2'>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ $bType->color }}" class="w-6 h-6">
@@ -386,16 +454,6 @@
                 </svg>
                 <p>Road</p>
             </div>
-        </div>
-        <div class="p-6 pt-0">
-            <a href="#" class="inline-block">
-                <button class="flex items-center gap-2 px-4 py-2 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none hover:bg-gray-900/10 active:bg-gray-900/20" type="button">
-                    Learn More
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
-                    </svg>
-                </button>
-            </a>
         </div>
     </div>
 </div>
@@ -632,7 +690,7 @@
                     if (i == 0) {
                         renderPath(route[i], route[i + 1], false, true);
                     } else if (i == route.length - 2) {
-                        renderPath(route[i], route[i + 1]);
+                        renderPath(route[i], route[i + 1], false, false, true);
                     } else {
                         renderPath(route[i], route[i + 1]);
                     }
@@ -901,7 +959,7 @@
         }
 
 
-        function renderPath(a, b, raw = false, first = false) {
+        function renderPath(a, b, raw = false, first = false, last = false) {
             if (raw === false) {
                 var data = {
                     'a': a,
@@ -976,6 +1034,14 @@
                                     'line-width': 4
                                 }
                             }, 'boundary-latest-19j3o8');
+                            if (last) {
+                                var thisMarker = new mapboxgl.Marker({
+                                        className: 'gps-marker',
+                                        color: 'blue'
+                                    })
+                                    .setLngLat([response.path.wp_b_lng, response.path.wp_b_lat])
+                                    .addTo(map);
+                            }
                         }
                     },
                     error: function(error) {
@@ -1049,7 +1115,8 @@
                     }
                 }, 'waterway-label');
                 var thisMarker = new mapboxgl.Marker({
-                        className: 'gps-marker'
+                        className: 'gps-marker',
+                        color: 'red'
                     })
                     .setLngLat(a[0], a[1])
                     .addTo(map);
@@ -1189,6 +1256,21 @@
             return await determineOriginPointPromise;
         }
 
+        async function getOfficeOriginPoint() {
+            let getOriginPointPromise = new Promise(function(myResolve, myReject) {
+                var customStartingPointBtn = document.getElementById('office-custom-starting-point-btn');
+                customStartingPointBtn.addEventListener('click', function() {
+                    var originPointResult = document.getElementById('office-custom-starting-point').value;
+                    if (originPointResult) {
+                        myResolve(originPointResult);
+                    } else {
+                        myReject(false);
+                    }
+                })
+            })
+            return await getOriginPointPromise;
+        }
+
         async function getOriginPoint() {
             let getOriginPointPromise = new Promise(function(myResolve, myReject) {
                 var customStartingPointBtn = document.getElementById('custom-starting-point-btn');
@@ -1212,6 +1294,29 @@
             }, 200);
             endProcedureNavigation();
         });
+
+        $('#office-origin-modal-close').click(function() {
+            var modal = $('#office-origin-modal');
+            modal.removeClass('modal-open');
+            setTimeout(function() {
+                modal.hide();
+            }, 200);
+            var office = $('#offices-cont');
+            var navbar = $('#navbar');
+            var map = $('#map');
+
+            office.animate({
+                left: '0%'
+            }, 500)
+            navbar.animate({
+                width: '80%',
+                marginLeft: '20%'
+            }, 500);
+            map.animate({
+                width: '80%',
+                marginLeft: '20%'
+            }, 500)
+        });
         // End of Dijkstra's Algorithm
 
         // Searchbar Functions
@@ -1221,7 +1326,8 @@
             url: '{{ route("buildings.get") }}',
             data: {
                 'names': true,
-                'active': true
+                'active': true,
+                'offices': true
             },
             success: (response) => {
                 building_names = response.names;
@@ -1232,6 +1338,9 @@
                     source: building_names
                 });
                 $('#custom-starting-point').autocomplete({
+                    source: building_names
+                });
+                $('#office-custom-starting-point').autocomplete({
                     source: building_names
                 });
                 // Function to set max-width of .ui-autocomplete to match the input's width
@@ -1571,6 +1680,9 @@
                 var destination = currentStepDestination;
             } else {
                 var destination = document.getElementById('destination').value;
+                if (!destination) {
+                    destination = $('#popup-office-name').text();
+                }
             }
             $.ajax({
                 url: '{{ route("directions.get.polarpoints") }}',
@@ -1914,7 +2026,7 @@
         function displayRoute(destination, origin = null, event = null) {
             if (!origin) {
                 var gps_point = locateUser();
-                gps_point = [124.24468480009568, 8.241310194494716];
+                // gps_point = [124.24468480009568, 8.241310194494716];
                 if (!gps_point) {
                     endProcedureNavigation()
                 } else {
@@ -2121,6 +2233,28 @@
             })
         })
 
+        document.querySelectorAll('.office-item').forEach(function(element) {
+            element.addEventListener('click', function() {
+                var officeID = $(this).attr('data-id');
+                getOffice(officeID)
+            })
+        })
+
+        function getOffice(id) {
+            $.ajax({
+                url: '{{ route("offices.get") }}',
+                data: {
+                    'id': id
+                },
+                success: (response) => {
+                    openOfficePopup(response.office);
+                },
+                error: (error) => {
+                    console.log(error)
+                }
+            })
+        }
+
         function getEvent(id) {
             $.ajax({
                 url: '{{ route("events.get") }}',
@@ -2135,6 +2269,50 @@
                 }
             })
         }
+
+        let officePopupStatus = 0;
+
+        function openOfficePopup(json) {
+            $('#popup-office-name').text(json.office_name);
+            if (json.office_image) {
+                var office_image = decodeURIComponent('{{ asset("storage/") }}' + "/" + json.office_image); // Decode URL
+                $('#office-image').attr('src', office_image);
+            }
+            $('#popup-office-description').text(json.description);
+            var officePopup = $('#popup-office');
+            if (officePopupStatus == 0) {
+                if (window.innerWidth <= 767) {
+                    $('#events-cont').animate({
+                        left: "-100%"
+                    }, 500);
+                    $('#map').animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500)
+                    $('#navbar').animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500);
+                }
+                officePopup.animate({
+                    right: '7.5%'
+                }, 500)
+                officePopupStatus = 1;
+            } else {
+                officePopup.animate({
+                    right: '-100%'
+                }, 500)
+                officePopupStatus = 0;
+            }
+        }
+
+        $('.popup-office-close-btn').click(function() {
+            var officePopup = $('#popup-office');
+            officePopup.animate({
+                right: '-100%'
+            }, 500)
+            officePopupStatus = 0;
+        })
 
         function openEventPopup(json, status, start, end) {
             $('#popup-event-name').text(json.event_name);
@@ -2365,6 +2543,7 @@
             }, 500)
             removeGpsMarker();
             removeRenderedPaths();
+            gps = false;
         })
 
         function openRightSidebar(non_raw = null) {
@@ -2519,6 +2698,69 @@
         })
         // End of Legend
 
+        // Offices Directions
+
+        $('#office-directions-btn').click(function() {
+            var officePopup = $('#popup-office');
+            officePopup.animate({
+                right: '-100%'
+            }, 500)
+            officePopupStatus = 0;
+            var destination = $('#popup-office-name').text();
+            $('#destination').text(destination);
+            determineOriginPoint().then(
+                function(value) {
+                    var originModeResults = value;
+                    if (originModeResults) {
+                        var gps_point = locateUser();
+                        // gps_point = [124.24468480009568, 8.241310194494716];
+                        nearestLine(gps_point);
+                        $('#offices-close-btn').click();
+                    } else {
+                        $('#office-origin-modal').show();
+                        getOfficeOriginPoint().then(
+                            function(value) {
+                                var origin = value; // bldg name
+                                $('#office-origin-modal-close').click();
+                                $('#offices-close-btn').click();
+                                $.ajax({
+                                    url: '{{ route("directions.get.polarpoints") }}',
+                                    data: {
+                                        'destination': destination,
+                                        'origin': origin
+                                    },
+                                    success: (response) => {
+                                        var origin_decoded = JSON.parse(JSON.parse(response.target_origin.entrypoints));
+                                        var destination_decoded = JSON.parse(JSON.parse(response.target_destination.entrypoints));
+                                        var origin_points = [];
+                                        var destination_points = [];
+                                        for (let key in origin_decoded) {
+                                            origin_points.push(origin_decoded[key].code);
+                                        }
+                                        for (let key in destination_decoded) {
+                                            destination_points.push(destination_decoded[key].code);
+                                        }
+                                        multipleCalculations(origin_points, destination_points);
+                                    },
+                                    error: (error) => {
+                                        console.log(error);
+                                    }
+                                })
+                            },
+                            function(error) {
+                                console.log(error)
+                            }
+                        )
+                    }
+                },
+                function(error) {
+                    console.log(error)
+                }
+            )
+        })
+
+        // End of Offices Directions
+
         // GPS
 
         let currentGeoposition = new Promise(function(myResolve, myReject) {
@@ -2526,7 +2768,7 @@
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         var currentPosition = [position.coords.longitude, position.coords.latitude];
-                        currentPosition = [124.24468480009568, 8.241310194494716];
+                        // currentPosition = [124.24468480009568, 8.241310194494716];
                         myResolve(currentPosition);
                     },
                     (error) => {

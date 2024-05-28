@@ -53,6 +53,7 @@
     <div id="buttons-container" class="buttons-container">
         <a href="#" id="procedures-btn" class="procedures btn2"><span class="spn2">Procedures</span></a>
         <a href="#" id="events-btn" class="events btn2"><span class="spn2">Events</span></a>
+        <a href="#" id="offices-btn" class="offices btn2"><span class="spn2">Offices</span></a>
     </div>
 
     <!-- Report button -->

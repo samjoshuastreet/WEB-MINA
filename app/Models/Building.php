@@ -16,6 +16,21 @@ class Building extends Model
         'status'
     ];
 
+    public function badgeColor()
+    {
+        switch ($this->status) {
+            case 'inactive':
+                return 'badge-danger';
+                break;
+            case 'active':
+                return 'badge-success';
+                break;
+            default:
+                return 'badge-warning';
+                break;
+        }
+    }
+
     public function buildingDetails()
     {
         return $this->hasOne(BuildingDetails::class, 'building_id');
@@ -43,11 +58,33 @@ class Building extends Model
 
     public function events()
     {
-        return $this->belongsToMany(Event::class, 'building_id');
+        return $this->hasMany(Event::class, 'building_id');
     }
 
     public function procedureWaypoint()
     {
-        return $this->hasOne(ProcedureWaypoint::class, 'building_id');
+        return $this->hasMany(ProcedureWaypoint::class, 'building_id');
+    }
+
+    public function entrancesCount()
+    {
+        $entrypoints = $this->buildingEntrypoint;
+        $decoded = json_decode($entrypoints->entrypoints);
+        return $decoded;
+    }
+
+    public function procedureCount()
+    {
+        return $this->hasMany(ProcedureWaypoint::class, 'building_id')->count();
+    }
+
+    public function offices()
+    {
+        return $this->hasMany(Office::class, 'building_id');
+    }
+
+    public function officeCount()
+    {
+        return $this->hasMany(Office::class, 'building_id')->count();
     }
 }

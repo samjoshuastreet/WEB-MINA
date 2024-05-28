@@ -23,6 +23,11 @@ class Procedure extends Model
         return $this->hasMany(ProcedureWaypoint::class, 'procedure_id');
     }
 
+    public function waypointCount()
+    {
+        return $this->hasMany(ProcedureWaypoint::class, 'procedure_id')->count();
+    }
+
     public function accessLevel()
     {
         $access_level = $this->access_level;

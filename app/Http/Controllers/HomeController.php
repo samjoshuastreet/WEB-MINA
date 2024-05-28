@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Office;
 use App\Models\Building;
 use App\Models\Procedure;
 use App\Models\BuildingType;
@@ -18,6 +19,7 @@ class HomeController extends Controller
         $events = Event::where('end_date', '>=', $today->toDateString())
             ->get();
         $building_types = BuildingType::all();
-        return view('home.map', compact('procedures', 'events', 'building_types', 'events'));
+        $offices = Office::all();
+        return view('home.map', compact('procedures', 'events', 'building_types', 'events', 'offices'));
     }
 }

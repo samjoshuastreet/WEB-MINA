@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Path;
+use App\Models\Office;
 use App\Models\Building;
+use App\Models\BuildingType;
 use Illuminate\Http\Request;
 use App\Models\BuildingMarker;
 use App\Models\BuildingDetails;
 use App\Models\BuildingBoundary;
 use App\Models\BuildingEntrypoint;
-use App\Models\BuildingType;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,7 +29,33 @@ class BuildingController extends Controller
     public function edit($id)
     {
         $target = Building::find($id);
-        return view('admin.buildings.edit', compact('target'));
+        $types = BuildingType::all();
+        return view('admin.buildings.edit', compact('target', 'types'));
+    }
+    public function edit_submit(Request $request)
+    {
+        $target = Building::find($request->input('id'));
+        if ($request->input('bd')) {
+            $target->building_name = $request->input('building_name');
+            $target->save();
+            $targetDetails = $target->buildingDetails;
+            $targetDetails->building_description = $request->input('building_description');
+            $targetDetails->save();
+        } elseif ($request->input('bt')) {
+            $type = $target->buildingDetails;
+            $type->building_type = $request->input('type');
+            $type->save();
+        }
+        return response()->json(['success' => true]);
+    }
+    public function edit_submit_mi(Request $request)
+    {
+        $target = Building::find($request->input('id'));
+        $targetMarker = $target->buildingMarker;
+        $marker_image = $request->file('marker_image')->store('marker_images', 'public');
+        $targetMarker->marker_image = $marker_image;
+        $targetMarker->save();
+        return response()->json(['success' => true]);
     }
     public function delete(Request $request)
     {
@@ -153,7 +180,15 @@ class BuildingController extends Controller
                 $building_names = $buildings->filter(function ($building) {
                     return $building->status === 'active';
                 })->pluck('building_name')->toArray();
-                return response()->json(['names' => $building_names]);
+                if ($request->input('offices')) {
+                    $offices = Office::all();
+                    foreach ($offices as $office) {
+                        array_push($building_names, $office->office_name);
+                    }
+                    return response()->json(['names' => $building_names]);
+                } else {
+                    return response()->json(['names' => $building_names]);
+                }
             }
             return response()->json(['names' => $building_names]);
         }
@@ -218,6 +253,12 @@ class BuildingController extends Controller
     }
     public function find(Request $request)
     {
+        if ($request->input('type-color')) {
+            $type = BuildingType::find($request->input('id'));
+            $color = $type->color;
+            $id = $type->id;
+            return response()->json(['color' => $color, 'id' => $id]);
+        }
         $target = $request->input('target');
         $marker = BuildingMarker::find($target);
         $building = $marker->building;

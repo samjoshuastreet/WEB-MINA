@@ -22,7 +22,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-header">MAP ELEMENTS</li>
                 <li class="nav-item {{ Route::currentRouteName() == 'buildings.index' || Route::currentRouteName() == 'buildings.add' || Route::currentRouteName() == 'buildings.types' ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ Route::currentRouteName() == 'buildings' || Route::currentRouteName() == 'buildings_add' ? 'active' : '' }} d-flex justify-center-start align-items-center">
+                    <a href="#" class="nav-link {{ Route::currentRouteName() == 'buildings.index' || Route::currentRouteName() == 'buildings.add' || Route::currentRouteName() == 'buildings.types' ? 'active' : '' }} d-flex justify-center-start align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building nav-item mr-2" viewBox="0 0 16 16">
                             <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
                             <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3z" />
@@ -54,7 +54,7 @@
                     </ul>
                 </li>
                 <li class="nav-item {{ Route::currentRouteName() == 'paths.index' || Route::currentRouteName() == 'paths.add' || Route::currentRouteName() == 'paths.edit' ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link d-flex justify-center-start align-items-center">
+                    <a href="#" class="nav-link d-flex justify-center-start align-items-center {{ Route::currentRouteName() == 'paths.index' || Route::currentRouteName() == 'paths.add' || Route::currentRouteName() == 'paths.edit' ? 'active' : '' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building nav-item mr-2" viewBox="0 0 16 16">
                             <path d="M5 8.5A2.5 2.5 0 0 1 7.5 6H9V4.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L9.41 8.658A.25.25 0 0 1 9 8.466V7H7.5A1.5 1.5 0 0 0 6 8.5V11H5z" />
                             <path fill-rule="evenodd" d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.48 1.48 0 0 1 0-2.098zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134Z" />
@@ -85,9 +85,35 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item {{ Route::currentRouteName() == 'offices.index' || Route::currentRouteName() == 'offices.add' ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Route::currentRouteName() == 'offices.index' || Route::currentRouteName() == 'offices.add' ? 'active' : '' }} d-flex justify-center-start align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-closed mr-2" viewBox="0 0 16 16">
+                            <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z" />
+                            <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
+                        </svg>
+                        <p>
+                            Offices
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('offices.add') }}" class="nav-link {{ Route::currentRouteName() == 'offices.add' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Add Office</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('offices.index') }}" class="nav-link {{ Route::currentRouteName() == 'offices.index' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Manage Offices</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-header mt-4">NAVIGATION</li>
                 <li class="nav-item {{ Route::currentRouteName() == 'procedures.index' || Route::currentRouteName() == 'procedures.add' ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link d-flex justify-center-start align-items-center">
+                    <a href="#" class="nav-link d-flex justify-center-start align-items-center {{ Route::currentRouteName() == 'procedures.index' || Route::currentRouteName() == 'procedures.add' ? 'active' : '' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building nav-item mr-2" viewBox="0 0 16 16">
                             <path d="M7 7V1.414a1 1 0 0 1 2 0V2h5a1 1 0 0 1 .8.4l.975 1.3a.5.5 0 0 1 0 .6L14.8 5.6a1 1 0 0 1-.8.4H9v10H7v-5H2a1 1 0 0 1-.8-.4L.225 9.3a.5.5 0 0 1 0-.6L1.2 7.4A1 1 0 0 1 2 7zm1 3V8H2l-.75 1L2 10zm0-5h6l.75-1L14 3H8z" />
                         </svg>
@@ -112,7 +138,7 @@
                     </ul>
                 </li>
                 <li class="nav-item {{ Route::currentRouteName() == 'events.index' || Route::currentRouteName() == 'events.add' ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link d-flex justify-center-start align-items-center">
+                    <a href="#" class="nav-link d-flex justify-center-start align-items-center {{ Route::currentRouteName() == 'events.index' || Route::currentRouteName() == 'events.add' ? 'active' : '' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building nav-item mr-2" viewBox="0 0 16 16">
                             <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
                             <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />

@@ -64,4 +64,19 @@ class AuthController extends Controller
             return response()->json(['success' => true]);
         }
     }
+
+    public function encrypt_passwords()
+    {
+        $users = User::all();
+        foreach ($users as $user) {
+            // Check if the password is already hashed
+            if (!password_get_info($user->password)['algo']) {
+                // Encrypt the password using bcrypt
+                $user->password = bcrypt($user->password);
+
+                // Save the user with the encrypted password
+                $user->save();
+            }
+        }
+    }
 }

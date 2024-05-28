@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Event extends Model
 {
@@ -39,5 +40,21 @@ class Event extends Model
         } else {
             return 'Unknown Level';
         }
+    }
+
+    public function getStatus()
+    {
+        $target = $this;
+        $today = Carbon::today();
+        $start = Carbon::parse($target->start_date)->format('F d (h:i A)');
+        $end = Carbon::parse($target->end_date)->format('F d (h:i A)');
+        if ($today >= $target->end_date) {
+            $status = 'Ended';
+        } elseif ($today < $target->end_date && $today >= $target->start_date) {
+            $status = 'On Going';
+        } else {
+            $status = 'Upcoming';
+        }
+        return $status;
     }
 }

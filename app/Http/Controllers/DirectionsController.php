@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Path;
+use App\Models\Office;
 use App\Models\Building;
 use Taniko\Dijkstra\Graph;
 use Illuminate\Http\Request;
@@ -46,11 +47,21 @@ class DirectionsController extends Controller
     {
         $destination = $request->input('destination');
         $target_destination = Building::where('building_name', $destination)->first();
-        $destination_entrypoints = json_decode($target_destination->buildingEntrypoint);
+        if (!$target_destination) {
+            $target_destination = Office::where('office_name', $destination)->first();
+            $destination_entrypoints = json_decode($target_destination->building->buildingEntrypoint);
+        } else {
+            $destination_entrypoints = json_decode($target_destination->buildingEntrypoint);
+        }
         if ($request->input('origin')) {
             $origin = $request->input('origin');
             $target_origin = Building::where('building_name', $origin)->first();
-            $origin_entrypoints = json_decode($target_origin->buildingEntrypoint);
+            if (!$target_origin) {
+                $target_origin = Office::where('office_name', $origin)->first();
+                $origin_entrypoints = json_decode($target_origin->building->buildingEntrypoint);
+            } else {
+                $origin_entrypoints = json_decode($target_origin->buildingEntrypoint);
+            }
             return response()->json(['success' => true, 'target_origin' => $origin_entrypoints, 'target_destination' => $destination_entrypoints]);
         }
         return response()->json(['success' => true, 'target_destination' => $destination_entrypoints]);

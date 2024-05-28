@@ -32,11 +32,11 @@
                     <a href="{{ route('home') }}">
                         <li class=" bg-upsdell-900 text-white text-[0.60rem] md:text-[0.90rem] lg:text-sm font-poppins-regular w-[75px] md:w-[110px] lg:w-[120px] py-0.5 md:py-1.5 px-1 md:px-1.5 lg:py-1.5 lg:px-1 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Get Started</li>
                     </a>
-                    <!-- <li class="login-btn bg-upsdell-900 text-white text-sm font-poppins-regular w-[120px] py-1.5 px-2 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Login</li>
-                    <li class="register-btn bg-upsdell-900 text-white text-sm font-poppins-regular w-[120px] py-1.5 px-2 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Register</li> -->
+                    <!-- <li class="login-btn bg-upsdell-900 text-white text-sm font-poppins-regular w-[120px] py-1.5 px-2 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Login</li> -->
+                    <!-- <li class="register-btn bg-upsdell-900 text-white text-sm font-poppins-regular w-[120px] py-1.5 px-2 rounded-2xl transition duration-500 hover:cursor-pointer hover:bg-minion-900">Register</li> -->
                 </ul>
             </div>
-            <!-- <div id="loginform" class="absolute w-[100%] h-[calc(100vh-50px)] top-0 right-[-100%] bg-white flex flex-col justify-center items-center gap-12 transition duration-500">
+            <div id="loginform" class="absolute w-[100%] h-[calc(100vh-50px)] top-0 right-[-100%] bg-white flex flex-col justify-center items-center gap-12 transition duration-500" style='display: none;'>
                 <div class="flex justify-center items-end"><img src="{{ asset('assets/images/landing/cover.png') }}" alt="MSU-IIT Map Logo" class="h-[80px]"></div>
                 <form id="login-form" action="" class="w-[820px] flex flex-col justify-center" method="post">
                     <div class="flex flex-col mx-auto justify-center items-center gap-4 w-[50%] h-fit py-8 rounded-3xl bg-upsdell-900">
@@ -54,7 +54,7 @@
                         <button id="back-btn" class="bg-raisin-500 font-poppins-regular text-white text-sm py-1 px-6 rounded-lg" type="button">Back</button>
                     </div>
                 </form>
-            </div> -->
+            </div>
             <!-- <div id="registrationform" class="absolute w-[100%] h-[calc(100vh-50px)] left-[-100%] top-0 bg-white flex flex-col justify-center items-center gap-12 transition duration-500">
                 <div class="flex justify-center items-end"><img src="{{ asset('assets/images/landing/cover.png') }}" alt="MSU-IIT Map Logo" class="h-[80px]"></div>
                 <form id="registration-form" class="w-[820px] flex flex-col justify-center" method="post">
@@ -214,6 +214,7 @@
             var navbar = document.getElementById('navbar');
             var contentContainer = document.getElementById('content');
             var navbarLogin = document.getElementById('navbar-login-btn-cont');
+            var navbarHelp = document.getElementById('navbar-help-btn-cont');
             var topCont = document.getElementById('scroll-top-cont');
 
             if (window.scrollY > 0) {
@@ -236,14 +237,18 @@
 
         // Login Form Animation
         $('.login-btn').on('click', function() {
-            $('#loginform').animate({
+            $('#loginform').show().animate({
                 left: "0%"
             })
         });
         $('#back-btn').on('click', function() {
             $('#loginform').animate({
                 left: "100%"
-            })
+            }, {
+                complete: function() {
+                    $('#loginform').hide();
+                }
+            });
         });
         $('#navbar-login-btn').on('click', function() {
             $('html, body').animate({

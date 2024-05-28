@@ -26,7 +26,7 @@
             </ul>
         </div>
         <div id="navbar-login-btn-cont" class="bg-white text-raisin-900 rounded-2xl flex items-center jus px-2 lg:px-3 py-1 lg:py-1 md:px-3 mr-2 md:mr-3 lg:mr-6 hover:bg-minion-900 hover:cursor-pointer transition opacity-0">
-            <h1 id="navbar-login-btn" class="font-gordita-ultra text-upsdell-900 text-[0.55rem] md:text-[0.80rem] lg:text-sm login-btn">Help</h1>
+            <h1 id="navbar-login-btn" class="font-gordita-ultra text-upsdell-900 text-[0.55rem] md:text-[0.80rem] lg:text-sm login-btn">Login</h1>
         </div>
     </div>
 

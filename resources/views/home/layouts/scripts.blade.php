@@ -250,6 +250,38 @@ https://cdn.jsdelivr.net/npm/use-geolocation-api@1.1.0/dist/index.umd.min.js
         }
     });
 
+    $('#offices-btn').on('click', function() {
+        var office = $('#offices-cont');
+        var navbar = $('#navbar');
+        var map = $('#map');
+        var sidebar = $('#sidebar');
+
+        office.animate({
+            left: '0%'
+        }, 500)
+        navbar.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500);
+        map.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500)
+
+        if (sidebarStatus == 1) {
+            if (window.innerWidth <= 767) {
+                sidebar.animate({
+                    left: "-100%"
+                }, 500)
+            } else {
+                sidebar.animate({
+                    left: "-20%"
+                }, 500)
+            }
+            sidebarStatus = 0;
+        }
+    });
+
     $('#directions-close-btn').on('click', function() {
         var directions = $('#directions-cont');
         var navbar = $('#navbar');
@@ -298,6 +330,35 @@ https://cdn.jsdelivr.net/npm/use-geolocation-api@1.1.0/dist/index.umd.min.js
 
     $('#events-close-btn').on('click', function() {
         var events = $('#events-cont');
+        var navbar = $('#navbar');
+        var map = $('#map');
+        var sidebar = $('#sidebar'); // Add this line
+        if (window.innerWidth <= 767) {
+            events.animate({
+                left: '-100%'
+            }, 500)
+        } else {
+            events.animate({
+                left: '-20%'
+            }, 500)
+        }
+        navbar.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500);
+        map.animate({
+            width: '80%',
+            marginLeft: '20%'
+        }, 500)
+
+        sidebar.animate({ // Add this block
+            left: '0%'
+        }, 500);
+        sidebarStatus = 1;
+    });
+
+    $('#offices-close-btn').on('click', function() {
+        var events = $('#offices-cont');
         var navbar = $('#navbar');
         var map = $('#map');
         var sidebar = $('#sidebar'); // Add this line
