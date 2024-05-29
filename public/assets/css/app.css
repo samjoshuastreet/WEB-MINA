@@ -1,31 +1,6 @@
+/* Button Styles */
 .more-info-button {
     color: black !important;
-}
-
-.text-container {
-    margin-top: 18%;
-    padding: 50px;
-}
-
-.image-container {
-    width: 650px;
-}
-
-.Image {
-    margin-left: 50px;
-}
-
-.image-container img {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px;
-    width: 100%;
-    height: auto;
-}
-
-.text-container h1 {
-    font-weight: bold;
-    margin-bottom: 3%;
 }
 
 .button {
@@ -81,10 +56,39 @@
     right: 0;
 }
 
+/* Text Container Styles */
+.text-container {
+    margin-top: 18%;
+    padding: 50px;
+}
+
+.text-container h1 {
+    font-weight: bold;
+    margin-bottom: 3%;
+}
+
+/* Image Container Styles */
+.image-container {
+    width: 650px;
+}
+
+.Image {
+    /* margin-left: 50px; */
+}
+
+.image-container img {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 100%;
+    height: auto;
+}
+
+/* Contact Section Styles */
 .contactall {
     box-sizing: border-box;
-    margin: 0%;
-    padding: 0%;
+    margin: 0;
+    padding: 0;
 }
 
 .contact-body {
@@ -92,7 +96,6 @@
     display: grid;
     font-family: 'Poppins', sans-serif;
     height: 100vh;
-    margin-top: 50px;
     width: 100%;
 }
 
@@ -128,7 +131,7 @@
 }
 
 .contact-form h1 {
-    margin-bottom: 10px;    
+    margin-bottom: 10px;
 }
 
 .contact-form-txt,
@@ -168,4 +171,82 @@
     padding: 10px 0;
     text-transform: uppercase;
     width: 100%;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    #about {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #about .image-container,
+    #about .text-container {
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+    }
+
+    #about .image-container img {
+        display: block;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .button {
+        width: 100%;
+    }
+
+    .text-container {
+        margin-top: 0;
+    }
+
+    #contact {
+        padding-top: 50px;
+    }
+
+    .contact-body {
+        height: auto;
+    }
+
+    .contact-map iframe {
+        height: 300px;
+    }
+
+    .contact-form {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    #about .image-container img {
+        width: 100%;
+    }
+
+    .button {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    #contact {
+        padding-top: 50px;
+    }
+
+    .contact-body {
+        height: auto;
+    }
+
+    .contact-map iframe {
+        height: 300px;
+    }
+
+    .contact-form {
+        padding: 20px;
+    }
+}
+
+
+/* Box-icon Styles */
+.box-icon {
+    color: #ffffff; /* Change icon color to white */
 }

@@ -21,10 +21,10 @@
             </div>
 
 
-            <!-- Divider -->
+            <!-- Divider
             <div class="icon-divider">
                 <box-icon name='dots-vertical-rounded' class='divider-icon'></box-icon>
-            </div>
+            </div> -->
 
             <!-- Destination form -->
             <label for="destination"></label>

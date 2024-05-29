@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <!-- Custom styles -->
     <style>
         @media (max-width: 767px) {
             #navbar-logo {
@@ -87,8 +89,9 @@
             </div> -->
         </div>
 
-        <div id="about" class="flex w-screen h-screen">
-            <div class="w-1/2 h-full flex items-center justify-center bg-upsdell-900">
+        <!-- About Section -->
+        <div id="about" class="relative flex w-screen h-screen flex-col lg:flex-row">
+            <div class="w-full lg:w-1/2 h-full flex items-center justify-center bg-upsdell-900 p-4 lg:p-8">
                 <div class="Image">
                     <div class="image-container">
                         <a href="{{ asset('assets/images/landing/campus-lawn.png') }}">
@@ -97,40 +100,35 @@
                     </div>
                 </div>
             </div>
-            <div class="h-full bg-upsdell-900 p-8 text-white text-lg">
+            <div class="w-full lg:w-1/2 h-full bg-upsdell-900 p-4 lg:p-8 text-white text-lg">
                 <div class="text-container">
                     <h1>MSU-IIT: Empowering Minds, Transforming Communities</h1>
                     <p class="block mt-1 text-lg leading-tight font-medium text-white">
                         Discover excellence at Mindanao State University – Iligan Institute of Technology (MSU-IIT). Founded in 1968 under Republic Act 5363, MSU-IIT is a leading state university renowned for its commitment to academic excellence, holistic development, and community engagement. Led by Prof. Alizedney M. Ditucalan, JD, LLM, MSU-IIT fosters a diverse and inclusive environment where global competitiveness thrives. Explore our achievements, leadership, and impact on technological advancements in Iligan City. Join us in shaping the future.
                     </p>
-                    <div class="button-container">
-                        <button id="more-info-button" class="button"><span>More Information </span></button>
+                    <div class="button-container mt-4">
+                        <button id="more-info-button" class="button more-info-button"><span>More Information </span></button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Contact Section -->
         <div id="contact" class="w-screen h-screen">
-            <div class="contactall">
-                <div class="contact-body">
-                    <div class="contact-in">
-                        <div class="contact-map">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.631487700821!2d124.24219007449189!3d8.239760300844592!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x325576785fc4d679%3A0x73c07711931c8cce!2sMindanao%20State%20University%20-%20Iligan%20Institute%20of%20Technology!5e0!3m2!1sen!2sph!4v1711065016417!5m2!1sen!2sph" width="100%" height="auto" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="contactall h-full">
+                <div class="contact-body h-full flex justify-center items-center">
+                    <div class="contact-in flex flex-col lg:flex-row">
+                        <div class="contact-map lg:w-1/2">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.631487700821!2d124.24219007449189!3d8.239760300844592!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x325576785fc4d679%3A0x73c07711931c8cce!2sMindanao%20State%20University%20-%20Iligan%20Institute%20of%20Technology!5e0!3m2!1sen!2sph!4v1622470985407!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                         </div>
-                        <div class="contact-form">
-                            <h1>Contact Us</h1>
-                            <form>
-                                <label for="name"></label>
-                                <input type="text" id="name" name="name" placeholder="Name" class="contact-form-txt" />
-
-                                <label for="email"></label>
-                                <input type="text" id="email" name="email" placeholder="Email" class="contact-form-txt" />
-
-                                <label for="message"></label>
-                                <textarea id="message" name="message" placeholder="Message" class="contact-form-txtarea"></textarea>
-
-                                <input type="submit" name="Submit" class="contact-form-btn" />
-                            </form>
+                        <div class="contact-form lg:w-1/2">
+                            <h1 class="text-white">Contact Us</h1>
+                            <input type="text" id="name" class="contact-form-txt mt-4 lg:mt-0" placeholder="Your Name">
+                            <input type="email" id="email" class="contact-form-txt mt-2 lg:mt-0" placeholder="Your Email">
+                            <textarea id="message" class="contact-form-txtarea mt-2 lg:mt-0" placeholder="Your Message"></textarea>
+                            <button id="send-message-button" class="contact-form-btn mt-2 lg:mt-0">
+                                Send Message
+                            </button>
                         </div>
                     </div>
                 </div>
