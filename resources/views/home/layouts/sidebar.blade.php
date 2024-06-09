@@ -3,7 +3,7 @@
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 </head>
 
-<div id="sidebar" class="fixed top-0 w-full left-[-100%] lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 flex flex-col gap-2 z-50">
+<div id="sidebar" class="fixed top-0 w-full left-[-100%] lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 flex flex-col gap-2 z-[51]">
     <!-- Title -->
     <h1 class="text-white font-poppins-regular p-2 text-center">Directions</h1>
     <div class="line"></div>

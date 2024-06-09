@@ -219,8 +219,7 @@
 <aside class="control-sidebar control-sidebar-dark">
     <div class="d-flex flex-column justify-content-center align-items-center mt-2 mb-2">
         <a href="{{ route('dashboard') }}" class="btn btn-primary my-1 btn-sm rounded-lg text-light" style="width: 80%;">Dashboard</a>
-        <a href="" class="btn btn-primary my-1 btn-sm rounded-lg text-light" style="width: 80%;">Settings</a>
-        <a href="" class="btn btn-danger my-1 btn-sm rounded-lg text-light" style="width: 80%;">Logout</a>
+        <a href="{{ route('logout') }}" class="btn btn-danger my-1 btn-sm rounded-lg text-light" style="width: 80%;">Logout</a>
     </div>
 </aside>
 <!-- /.control-sidebar -->

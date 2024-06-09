@@ -171,7 +171,7 @@
                         console.log("logged in successfully!");
                         $('#login-form')[0].reset();
                         clear_validations();
-                        window.location.href = '{{ route("home") }}';
+                        window.location.href = '{{ route("dashboard") }}';
                     } else if (data.success == false) {
                         printValidationErrorMsg(data.msg);
                     }

@@ -1,4 +1,4 @@
-<div id="right-sidebar" class="absolute h-full w-[30%] bg-upsdell-900 top-0 right-[-30%] z-50 p-3" style="overflow-y: auto; -ms-overflow-style: none; scrollbar-width: none;">
+<div id="right-sidebar" class="absolute h-full w-[30%] bg-upsdell-900 top-0 right-[-30%] z-[51] p-3" style="overflow-y: auto; -ms-overflow-style: none; scrollbar-width: none; display: none;">
     <div class="bg-isabelline-900 rounded-md h-fit w-full relative">
         <div class="header py-2">
             <h1 class="text-center font-poppins-regular text-xl font-bold">Directions</h1>

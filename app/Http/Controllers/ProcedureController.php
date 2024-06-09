@@ -15,6 +15,24 @@ class ProcedureController extends Controller
         $procedures = Procedure::all();
         return view('admin.procedures.index', compact('procedures'));
     }
+    public function edit($id)
+    {
+        $target = Procedure::find($id);
+        return view('admin.procedures.edit', compact('target'));
+    }
+    public function edit_submit(Request $request)
+    {
+        if ($request->input('pro')) {
+            $target = Procedure::find($request->input('id'));
+            $target->procedure_name = $request->input('procedure_name');
+            $target->procedure_description = $request->input('procedure_description');
+            $target->initial_instructions = $request->input('initial_instructions');
+            $target->access_level = $request->input('access_level');
+            $target->save();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false]);
+    }
     public function add()
     {
         return view('admin.procedures.add');

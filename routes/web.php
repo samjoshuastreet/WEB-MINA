@@ -26,7 +26,7 @@ use App\Http\Controllers\FeedbackReportController;
 Route::get('/', [AuthController::class, 'index'])->name('landing');
 Route::get('/login_user', [AuthController::class, 'login_user'])->name('login_user');
 Route::get('/register_user', [AuthController::class, 'register_user'])->name('register_user');
-Route::get('/logout_user', [AuthController::class, 'logout_user'])->name('logout_user');
+Route::get('/logout_user', [AuthController::class, 'logout_user'])->name('logout');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
@@ -90,6 +90,8 @@ Route::middleware('auth', 'isAdmin')->group(function () {
     Route::get('/admin/procedures/add/submit', [ProcedureController::class, 'add_submit'])->name('procedures.add.submit');
     Route::get('/admin/procedures/delete', [ProcedureController::class, 'delete'])->name('procedures.delete');
     Route::get('/admin/procedures/all', [ProcedureController::class, 'all'])->name('procedures.all');
+    Route::get('/admin/procedures/{id}/edit', [ProcedureController::class, 'edit'])->name('procedures.edit');
+    Route::get('/admin/procedures/edit', [ProcedureController::class, 'edit_submit'])->name('procedures.edit.submit');
 
     Route::get('/admin/events/index', [EventController::class, 'index'])->name('events.index');
     Route::get('/admin/events/add', [EventController::class, 'add'])->name('events.add');

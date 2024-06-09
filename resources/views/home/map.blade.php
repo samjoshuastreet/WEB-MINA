@@ -128,6 +128,8 @@
     @include('home.layouts.popups')
     @include('home.layouts.sidebar_right')
     @include('home.layouts.spinners')
+    <button type="button" id='hide-map-btn' class='absolute bg-black text-white px-2 py-1 rounded-lg top-[50%] left-2 translate-y-[-50%] z-50 text-lg' style='display: none;'>></button>
+    <button id='phone-directions-btn' class='transition duration-500 absolute right-[50%] top-2 translate-x-[50%] bg-upsdell-900 rounded-lg z-[100] font-gordita-regular text-white font-bold px-2 py-1' style='display: none;' type="button">Show Directions</button>
     <button class="modal-open bg-transparent border border-gray-500 hover:border-indigo-500 text-gray-500 hover:text-indigo-500 font-bold py-2 px-4 rounded-full" style='display: none;'>Open Modal</button>
     <div id="map-navbar" class="absolute top-1 left-[50%] translate-x-[-50%] z-50 bg-transparent rounded-md text-white-900 text-white font-poppins-light w-[80%] h-[35px] ml-10 p-1 flex gap-2 justify-start" style="display: none;">
         <div class="bg-upsdell-900 text-white rounded-full py-1 px-3">
@@ -157,9 +159,12 @@
     <div id="currently-facing-cont" class="absolute top-2 left-2 z-50 bg-transparent px-1 py-2 rounded-md font-poppins-regular text-black outline-offset-1" style='display: none;'>Facing: <span id="currently-facing" class="font-bold bg-green-500 rounded-md text-black px-1 py-1"></span></div>
 </div>
 
-<div id="directions-cont" class="fixed py-8 top-0 w-[100%] left-[-100%] lg:left-[-30%] lg:w-[30%] h-full z-50">
-    <h1 class="text-white font-poppins-regular p-1 text-center">Procedure Process Flow</h1>
-    <div class="flex flex-row items-center justify-center gap-1 px-1 w-full h-full">
+<div id="directions-cont" class="fixed bg-upsdell-900 py-8 top-0 w-[100%] left-[-100%] lg:left-[-30%] lg:w-[30%] h-full z-[101]">
+    <h1 class="h-[8%] text-white font-poppins-regular p-1 text-center">Procedure Process Flow</h1>
+    <div id="see-map-btn-cont" class='h-[3%] w-full text-center'>
+        <button type="button" id='see-map-btn' class='px-2 py-1 bg-white font-gordita-regular font-bold rounded-md text-center text-sm' style='display: none;'>See Map</button>
+    </div>
+    <div class="flex flex-row items-center justify-center gap-1 px-1 w-full h-[90%]">
         <button type="button" class="shine bg-blue-500 hover:bg-blue-600 text-white font-bold py-5 px-1 rounded focus:outline-none focus:shadow-outline w-[7.5%] font-poppins-regular flex justify-center items-center text-[1rem]" id="procedure-prev-btn">&lt;</button>
         <div class="w-[80%] h-[90%] rounded-lg bg-white p-2 flex flex-col flex-between" style="overflow-y: auto;">
             <div class="h-[95%]" id="procedure-timeline" style="overflow-y: scroll; -ms-overflow-style: none; scrollbar-width: none;">
@@ -887,9 +892,9 @@
                 });
                 printDirections(directions);
                 if (non_raw) {
-                    openRightSidebar(true);
+                    window.innerWidth > 767 ? openRightSidebar(true) : openRightSidebar(true, true)
                 } else {
-                    openRightSidebar();
+                    window.innerWidth > 767 ? openRightSidebar(false) : openRightSidebar(false, true)
                 }
             } catch (error) {
                 console.log(error);
@@ -1858,7 +1863,7 @@
         var totalWaypoints = 0;
         var response_json = {};
 
-        function setSidebarTimeline(json) {
+        function setSidebarTimeline(json, phone = false) {
             console.log(json)
             $('#procedure-name').text(json.target_procedure.procedure_name);
             $('#procedure-description').text(json.target_procedure.procedure_description);
@@ -1939,7 +1944,7 @@
 
         function beginProcedureNagivation(json) {
             $('#sidebar-btn').hide();
-            setSidebarTimeline(json);
+            window.innerWidth > 767 ? setSidebarTimeline(json) : setSidebarTimeline(json, true)
             var procedures = $('#procedures-cont');
             if (window.innerWidth > 767) {
                 procedures.animate({
@@ -2106,7 +2111,7 @@
         }
 
         function displaySidebar(instructions, initial = null, procedure) {
-            instructionsSidebar(true);
+            window.innerWidth > 767 ? instructionsSidebar(true) : instructionsSidebar(true, true)
             $('#initial-instructions-cont').text('');
             // if (initial) {
             //     $('#initial-instructions-cont').text(initial);
@@ -2132,6 +2137,20 @@
             }
         }
 
+        $('#see-map-btn').click(function() {
+            $('#directions-cont').animate({
+                left: '-100%'
+            });
+            $('#hide-map-btn').show()
+        })
+
+        $('#hide-map-btn').click(function() {
+            $('#directions-cont').animate({
+                left: '0%'
+            });
+            $('#hide-map-btn').hide()
+        })
+
         function endProcedureNavigation() {
             $('#sidebar-btn').show();
             var procedures = $('#procedures-cont');
@@ -2143,7 +2162,7 @@
                 left: '-20%'
             }, 500);
             procedurePopupStatus = 0;
-            instructionsSidebar(false);
+            window.innerWidth > 767 ? instructionsSidebar(false) : instructionsSidebar(false, true)
             response_json = {};
             totalWaypoints = 0;
             removeRenderedPaths();
@@ -2189,25 +2208,35 @@
         }
 
         // End of Procedures Functions
-        function instructionsSidebar(state) {
+        function instructionsSidebar(state, phone = false) {
             var directions = $('#directions-cont');
             var navbar = $('#navbar');
             var map = $('#map');
             var sidebar = $('#sidebar');
-
+            phone ? $('#see-map-btn').show() : ''
             if (state) {
                 directions.animate({
                     left: '0%'
                 }, 500)
-                navbar.animate({
-                    width: '70%',
-                    marginLeft: '30%'
-                }, 500);
-                map.animate({
-                    width: '70%',
-                    marginLeft: '30%'
-                }, 500)
-
+                if (phone) {
+                    navbar.animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500);
+                    map.animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500)
+                } else {
+                    navbar.animate({
+                        width: '70%',
+                        marginLeft: '30%'
+                    }, 500);
+                    map.animate({
+                        width: '70%',
+                        marginLeft: '30%'
+                    }, 500)
+                }
                 if (sidebarStatus == 1) {
                     sidebar.animate({
                         left: "-20%"
@@ -2227,6 +2256,7 @@
                     width: '80%',
                     marginLeft: '20%'
                 }, 500)
+                $('#see-map-btn').hide()
             }
 
         }
@@ -2490,12 +2520,12 @@
         // End of Events Functions
 
         // Smaller Screen
-        if (window.innerWidth <= 767) {
-            $('#procedure-next-btn').hide();
-            $('#procedure-prev-btn').hide();
-            $('#procedure-end-btn').hide();
-            $('#event-end-btn').hide();
-        }
+        // if (window.innerWidth <= 767) {
+        //     $('#procedure-next-btn').hide();
+        //     $('#procedure-prev-btn').hide();
+        //     $('#procedure-end-btn').hide();
+        //     $('#event-end-btn').hide();
+        // }
         // End of Smaller Screens
 
         // Marker Toggle
@@ -2552,36 +2582,63 @@
             gps = false;
         })
 
-        function openRightSidebar(non_raw = null) {
-            $('#right-sidebar').show();
-            $('#right-sidebar').animate({
-                right: '0'
-            });
+        function openRightSidebar(non_raw = null, phone = false) {
             var sidebar = $('#sidebar');
             var navbar = $('#navbar');
             var map = $('#map');
-            if (!non_raw) {
-                sidebar.animate({
-                    left: "-30%"
-                }, 500);
-                navbar.animate({
-                    width: '100%',
-                    marginLeft: '0%'
-                }, 500);
-                map.animate({
-                    width: '100%',
-                    marginLeft: '0%',
-                }, 500)
+            if (!phone) {
+                if (!non_raw) {
+                    sidebar.animate({
+                        left: "-30%"
+                    }, 500);
+                    navbar.animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500);
+                    map.animate({
+                        width: '100%',
+                        marginLeft: '0%',
+                    }, 500)
+                }
+
+                $('#right-sidebar').show();
+                $('#right-sidebar').animate({
+                    right: '0'
+                });
             } else {
-                $('#directions-end-btn').hide();
+                $('#phone-directions-btn').show();
             }
+            non_raw ? $('#directions-end-btn').hide() : ''
         }
+
+        $('#phone-directions-btn').click(function() {
+            if ($('#right-sidebar').css('display') == 'none') {
+                $('#right-sidebar').show().animate({
+                    right: '0',
+                    width: '100%'
+                });
+                $('#phone-directions-btn').text('Hide').animate({
+                    right: '10%',
+                });
+            } else {
+                $('#right-sidebar').animate({
+                    right: '-30%',
+                    width: '30%'
+                }, function() {
+                    $('#right-sidebar').hide();
+                });
+                $('#phone-directions-btn').text('Show Directions').animate({
+                    right: '50%',
+                });
+            }
+        })
 
         function closeRightSidebar() {
             $('#right-sidebar').animate({
                 right: '0%'
             }, function() {
                 $('#right-sidebar').hide();
+                $('#phone-directions-btn').hide();
             });
         }
 

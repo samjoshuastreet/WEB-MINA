@@ -21,7 +21,7 @@
                             <a identifier='{{ $procedure->id }}' name='{{ $procedure->procedure_name }}' class="procedure-delete-btn"><span class="btn btn-sm btn-danger">Delete</span></a>
                         </li>
                         <li class="list-inline-item me-3">
-                            <span class="btn btn-sm btn-primary">View</span>
+                            <a href='{{ route("procedures.edit", ["id" => $procedure->id ]) }}' class="btn btn-sm btn-primary">View</a>
                         </li>
                     </div>
                 </ul>
