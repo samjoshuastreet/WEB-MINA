@@ -31,6 +31,7 @@ Route::get('/logout_user', [AuthController::class, 'logout_user'])->name('logout
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/admin/buildings/get', [BuildingController::class, 'get'])->name('buildings.get');
+Route::get('/admin/buildings/find', [BuildingController::class, 'find'])->name('buildings.find');
 
 Route::get('/directions/get', [DirectionsController::class, 'get'])->name('directions.get');
 Route::get('/directions/get/polarpoints', [DirectionsController::class, 'polarpoints'])->name('directions.get.polarpoints');
@@ -57,7 +58,6 @@ Route::middleware('auth', 'isAdmin')->group(function () {
 
     Route::get('/admin/buildings', [BuildingController::class, 'index'])->name('buildings.index');
     Route::get('/admin/buildings/reload', [BuildingController::class, 'reload'])->name('buildings.reload');
-    Route::get('/admin/buildings/find', [BuildingController::class, 'find'])->name('buildings.find');
     Route::get('/admin/buildings/add', [BuildingController::class, 'add'])->name('buildings.add');
     Route::get('/admin/buildings/{id}/edit', [BuildingController::class, 'edit'])->name('buildings.edit');
     Route::get('/admin/buildings/{id}/view', [BuildingController::class, 'view'])->name('buildings.view');

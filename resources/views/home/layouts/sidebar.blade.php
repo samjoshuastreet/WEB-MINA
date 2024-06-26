@@ -3,7 +3,7 @@
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 </head>
 
-<div id="sidebar" class="fixed top-0 w-full left-[-100%] lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 flex flex-col gap-2 z-[51]">
+<div id="sidebar" class="fixed top-0 w-full left-[-100%] lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 flex flex-col gap-2 z-[101]">
     <!-- Title -->
     <h1 class="text-white font-poppins-regular p-2 text-center">Directions</h1>
     <div class="line"></div>
@@ -54,6 +54,22 @@
         <a href="#" id="procedures-btn" class="procedures btn2"><span class="spn2">Procedures</span></a>
         <a href="#" id="events-btn" class="events btn2"><span class="spn2">Events</span></a>
         <a href="#" id="offices-btn" class="offices btn2"><span class="spn2">Offices</span></a>
+    </div>
+
+    <div>
+        <div class="mx-6">
+            <ul class="flex flex-col mt-4 justify-end items-center gap-4">
+                @auth
+                <a href="{{ route('dashboard') }}">
+                    <li class="bg-white rounded-lg lg:rounded-2xl font-gordita-ultra text-raisin-900 lg:text-sm hover:bg-minion-900 hover:cursor-pointer px-5 py-2 lg:px-3 lg:py-1 transition duration-500">Admin</li>
+                </a>
+                <a href="{{ route('logout') }}">
+                    <li class="bg-white rounded-lg lg:rounded-2xl font-gordita-ultra text-raisin-900 lg:text-sm hover:bg-minion-900 hover:cursor-pointer px-5 py-2 lg:px-3 lg:py-1 transition duration-500">Logout</li>
+                </a>
+                @else
+                @endauth
+            </ul>
+        </div>
     </div>
 
     <!-- Report button -->

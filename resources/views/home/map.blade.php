@@ -231,7 +231,7 @@
     </div>
 </div>
 
-<div id="events-cont" class="fixed py-8 top-0 left-[-100%] w-full lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 z-30">
+<div id="events-cont" class="fixed py-8 top-0 left-[-100%] w-full lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 z-50">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" id="events-close-btn" fill="white" class="bi bi-x-circle-fill absolute top-[2.5%] right-[5%] hover:cursor-pointer" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
     </svg>
@@ -257,7 +257,7 @@
     </div>
 </div>
 
-<div id="offices-cont" class="fixed py-8 top-0 left-[-100%] w-full lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 z-30 transition">
+<div id="offices-cont" class="fixed py-8 top-0 left-[-100%] w-full lg:left-[-20%] lg:w-[20%] h-full bg-upsdell-900 z-50 transition">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" id="offices-close-btn" fill="white" class="bi bi-x-circle-fill absolute top-[2.5%] right-[5%] hover:cursor-pointer" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
     </svg>
@@ -1343,16 +1343,32 @@
             success: (response) => {
                 building_names = response.names;
                 $('#starting-point').autocomplete({
-                    source: building_names
+                    source: building_names,
+                    select: function(event, ui) {
+                        // Remove elements with the class after selection
+                        $(".ui-helper-hidden-accessible").remove();
+                    }
                 });
                 $('#destination').autocomplete({
-                    source: building_names
+                    source: building_names,
+                    select: function(event, ui) {
+                        // Remove elements with the class after selection
+                        $(".ui-helper-hidden-accessible").remove();
+                    }
                 });
                 $('#custom-starting-point').autocomplete({
-                    source: building_names
+                    source: building_names,
+                    select: function(event, ui) {
+                        // Remove elements with the class after selection
+                        $(".ui-helper-hidden-accessible").remove();
+                    }
                 });
                 $('#office-custom-starting-point').autocomplete({
-                    source: building_names
+                    source: building_names,
+                    select: function(event, ui) {
+                        // Remove elements with the class after selection
+                        $(".ui-helper-hidden-accessible").remove();
+                    }
                 });
                 // Function to set max-width of .ui-autocomplete to match the input's width
                 function setAutocompleteWidth() {
@@ -2245,17 +2261,32 @@
                     sidebarStatus = 0;
                 }
             } else {
-                directions.animate({
-                    left: '-30%'
-                }, 500)
-                navbar.animate({
-                    width: '80%',
-                    marginLeft: '20%'
-                }, 500);
-                map.animate({
-                    width: '80%',
-                    marginLeft: '20%'
-                }, 500)
+                if (phone) {
+                    directions.animate({
+                        left: '-30%',
+                        width: '30%'
+                    }, 500)
+                    navbar.animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500);
+                    map.animate({
+                        width: '100%',
+                        marginLeft: '0%'
+                    }, 500)
+                } else {
+                    directions.animate({
+                        left: '-30%'
+                    }, 500)
+                    navbar.animate({
+                        width: '80%',
+                        marginLeft: '20%'
+                    }, 500);
+                    map.animate({
+                        width: '80%',
+                        marginLeft: '20%'
+                    }, 500)
+                }
                 $('#see-map-btn').hide()
             }
 

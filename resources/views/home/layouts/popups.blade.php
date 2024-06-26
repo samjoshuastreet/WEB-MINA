@@ -5,7 +5,7 @@
         </svg>
         <h1 id="popup-building-name" class="font-upsdell-900 lg:w-full w-full lg:h-fit h-[7.5%] font-poppins-regular text-[0.75rem] lg:text-3xl text-center p-3 lg:p-6">Sample Popup</h1>
         <div class="w-[100%] h-[92.5%] lg:h-fit lg:overflow-hidden overflow-scroll bg-transparent flex justify-center items-center">
-            <div class="w-[85%] h-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg flex flex-col lg:flex-row">
+            <div class="w-[85%] h-fit shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-lg flex flex-col lg:flex-row">
                 <figure class="max-w-lg w-full lg:w-[40%] h-fit p-4">
                     <img id="popup-image" class="lg:w-full lg:h-auto max-w-full rounded-lg" src="" alt="">
                 </figure>

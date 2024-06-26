@@ -20,7 +20,7 @@
                 </li> -->
             </ul>
         </div>
-        <a href="{{ route('home') }}" class="bg-white rounded-xl p-1 flex items-center lg:ml-6 lg:h-[75%]">
+        <a href="{{ route('landing') }}" class="bg-white rounded-xl p-1 flex items-center lg:ml-6 lg:h-[75%]">
             <img src="{{ asset('assets/logos/logo-full.png') }}" class="h-6 lg:h-8 lg:mr-1" alt="MSU-IIT Map Logo">
         </a>
 
@@ -32,19 +32,6 @@
                 <input type="text" name="" id="" placeholder="Search..." class="bg-transparent w-[85%] px-2">
             </div> -->
 
-        <!-- <div class="mx-6">
-                <ul class="flex justify-end items-center gap-4">
-                    @auth
-                    <li class="bg-white rounded-2xl font-gordita-ultra text-raisin-900 lg:text-sm hover:bg-minion-900 hover:cursor-pointer lg:px-3 lg:py-1 transition duration-500">Help</li>
-                    <a href="{{ route('logout_user') }}">
-                        <li class="bg-white rounded-2xl font-gordita-ultra text-raisin-900 lg:text-sm hover:bg-minion-900 hover:cursor-pointer lg:px-3 lg:py-1 transition duration-500">Logout</li>
-                    </a>
-                    @else
 
-                    <li id="login-btn" class="bg-white rounded-2xl font-gordita-ultra text-raisin-900 lg:text-sm hover:bg-minion-900 hover:cursor-pointer lg:px-3 lg:py-1 transition duration-500">Login</li>
-                    <li id="register-btn" class="bg-white rounded-2xl font-gordita-ultra text-raisin-900 lg:text-sm hover:bg-minion-900 hover:cursor-pointer lg:px-3 lg:py-1 transition duration-500">Register</li>
-                    @endauth
-                </ul>
-            </div> -->
 
     </nav>
